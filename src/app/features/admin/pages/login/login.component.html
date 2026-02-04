@@ -1,0 +1,86 @@
+<div class="row g-0 vh-100">
+    <!-- Left Side: Branding (Hidden on mobile) -->
+    <div
+        class="col-lg-7 d-none d-lg-flex flex-column justify-content-center align-items-center brand-section text-white p-5">
+        <div class="brand-overlay"></div>
+        <div class="brand-content text-center position-relative">
+            <div class="logo-box mb-4 mx-auto">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round" width="48" height="48">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
+            <h1 class="display-3 fw-bold brand-title mb-3">MEAN Stephan - Elysé</h1>
+            <p class="lead opacity-75">Console d'administration sécurisée pour la gestion de votre plateforme.</p>
+        </div>
+    </div>
+
+    <!-- Right Side: Login Form -->
+    <div class="col-lg-5 col-12 d-flex align-items-center justify-content-center bg-white p-4 p-md-5 login-section">
+        <div class="w-100" style="max-width: 400px;">
+            <div class="text-center text-lg-start mb-5">
+                <h2 class="fw-bold text-dark mb-2">Connectez-vous</h2>
+                <p class="text-muted">Accédez à votre tableau de bord administrateur.</p>
+            </div>
+
+            @if (errorMessage()) {
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlink:href="#exclamation-triangle-fill" />
+                </svg>
+                <div>{{ errorMessage() }}</div>
+            </div>
+            }
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="mb-4">
+                    <label for="email" class="form-label fw-semibold">Identifiant Administration</label>
+                    <input type="email" id="email" formControlName="email" class="form-control form-control-lg bg-light"
+                        [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+                        placeholder="admin@exemple.com">
+                    <div class="invalid-feedback">
+                        Veuillez entrer une adresse email valide.
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label for="password" class="form-label fw-semibold">Mot de passe</label>
+                        <a href="#" class="text-primary text-decoration-none small fw-bold">Oublié ?</a>
+                    </div>
+                    <div class="position-relative">
+                        <input [type]="showPassword() ? 'text' : 'password'" id="password" formControlName="password"
+                            class="form-control form-control-lg bg-light pe-5"
+                            [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+                            placeholder="••••••••">
+                        @if (loginForm.get('password')?.valid) {
+                        <button type="button" (click)="togglePasswordVisibility()" class="password-toggle-btn"
+                            aria-label="Toggle password visibility">
+                            <i class="bi" [class.bi-eye]="!showPassword()" [class.bi-eye-slash]="showPassword()"></i>
+                        </button>
+                        }
+                        <div class="invalid-feedback">
+                            Le mot de passe doit contenir au moins 6 caractères.
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-3 shadow-sm login-btn"
+                    [disabled]="loginForm.invalid || isLoading()">
+                    @if (isLoading()) {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Authentification...
+                    } @else {
+                    Se connecter
+                    }
+                </button>
+            </form>
+
+            <div class="mt-5 pt-4 border-top">
+                <p class="text-center text-muted small mb-0">
+                    Système propriétaire &copy; 2026 Stephan & Elysé. Tous droits réservés.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
