@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
@@ -17,6 +18,7 @@ export class LoginComponent {
     errorMessage = signal<string | null>(null);
 
     private toastService = inject(ToastService);
+    private router = inject(Router);
 
     constructor(private fb: FormBuilder) {
         this.loginForm = this.fb.group({
@@ -42,7 +44,8 @@ export class LoginComponent {
 
                 if (email === 'admin@meanmall.com' && password === 'admin123') {
                     this.toastService.show('Connexion réussie !', 'success');
-                    console.log('Success login');
+                    // Redirect to dashboard after successful login
+                    this.router.navigate(['/admin/dashboard']);
                 } else {
                     this.toastService.show('Identifiants invalides ou profil non autorisé.', 'danger');
                     this.errorMessage.set('Échec de l\'authentification.');

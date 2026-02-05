@@ -1,0 +1,151 @@
+/* Sidebar - only custom styles that Bootstrap can't provide */
+.sidebar {
+    width: var(--sidebar-width, 260px);
+    height: 100vh;
+    position: fixed;
+    background: linear-gradient(180deg, var(--sidebar-bg-start) 0%, var(--sidebar-bg-end) 100%);
+    z-index: 100;
+    transition: transform 0.3s ease;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.logo-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    flex-shrink: 0;
+}
+
+.user-profile {
+    background: rgba(255, 255, 255, 0.05);
+    transition: background 0.3s ease;
+}
+
+.user-profile:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Navigation Links */
+.nav-link {
+    position: relative;
+    transition: all 0.3s ease;
+    border-radius: 0;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff !important;
+}
+
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff !important;
+}
+
+.nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--primary);
+    border-radius: 0 2px 2px 0;
+}
+
+.letter-spacing {
+    letter-spacing: 0.5px;
+}
+
+/* Profile Dropdown */
+.dropdown-menu {
+    animation: dropdownFadeIn 0.2s ease-out;
+    bottom: 100%;
+    margin-bottom: 0.5rem;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #F3F4F6;
+}
+
+.logout-item:hover {
+    background-color: #FEE2E2 !important;
+}
+
+/* Rotate animation for chevron */
+.transition-transform {
+    transition: transform 0.2s ease;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+/* Dropdown backdrop */
+.dropdown-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+}
+
+/* Mobile Toggle */
+.mobile-toggle {
+    top: 1rem;
+    left: 1rem;
+    z-index: 200;
+    background: linear-gradient(135deg, var(--sidebar-bg-start) 0%, var(--sidebar-bg-end) 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Overlay for mobile */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 90;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Mobile responsive */
+@media (max-width: 991.98px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+}
