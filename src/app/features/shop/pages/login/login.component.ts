@@ -4,6 +4,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { ToastService } from '../../../../core/services/toast.service';
 
+// Get credentials from environment variables
+const SHOP_EMAIL = import.meta.env['NG_APP_SHOP_EMAIL'] || '';
+const SHOP_PASSWORD = import.meta.env['NG_APP_SHOP_PASSWORD'] || '';
+
 @Component({
     selector: 'app-shop-login',
     standalone: true,
@@ -22,9 +26,10 @@ export class ShopLoginComponent {
     private toastService = inject(ToastService);
 
     constructor() {
+        // Pre-fill form with env credentials for dev convenience
         this.loginForm = this.fb.group({
-            email: ['boutique@meanmall.com', [Validators.required, Validators.email]],
-            password: ['shop123', [Validators.required, Validators.minLength(6)]]
+            email: [SHOP_EMAIL, [Validators.required, Validators.email]],
+            password: [SHOP_PASSWORD, [Validators.required, Validators.minLength(6)]]
         });
     }
 
@@ -39,10 +44,10 @@ export class ShopLoginComponent {
 
             const { email, password } = this.loginForm.value;
 
-            // Simulate API call
+            // Simulate API call - validates against env credentials
             setTimeout(() => {
                 this.isLoading.set(false);
-                if (email === 'boutique@meanmall.com' && password === 'shop123') {
+                if (email === SHOP_EMAIL && password === SHOP_PASSWORD) {
                     localStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('userRole', 'shop');
                     localStorage.setItem('userName', 'Ma Boutique Fashion');
