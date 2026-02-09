@@ -4,6 +4,10 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../../core/services/toast.service';
 
+// Get credentials from environment variables
+const ADMIN_EMAIL = import.meta.env['NG_APP_ADMIN_EMAIL'] || '';
+const ADMIN_PASSWORD = import.meta.env['NG_APP_ADMIN_PASSWORD'] || '';
+
 @Component({
     selector: 'app-login',
     standalone: true,
@@ -21,9 +25,10 @@ export class LoginComponent {
     private router = inject(Router);
 
     constructor(private fb: FormBuilder) {
+        // Pre-fill form with env credentials for dev convenience
         this.loginForm = this.fb.group({
-            email: ['admin@meanmall.com', [Validators.required, Validators.email]],
-            password: ['admin123', [Validators.required, Validators.minLength(6)]]
+            email: [ADMIN_EMAIL, [Validators.required, Validators.email]],
+            password: [ADMIN_PASSWORD, [Validators.required, Validators.minLength(6)]]
         });
     }
 
@@ -38,11 +43,11 @@ export class LoginComponent {
 
             const { email, password } = this.loginForm.value;
 
-            // Simulate API call
+            // Simulate API call - validates against env credentials
             setTimeout(() => {
                 this.isLoading.set(false);
 
-                if (email === 'admin@meanmall.com' && password === 'admin123') {
+                if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
                     this.toastService.show('Connexion réussie !', 'success');
                     // Redirect to dashboard after successful login
                     this.router.navigate(['/admin/dashboard']);
