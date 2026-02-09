@@ -1,0 +1,122 @@
+<div class="login-wrapper">
+    <!-- Decorative background elements -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="container h-100 d-flex align-items-center justify-content-center">
+        <div class="auth-card shadow-lg overflow-hidden">
+            <div class="row g-0 h-100">
+                <!-- Left Side: Informative Banner -->
+                <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-between p-5 banner-side">
+                    <div class="banner-top">
+                        <div class="logo-circle mb-4">
+                            <i class="bi bi-shop"></i>
+                        </div>
+                        <h1 class="display-4 fw-bold mb-3 text-white">Espace Vendeur</h1>
+                        <p class="lead text-white-50">Gérez, vendez et développez votre activité sur la plateforme MEAN
+                            Stephan-Elysé.</p>
+                    </div>
+
+                    <div class="features-list">
+                        <div class="feature-item d-flex align-items-center mb-3">
+                            <div class="icon-box me-3"><i class="bi bi-graph-up-arrow"></i></div>
+                            <span class="text-white">Analytiques avancées en temps réel</span>
+                        </div>
+                        <div class="feature-item d-flex align-items-center mb-3">
+                            <div class="icon-box me-3"><i class="bi bi-box-seam"></i></div>
+                            <span class="text-white">Gestion de stock centralisée</span>
+                        </div>
+                        <div class="feature-item d-flex align-items-center">
+                            <div class="icon-box me-3"><i class="bi bi-lightning-charge"></i></div>
+                            <span class="text-white">Ventes et paiements sécurisés</span>
+                        </div>
+                    </div>
+
+                    <div class="banner-footer pt-4 border-top border-white-10">
+                        <p class="small text-white-50 mb-0">&copy; 2026 MEAN Stephan-Elysé Corporation</p>
+                    </div>
+                </div>
+
+                <!-- Right Side: Login Form -->
+                <div class="col-lg-6 p-4 p-md-5 form-side bg-white bg-opacity-75 backdrop-blur">
+                    <div class="d-flex flex-column h-100">
+                        <div class="form-content my-auto">
+                            <h2 class="fw-800 text-dark mb-2">Bon retour !</h2>
+                            <p class="text-muted mb-4">Connectez-vous pour accèder à votre tableau de bord.</p>
+
+                            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-4">
+                                <div class="mb-4">
+                                    <label
+                                        class="form-label small fw-bold text-uppercase tracking-wider text-secondary">Email
+                                    </label>
+                                    <div class="input-group-custom">
+                                        <span class="input-icon"><i class="bi bi-envelope"></i></span>
+                                        <input type="email" formControlName="email" class="form-control"
+                                            placeholder="nom@boutique.com"
+                                            [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+                                    </div>
+                                    @if (loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['email']) {
+                                    <div class="invalid-feedback d-block">
+                                        Veuillez entrer une adresse email valide.
+                                    </div>
+                                    }
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="d-flex justify-content-between">
+                                        <label
+                                            class="form-label small fw-bold text-uppercase tracking-wider text-secondary">Mot
+                                            de passe</label>
+                                        <a href="#" class="text-primary text-decoration-none small fw-bold">Oublié ?</a>
+                                    </div>
+                                    <div class="input-group-custom">
+                                        <span class="input-icon"><i class="bi bi-shield-lock"></i></span>
+                                        <input [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+                                            class="form-control" placeholder="••••••••"
+                                            [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+                                        @if (loginForm.get('password')?.valid) {
+                                        <button type="button" class="btn-toggle-pass"
+                                            (click)="togglePasswordVisibility()">
+                                            <i class="bi" [class.bi-eye]="!showPassword()"
+                                                [class.bi-eye-slash]="showPassword()"></i>
+                                        </button>
+                                        }
+                                    </div>
+                                    @if (loginForm.get('password')?.touched &&
+                                    loginForm.get('password')?.errors?.['minlength']) {
+                                    <div class="invalid-feedback d-block">
+                                        Le mot de passe doit faire au moins 6 caractères.
+                                    </div>
+                                    }
+                                </div>
+
+                                @if (errorMessage()) {
+                                <div class="alert alert-danger mb-4 py-2 border-0 shadow-sm d-flex align-items-center">
+                                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                    <span class="small">{{ errorMessage() }}</span>
+                                </div>
+                                }
+
+                                <button type="submit" class="btn btn-primary btn-submit w-100 py-3 fw-bold"
+                                    [disabled]="loginForm.invalid || isLoading()">
+                                    @if (isLoading()) {
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                    Validation...
+                                    } @else {
+                                    Se Connecter
+                                    }
+                                </button>
+                            </form>
+
+                            <div class="mt-5 text-center">
+                                <p class="text-muted small">Pas encore de compte vendeur ?
+                                    <a href="#" class="text-primary fw-bold text-decoration-none">Créer une boutique</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
