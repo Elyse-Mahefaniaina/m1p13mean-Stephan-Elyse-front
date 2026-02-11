@@ -1,0 +1,257 @@
+<div class="catalog-page">
+    <div class="container py-5">
+        <div class="row g-4">
+
+            <!-- ========== MOBILE FILTER TOGGLE ========== -->
+            <div class="col-12 d-lg-none">
+                <button
+                    class="btn btn-outline-primary w-100 rounded-pill d-flex align-items-center justify-content-center gap-2"
+                    (click)="toggleMobileFilters()">
+                    <i class="bi bi-funnel"></i>
+                    Filtres
+                    @if (selectedCategories().length > 0 || minRating() > 0 || priceMin() !== null || priceMax() !==
+                    null) {
+                    <span class="badge bg-primary rounded-pill">Actifs</span>
+                    }
+                </button>
+            </div>
+
+            <!-- ========== FILTER SIDEBAR ========== -->
+            <aside class="col-lg-3" [class.d-none]="!isMobileFiltersOpen()" [class.d-lg-block]="true">
+                <div class="filter-sidebar shadow-sm">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0 fw-bold filter-sidebar-title">
+                            <i class="bi bi-funnel me-2"></i>Filtres
+                        </h5>
+                        <button class="btn btn-link btn-sm text-decoration-none text-primary p-0 fw-semibold"
+                            (click)="resetFilters()">
+                            Effacer tout
+                        </button>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="filter-group">
+                        <h6 class="filter-title">Catégories</h6>
+                        @for (category of categories(); track category.slug; let i = $index) {
+                        <div class="filter-option" (click)="toggleCategory(i)">
+                            <input class="form-check-input" type="checkbox" [checked]="category.checked"
+                                [id]="'cat-' + category.slug">
+                            <label class="small" [for]="'cat-' + category.slug">
+                                <i class="bi {{ category.icon }} me-1"></i>
+                                {{ category.name }}
+                            </label>
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="filter-group">
+                        <h6 class="filter-title">Tranche de prix</h6>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="input-group">
+                                    <span class="input-group-text">Ar</span>
+                                    <input type="number" class="form-control" placeholder="Min" [value]="priceMin()"
+                                        (input)="onPriceMinChange($any($event.target).value)">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group">
+                                    <span class="input-group-text">Ar</span>
+                                    <input type="number" class="form-control" placeholder="Max" [value]="priceMax()"
+                                        (input)="onPriceMaxChange($any($event.target).value)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rating Filter -->
+                    <div class="filter-group mb-0">
+                        <h6 class="filter-title">Note minimum</h6>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="rating" id="r4"
+                                [checked]="minRating() === 4" (click)="setRatingFilter(4)">
+                            <label class="form-check-label small d-flex align-items-center gap-1" for="r4">
+                                <span class="text-warning">
+                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                                        class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                                </span>
+                                et plus
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="rating" id="r3"
+                                [checked]="minRating() === 3" (click)="setRatingFilter(3)">
+                            <label class="form-check-label small d-flex align-items-center gap-1" for="r3">
+                                <span class="text-warning">
+                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                                        class="bi bi-star-fill"></i>
+                                </span>
+                                et plus
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="rating" id="r0"
+                                [checked]="minRating() === 0" (click)="setRatingFilter(0)">
+                            <label class="form-check-label small" for="r0">Toutes les notes</label>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- ========== MAIN CONTENT ========== -->
+            <main class="col-lg-9">
+                <!-- Toolbar -->
+                <div class="catalog-toolbar shadow-sm mb-4">
+                    <!-- Search Bar -->
+                    <div class="position-relative catalog-search-wrapper mb-3">
+                        <input type="text" class="form-control catalog-search-input rounded-pill border-0 px-4 py-2"
+                            placeholder="Rechercher un produit..." [value]="searchQuery()"
+                            (input)="onSearchChange($any($event.target).value)">
+                        <i class="bi bi-search position-absolute end-0 top-50 translate-middle-y me-3 text-muted"></i>
+                    </div>
+
+                    <!-- Count + Sort -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small">Affichage de </span>
+                            <span class="fw-bold text-primary">{{ filteredProducts().length }}</span>
+                            <span class="text-muted small"> produits</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="text-muted small d-none d-md-block">Trier par:</span>
+                            <select
+                                class="form-select form-select-sm border-0 bg-light rounded-pill catalog-sort-select"
+                                [value]="sortBy()" (change)="onSortChange($any($event.target).value)">
+                                <option value="popular">Plus populaires</option>
+                                <option value="newest">Nouveautés</option>
+                                <option value="price-asc">Prix croissant</option>
+                                <option value="price-desc">Prix décroissant</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Filters Tags -->
+                @if (selectedCategories().length > 0 || minRating() > 0) {
+                <div class="d-flex flex-wrap gap-2 mb-4 active-filters">
+                    @for (cat of selectedCategories(); track cat) {
+                    <span class="badge filter-tag">
+                        {{ cat }}
+                        <button class="btn-close btn-close-white ms-2" style="font-size: 0.5rem;"
+                            (click)="removeCategoryByName(cat)">
+                        </button>
+                    </span>
+                    }
+                    @if (minRating() > 0) {
+                    <span class="badge filter-tag">
+                        {{ minRating() }}★ et plus
+                        <button class="btn-close btn-close-white ms-2" style="font-size: 0.5rem;"
+                            (click)="setRatingFilter(0)">
+                        </button>
+                    </span>
+                    }
+                </div>
+                }
+
+                <!-- Product Grid -->
+                @if (paginatedProducts().length > 0) {
+                <div class="row g-4">
+                    @for (product of paginatedProducts(); track product.id) {
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="catalog-product-card card h-100 border-0 overflow-hidden">
+                            <!-- Image -->
+                            <div class="catalog-img-container position-relative">
+                                <img [src]="product.image" [alt]="product.name" class="catalog-product-img">
+                                @if (getDiscount(product) > 0) {
+                                <span class="discount-badge">-{{ getDiscount(product) }}%</span>
+                                }
+                                <button class="wishlist-btn" [class.active]="product.isWishlisted"
+                                    (click)="toggleWishlist(product, $event)">
+                                    <i class="bi" [class.bi-heart-fill]="product.isWishlisted"
+                                        [class.bi-heart]="!product.isWishlisted"></i>
+                                </button>
+                            </div>
+                            <!-- Info -->
+                            <div class="card-body p-4 d-flex flex-column">
+                                <h3 class="h6 fw-bold mb-2 catalog-product-name">
+                                    <a routerLink="/client" class="text-decoration-none text-dark">{{ product.name
+                                        }}</a>
+                                </h3>
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <div class="d-flex gap-0">
+                                        @for (filled of getStars(product.rating); track $index) {
+                                        <i class="bi star-icon" [class.bi-star-fill]="filled" [class.bi-star]="!filled"
+                                            [class.text-warning]="filled" [class.text-muted]="!filled">
+                                        </i>
+                                        }
+                                    </div>
+                                    <span class="text-muted review-count">({{ product.reviews }})</span>
+                                </div>
+                                <div class="mt-auto d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="fw-bold text-primary fs-5">{{ formatPrice(product.price) }}</span>
+                                        @if (product.originalPrice) {
+                                        <span class="text-muted text-decoration-line-through small ms-2">
+                                            {{ formatPrice(product.originalPrice) }}
+                                        </span>
+                                        }
+                                    </div>
+                                    <button
+                                        class="btn btn-primary btn-sm rounded-circle catalog-cart-btn d-flex align-items-center justify-content-center"
+                                        (click)="addToCart(product, $event)" title="Ajouter au panier">
+                                        <i class="bi bi-cart-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+                } @else {
+                <!-- Empty State -->
+                <div class="empty-state text-center py-5">
+                    <div class="empty-state-icon mb-4">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">Aucun produit trouvé</h4>
+                    <p class="text-muted mb-4">Aucun produit ne correspond à vos critères de recherche.</p>
+                    <button class="btn btn-primary rounded-pill px-5 py-2" (click)="resetFilters()">
+                        Tout afficher
+                    </button>
+                </div>
+                }
+
+                <!-- Pagination -->
+                @if (totalPages() > 1) {
+                <nav class="mt-5" aria-label="Pagination des produits">
+                    <div class="d-flex justify-content-center gap-2">
+                        <!-- Previous -->
+                        <button class="btn btn-sm pagination-btn" [disabled]="currentPage() === 1"
+                            (click)="goToPage(currentPage() - 1)">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <!-- Pages -->
+                        @for (page of paginationPages(); track $index) {
+                        @if (page === '...') {
+                        <span class="btn btn-sm pagination-ellipsis">...</span>
+                        } @else {
+                        <button class="btn btn-sm pagination-btn" [class.active]="page === currentPage()"
+                            (click)="goToPage(page)">
+                            {{ page }}
+                        </button>
+                        }
+                        }
+                        <!-- Next -->
+                        <button class="btn btn-sm pagination-btn" [disabled]="currentPage() === totalPages()"
+                            (click)="goToPage(currentPage() + 1)">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+                </nav>
+                }
+            </main>
+        </div>
+    </div>
+</div>

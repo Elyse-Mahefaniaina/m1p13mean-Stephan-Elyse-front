@@ -1,0 +1,11 @@
+/* ===== Client Layout Shell ===== */
+.client-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8fafc;
+}
+
+.client-main {
+    flex: 1;
+}
