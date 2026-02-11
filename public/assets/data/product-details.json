@@ -1,0 +1,169 @@
+[
+    {
+        "id": 1,
+        "description": "Le nouveau MacBook Pro M3 Ultra repousse les limites de la performance. Avec son écran Liquid Retina XDR de 14 ou 16 pouces, il offre une expérience visuelle incomparable. Conçu pour les professionnels de la création, du développement et de la science des données.",
+        "stock": 15,
+        "images": [
+            "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=1200",
+            "https://images.unsplash.com/photo-1629131726692-1accd0c53ce0?auto=format&fit=crop&q=80&w=1200",
+            "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=1200"
+        ],
+        "variants": [
+            {
+                "type": "Taille",
+                "options": [
+                    "14\"",
+                    "16\""
+                ]
+            },
+            {
+                "type": "Stockage",
+                "options": [
+                    "512 Go",
+                    "1 To",
+                    "2 To"
+                ]
+            },
+            {
+                "type": "RAM",
+                "options": [
+                    "16 Go",
+                    "32 Go",
+                    "64 Go"
+                ]
+            }
+        ],
+        "specifications": [
+            {
+                "key": "Puce",
+                "value": "Apple M3 Ultra"
+            },
+            {
+                "key": "GPU",
+                "value": "40 coeurs"
+            },
+            {
+                "key": "Autonomie",
+                "value": "Jusqu'à 22 heures"
+            },
+            {
+                "key": "Poids",
+                "value": "1.6 kg"
+            }
+        ],
+        "detailedReviews": [
+            {
+                "userName": "Marc L.",
+                "rating": 5,
+                "comment": "Une bête de course ! L'écran est magnifique et la batterie tient vraiment toute la journée même en usage intensif.",
+                "createdAt": "2024-02-10"
+            },
+            {
+                "userName": "Sophie D.",
+                "rating": 4,
+                "comment": "Très satisfait, même si le prix reste élevé. La finition est exemplaire.",
+                "createdAt": "2024-02-05"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "description": "Les Sneakers Air Max Premium allient confort légendaire et style urbain moderne. Équipées de la technologie Air de Nike pour un amorti optimal à chaque pas. Parfaites pour le quotidien ou les sorties sportives.",
+        "stock": 42,
+        "images": [
+            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=1200",
+            "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=1200",
+            "https://images.unsplash.com/photo-1512374382149-4332c6c02151?auto=format&fit=crop&q=80&w=1200"
+        ],
+        "variants": [
+            {
+                "type": "Pointure",
+                "options": [
+                    "40",
+                    "41",
+                    "42",
+                    "43",
+                    "44"
+                ]
+            },
+            {
+                "type": "Couleur",
+                "options": [
+                    "Rouge/Noir",
+                    "Blanc/Bleu",
+                    "Gris"
+                ]
+            }
+        ],
+        "specifications": [
+            {
+                "key": "Matériau",
+                "value": "Cuir synthétique et Mesh"
+            },
+            {
+                "key": "Semelle",
+                "value": "Caoutchouc avec bulle d'air"
+            },
+            {
+                "key": "Style",
+                "value": "Sportswear"
+            }
+        ],
+        "detailedReviews": [
+            {
+                "userName": "Jean P.",
+                "rating": 5,
+                "comment": "Confort absolu. Je les porte tous les jours et je n'ai jamais eu mal aux pieds.",
+                "createdAt": "2024-01-20"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "description": "Ce canapé au design scandinave épuré apportera une touche d'élégance et de chaleur à votre salon. Fabriqué avec des matériaux durables et des tissus de haute qualité, il offre une assise ferme mais accueillante.",
+        "stock": 8,
+        "images": [
+            "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=1200",
+            "https://images.unsplash.com/photo-1550226129-3990610ac14d?auto=format&fit=crop&q=80&w=1200"
+        ],
+        "variants": [
+            {
+                "type": "Couleur",
+                "options": [
+                    "Gris Anthracite",
+                    "Bleu Nordique",
+                    "Beige"
+                ]
+            },
+            {
+                "type": "Taille",
+                "options": [
+                    "3 places",
+                    "4 places"
+                ]
+            }
+        ],
+        "specifications": [
+            {
+                "key": "Dimensions",
+                "value": "220 x 95 x 85 cm"
+            },
+            {
+                "key": "Revêtement",
+                "value": "Tissu déperlant"
+            },
+            {
+                "key": "Pieds",
+                "value": "Chêne massif"
+            }
+        ],
+        "detailedReviews": [
+            {
+                "userName": "Alice M.",
+                "rating": 5,
+                "comment": "Superbe canapé ! La couleur est exactement comme sur les photos et il est très confortable.",
+                "createdAt": "2024-02-01"
+            }
+        ]
+    }
+]

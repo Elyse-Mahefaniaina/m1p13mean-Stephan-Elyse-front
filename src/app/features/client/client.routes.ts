@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { ClientLayoutComponent } from './layouts/client-layout/client-layout.component';
 import { HomeComponent } from './pages/home/home.component';
 import { CatalogComponent } from './pages/catalog/catalog.component';
+import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 
 export const CLIENT_ROUTES: Routes = [
     {
@@ -10,8 +11,8 @@ export const CLIENT_ROUTES: Routes = [
         children: [
             { path: '', component: HomeComponent },
             { path: 'catalog', component: CatalogComponent },
+            { path: 'product/:id', component: ProductDetailComponent },
             // Future routes:
-            // { path: 'product/:id', component: ProductDetailComponent },
             // { path: 'cart', component: CartComponent },
             // { path: 'wishlist', component: WishlistComponent },
             // { path: 'checkout', component: CheckoutComponent },
