@@ -1,0 +1,215 @@
+<div class="product-detail-page py-5">
+    <div class="container">
+        @if (loading()) {
+        <div class="d-flex justify-content-center align-items-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+        </div>
+        } @else if (product(); as p) {
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-5">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/client" class="text-decoration-none text-muted">Accueil</a>
+                </li>
+                <li class="breadcrumb-item"><a routerLink="/client/catalog"
+                        class="text-decoration-none text-muted">Catalogue</a></li>
+                <li class="breadcrumb-item active fw-bold text-primary" aria-current="page">{{ p.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="row g-5">
+            <!-- Gallery Section -->
+            <div class="col-lg-6">
+                <div class="gallery-wrapper">
+                    <!-- Main Image -->
+                    <div class="main-image-container mb-4 shadow-sm">
+                        <img [src]="mainImage()" [alt]="p.name" class="img-fluid rounded-4 main-image">
+                        @if (getDiscount() > 0) {
+                        <span class="discount-badge">-{{ getDiscount() }}%</span>
+                        }
+                    </div>
+
+                    <!-- Thumbnails -->
+                    @if (p.images && p.images.length > 1) {
+                    <div class="thumbnail-grid d-flex gap-3">
+                        @for (img of p.images; track $index) {
+                        <div class="thumbnail-item" [class.active]="mainImage() === img" (click)="setMainImage(img)">
+                            <img [src]="img" class="img-fluid rounded-3 shadow-sm">
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Product Info Section -->
+            <div class="col-lg-6">
+                <div class="product-info-wrapper h-100 p-lg-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a href="#" class="shop-badge text-decoration-none">
+                            <i class="bi bi-shop me-2"></i> {{ p.shop }}
+                        </a>
+                        <span class="stock-badge" [class.in-stock]="p.stock > 0" [class.out-of-stock]="p.stock <= 0">
+                            {{ p.stock > 0 ? 'En stock' : 'Rupture de stock' }}
+                        </span>
+                    </div>
+
+                    <h1 class="display-6 fw-bold mb-3">{{ p.name }}</h1>
+
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="stars-display text-warning">
+                            @for (filled of getStars(p.rating); track $index) {
+                            <i class="bi" [class.bi-star-fill]="filled" [class.bi-star]="!filled"></i>
+                            }
+                        </div>
+                        <span class="text-muted small fw-semibold">{{ p.rating }} ({{ p.reviews }} avis)</span>
+                    </div>
+
+                    <div class="price-section mb-5">
+                        <div class="d-flex align-items-baseline gap-3">
+                            <h2 class="text-primary fw-bold mb-0">{{ formatPrice(p.price) }}</h2>
+                            @if (p.originalPrice) {
+                            <span class="text-muted text-decoration-line-through fs-4 opacity-50">{{
+                                formatPrice(p.originalPrice) }}</span>
+                            }
+                        </div>
+                        <p class="text-success small fw-bold mt-2 mb-0">
+                            <i class="bi bi-check2-circle me-1"></i> TVA incluse
+                        </p>
+                    </div>
+
+                    <!-- Variants -->
+                    @if (p.variants) {
+                    <div class="variants-section mb-4">
+                        @for (variant of p.variants; track variant.type) {
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-uppercase text-muted">{{ variant.type }}</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                @for (option of variant.options; track option) {
+                                <button class="btn btn-outline-variant"
+                                    [class.active]="selectedVariants()[variant.type] === option"
+                                    (click)="selectVariant(variant.type, option)">
+                                    {{ option }}
+                                </button>
+                                }
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+
+                    <!-- Action Bar -->
+                    <div class="action-bar d-flex gap-3 align-items-center pt-4 border-top">
+                        <div class="quantity-controller d-flex align-items-center gap-3">
+                            <button class="btn btn-qty" (click)='updateQuantity(-1)'><i class="bi bi-dash"></i></button>
+                            <span class="fw-bold fs-5">{{ quantity() }}</span>
+                            <button class="btn btn-qty" (click)='updateQuantity(1)'><i class="bi bi-plus"></i></button>
+                        </div>
+
+                        <button class="btn btn-primary btn-lg rounded-pill px-5 flex-grow-1 add-to-cart-btn"
+                            (click)="addToCart()" [disabled]="p.stock <= 0">
+                            <i class="bi bi-cart-plus me-2"></i> Ajouter au panier
+                        </button>
+
+                        <button class="btn btn-outline-wishlist" [class.active]="p.isWishlisted"
+                            (click)="toggleWishlist()">
+                            <i class="bi" [class.bi-heart-fill]="p.isWishlisted" [class.bi-heart]="!p.isWishlisted"></i>
+                        </button>
+                    </div>
+
+                    <!-- Features Grid -->
+                    <div class="features-grid mt-5 row g-3">
+                        <div class="col-6">
+                            <div class="feature-item p-3 rounded-4 bg-light border border-white">
+                                <i class="bi bi-truck text-primary mb-2 d-block fs-4"></i>
+                                <h6 class="fw-bold mb-1 small">Livraison Express</h6>
+                                <p class="text-muted small mb-0">Partout à Madagascar</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="feature-item p-3 rounded-4 bg-light border border-white">
+                                <i class="bi bi-shield-check text-primary mb-2 d-block fs-4"></i>
+                                <h6 class="fw-bold mb-1 small">Garantie Qualité</h6>
+                                <p class="text-muted small mb-0">Satisfait ou remboursé</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Section -->
+        <div class="details-tabs-wrapper mt-5 pt-5">
+            <ul class="nav premium-tabs mb-4 px-2">
+                <li class="nav-item">
+                    <button class="nav-link" [class.active]="activeTab() === 'description'"
+                        (click)="setTab('description')">Description</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" [class.active]="activeTab() === 'reviews'" (click)="setTab('reviews')">Avis
+                        Clients ({{ p.reviews }})</button>
+                </li>
+            </ul>
+
+            <div class="tab-content-wrapper p-4 p-md-5 rounded-5 bg-white shadow-sm border">
+                @if (activeTab() === 'description') {
+                <div class="description-tab animate-fade-in">
+                    <p class="lead text-muted mb-5">{{ p.description || 'Pas de description disponible pour ce produit.'
+                        }}</p>
+
+                    @if (p.specifications) {
+                    <div class="specs-grid row g-4">
+                        @for (spec of p.specifications; track spec.key) {
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-between py-2 border-bottom">
+                                <span class="fw-bold text-dark">{{ spec.key }}</span>
+                                <span class="text-muted">{{ spec.value }}</span>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+                } @else {
+                <div class="reviews-tab animate-fade-in">
+                    @if (p.detailedReviews && p.detailedReviews.length > 0) {
+                    @for (review of p.detailedReviews; track $index) {
+                    <div class="review-item mb-5 pb-5 border-bottom last-child-no-border">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="avatar-placeholder">{{ review.userName.charAt(0) }}</div>
+                                <div>
+                                    <h6 class="fw-bold mb-0">{{ review.userName }}</h6>
+                                    <span class="text-muted small">{{ review.createdAt }}</span>
+                                </div>
+                            </div>
+                            <div class="stars-display text-warning">
+                                @for (filled of getStars(review.rating); track $index) {
+                                <i class="bi" [class.bi-star-fill]="filled" [class.bi-star]="!filled"></i>
+                                }
+                            </div>
+                        </div>
+                        <p class="mb-0 text-muted fs-5">"{{ review.comment }}"</p>
+                    </div>
+                    }
+                    } @else {
+                    <div class="text-center py-5">
+                        <i class="bi bi-chat-dots fs-1 text-muted opacity-25 mb-3 d-block"></i>
+                        <p class="text-muted fw-semibold">Aucun avis pour le moment.</p>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+        } @else {
+        <div class="text-center py-5">
+            <i class="bi bi-exclamation-circle fs-1 text-danger mb-3 d-block"></i>
+            <h2 class="fw-bold">Produit non trouvé</h2>
+            <p class="text-muted mb-4">Désolé, le produit que vous recherchez n'existe pas ou a été retiré.</p>
+            <a routerLink="/client/catalog" class="btn btn-primary rounded-pill px-5">Retour au catalogue</a>
+        </div>
+        }
+    </div>
+</div>

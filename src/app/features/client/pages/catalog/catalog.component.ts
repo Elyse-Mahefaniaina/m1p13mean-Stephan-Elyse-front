@@ -1,25 +1,10 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ProductService, Product, Category as BaseCategory } from '../../../../core/services/product.service';
 
-interface Category {
-    name: string;
-    icon: string;
-    slug: string;
+interface Category extends BaseCategory {
     checked: boolean;
-}
-
-interface Product {
-    id: number;
-    name: string;
-    shop: string;
-    category: string;
-    price: number;
-    originalPrice?: number;
-    image: string;
-    rating: number;
-    reviews: number;
-    isWishlisted: boolean;
 }
 
 type SortOption = 'popular' | 'newest' | 'price-asc' | 'price-desc';
@@ -43,94 +28,41 @@ export class CatalogComponent implements OnInit {
     protected isMobileFiltersOpen = signal(false);
 
     // --- Data ---
-    protected readonly categories = signal<Category[]>([
-        { name: 'Électronique', icon: 'bi-laptop', slug: 'electronique', checked: false },
-        { name: 'Mode', icon: 'bi-handbag', slug: 'mode', checked: false },
-        { name: 'Maison', icon: 'bi-house-heart', slug: 'maison', checked: false },
-        { name: 'Sport', icon: 'bi-dribbble', slug: 'sport', checked: false },
-        { name: 'Beauté', icon: 'bi-droplet', slug: 'beaute', checked: false },
-        { name: 'Alimentation', icon: 'bi-cup-hot', slug: 'alimentation', checked: false }
-    ]);
-
-    protected readonly allProducts = signal<Product[]>([
-        {
-            id: 1, name: 'MacBook Pro M3 Ultra', shop: 'TechZone', category: 'Électronique',
-            price: 2999000, originalPrice: 3499000,
-            image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=600',
-            rating: 5, reviews: 128, isWishlisted: false
-        },
-        {
-            id: 2, name: 'Sneakers Air Max Premium', shop: 'UrbanStyle', category: 'Mode',
-            price: 189000,
-            image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=600',
-            rating: 4, reviews: 89, isWishlisted: true
-        },
-        {
-            id: 3, name: 'Canapé Design Scandinave', shop: 'MaisonChic', category: 'Maison',
-            price: 899000,
-            image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=600',
-            rating: 5, reviews: 42, isWishlisted: false
-        },
-        {
-            id: 4, name: 'Montre Connectée Elite', shop: 'SmartWear', category: 'Électronique',
-            price: 459000, originalPrice: 599000,
-            image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=600',
-            rating: 4, reviews: 215, isWishlisted: false
-        },
-        {
-            id: 5, name: 'Casque Audio Studio Pro', shop: 'TechZone', category: 'Électronique',
-            price: 349000,
-            image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=600',
-            rating: 5, reviews: 312, isWishlisted: false
-        },
-        {
-            id: 6, name: 'Sac à Main Cuir Milano', shop: 'LuxeBag', category: 'Mode',
-            price: 275000, originalPrice: 350000,
-            image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&q=80&w=600',
-            rating: 4, reviews: 67, isWishlisted: false
-        },
-        {
-            id: 7, name: 'Lampe Design Articulée', shop: 'MaisonChic', category: 'Maison',
-            price: 145000,
-            image: 'https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?auto=format&fit=crop&q=80&w=600',
-            rating: 3, reviews: 29, isWishlisted: false
-        },
-        {
-            id: 8, name: 'Ballon de Football Pro', shop: 'SportMax', category: 'Sport',
-            price: 55000,
-            image: 'https://images.unsplash.com/photo-1614632537197-38a17061c2bd?auto=format&fit=crop&q=80&w=600',
-            rating: 4, reviews: 156, isWishlisted: false
-        },
-        {
-            id: 9, name: 'Sérum Visage Premium', shop: 'GlowUp', category: 'Beauté',
-            price: 89000, originalPrice: 120000,
-            image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=600',
-            rating: 5, reviews: 203, isWishlisted: false
-        },
-        {
-            id: 10, name: 'Clavier Mécanique RGB', shop: 'TechZone', category: 'Électronique',
-            price: 199000,
-            image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&q=80&w=600',
-            rating: 4, reviews: 178, isWishlisted: false
-        },
-        {
-            id: 11, name: 'Tapis de Yoga Premium', shop: 'SportMax', category: 'Sport',
-            price: 65000,
-            image: 'https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?auto=format&fit=crop&q=80&w=600',
-            rating: 4, reviews: 94, isWishlisted: false
-        },
-        {
-            id: 12, name: 'Parfum Élégance Noire', shop: 'GlowUp', category: 'Beauté',
-            price: 135000,
-            image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=600',
-            rating: 5, reviews: 187, isWishlisted: false
-        }
-    ]);
+    protected readonly categories = signal<Category[]>([]);
+    protected readonly allProducts = signal<Product[]>([]);
 
     // --- Computed ---
     protected readonly selectedCategories = computed(() =>
         this.categories().filter(c => c.checked).map(c => c.name)
     );
+
+    constructor(
+        private route: ActivatedRoute,
+        private productService: ProductService
+    ) { }
+
+    ngOnInit(): void {
+        this.productService.getCategories().subscribe(categories => {
+            const mappedCategories = categories.map(c => ({ ...c, checked: false }));
+            this.categories.set(mappedCategories);
+
+            // Handle query params after categories are loaded
+            this.route.queryParams.subscribe(params => {
+                if (params['category']) {
+                    this.categories.update(cats =>
+                        cats.map(c => ({ ...c, checked: c.name === params['category'] }))
+                    );
+                }
+                if (params['search']) {
+                    this.searchQuery.set(params['search']);
+                }
+            });
+        });
+
+        this.productService.getProducts().subscribe(products => {
+            this.allProducts.set(products);
+        });
+    }
 
     protected readonly filteredProducts = computed(() => {
         const search = this.searchQuery().toLowerCase();
@@ -186,21 +118,6 @@ export class CatalogComponent implements OnInit {
         }
         return pages;
     });
-
-    constructor(private route: ActivatedRoute) { }
-
-    ngOnInit(): void {
-        this.route.queryParams.subscribe(params => {
-            if (params['category']) {
-                this.categories.update(cats =>
-                    cats.map(c => ({ ...c, checked: c.name === params['category'] }))
-                );
-            }
-            if (params['search']) {
-                this.searchQuery.set(params['search']);
-            }
-        });
-    }
 
     // --- Actions ---
     onSearchChange(value: string): void {

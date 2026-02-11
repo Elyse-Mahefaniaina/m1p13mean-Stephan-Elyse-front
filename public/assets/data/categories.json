@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Électronique",
+        "icon": "bi-laptop",
+        "slug": "electronique"
+    },
+    {
+        "name": "Mode",
+        "icon": "bi-handbag",
+        "slug": "mode"
+    },
+    {
+        "name": "Maison",
+        "icon": "bi-house-heart",
+        "slug": "maison"
+    },
+    {
+        "name": "Sport",
+        "icon": "bi-dribbble",
+        "slug": "sport"
+    },
+    {
+        "name": "Beauté",
+        "icon": "bi-droplet",
+        "slug": "beaute"
+    },
+    {
+        "name": "Alimentation",
+        "icon": "bi-cup-hot",
+        "slug": "alimentation"
+    }
+]

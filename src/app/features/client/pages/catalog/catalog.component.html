@@ -162,7 +162,8 @@
                     <div class="col-sm-6 col-lg-4">
                         <div class="catalog-product-card card h-100 border-0 overflow-hidden">
                             <!-- Image -->
-                            <div class="catalog-img-container position-relative">
+                            <div class="catalog-img-container position-relative"
+                                [routerLink]="['/client/product', product.id]" style="cursor: pointer;">
                                 <img [src]="product.image" [alt]="product.name" class="catalog-product-img">
                                 @if (getDiscount(product) > 0) {
                                 <span class="discount-badge">-{{ getDiscount(product) }}%</span>
@@ -176,7 +177,8 @@
                             <!-- Info -->
                             <div class="card-body p-4 d-flex flex-column">
                                 <h3 class="h6 fw-bold mb-2 catalog-product-name">
-                                    <a routerLink="/client" class="text-decoration-none text-dark">{{ product.name
+                                    <a [routerLink]="['/client/product', product.id]"
+                                        class="text-decoration-none text-dark">{{ product.name
                                         }}</a>
                                 </h3>
                                 <div class="d-flex align-items-center gap-2 mb-3">

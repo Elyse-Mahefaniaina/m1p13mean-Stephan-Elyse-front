@@ -1,0 +1,138 @@
+[
+    {
+        "id": 1,
+        "name": "MacBook Pro M3 Ultra",
+        "shop": "TechZone",
+        "category": "Électronique",
+        "price": 2999000,
+        "originalPrice": 3499000,
+        "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=600",
+        "rating": 5,
+        "reviews": 128,
+        "isWishlisted": false
+    },
+    {
+        "id": 2,
+        "name": "Sneakers Air Max Premium",
+        "shop": "UrbanStyle",
+        "category": "Mode",
+        "price": 189000,
+        "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=600",
+        "rating": 4,
+        "reviews": 89,
+        "isWishlisted": true
+    },
+    {
+        "id": 3,
+        "name": "Canapé Design Scandinave",
+        "shop": "MaisonChic",
+        "category": "Maison",
+        "price": 899000,
+        "image": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=600",
+        "rating": 5,
+        "reviews": 42,
+        "isWishlisted": false
+    },
+    {
+        "id": 4,
+        "name": "Montre Connectée Elite",
+        "shop": "SmartWear",
+        "category": "Électronique",
+        "price": 459000,
+        "originalPrice": 599000,
+        "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=600",
+        "rating": 4,
+        "reviews": 215,
+        "isWishlisted": false
+    },
+    {
+        "id": 5,
+        "name": "Casque Audio Studio Pro",
+        "shop": "TechZone",
+        "category": "Électronique",
+        "price": 349000,
+        "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=600",
+        "rating": 5,
+        "reviews": 312,
+        "isWishlisted": false
+    },
+    {
+        "id": 6,
+        "name": "Sac à Main Cuir Milano",
+        "shop": "LuxeBag",
+        "category": "Mode",
+        "price": 275000,
+        "originalPrice": 350000,
+        "image": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&q=80&w=600",
+        "rating": 4,
+        "reviews": 67,
+        "isWishlisted": false
+    },
+    {
+        "id": 7,
+        "name": "Lampe Design Articulée",
+        "shop": "MaisonChic",
+        "category": "Maison",
+        "price": 145000,
+        "image": "https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?auto=format&fit=crop&q=80&w=600",
+        "rating": 3,
+        "reviews": 29,
+        "isWishlisted": false
+    },
+    {
+        "id": 8,
+        "name": "Ballon de Football Pro",
+        "shop": "SportMax",
+        "category": "Sport",
+        "price": 55000,
+        "image": "https://images.unsplash.com/photo-1614632537197-38a17061c2bd?auto=format&fit=crop&q=80&w=600",
+        "rating": 4,
+        "reviews": 156,
+        "isWishlisted": false
+    },
+    {
+        "id": 9,
+        "name": "Sérum Visage Premium",
+        "shop": "GlowUp",
+        "category": "Beauté",
+        "price": 89000,
+        "originalPrice": 120000,
+        "image": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=600",
+        "rating": 5,
+        "reviews": 203,
+        "isWishlisted": false
+    },
+    {
+        "id": 10,
+        "name": "Clavier Mécanique RGB",
+        "shop": "TechZone",
+        "category": "Électronique",
+        "price": 199000,
+        "image": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&q=80&w=600",
+        "rating": 4,
+        "reviews": 178,
+        "isWishlisted": false
+    },
+    {
+        "id": 11,
+        "name": "Tapis de Yoga Premium",
+        "shop": "SportMax",
+        "category": "Sport",
+        "price": 65000,
+        "image": "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?auto=format&fit=crop&q=80&w=600",
+        "rating": 4,
+        "reviews": 94,
+        "isWishlisted": false
+    },
+    {
+        "id": 12,
+        "name": "Parfum Élégance Noire",
+        "shop": "GlowUp",
+        "category": "Beauté",
+        "price": 135000,
+        "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=600",
+        "rating": 5,
+        "reviews": 187,
+        "isWishlisted": false
+    }
+]
