@@ -55,11 +55,16 @@
                     </span>
                     }
                 </a>
-                <!-- Login Dropdown -->
+                <!-- Auth Section -->
+                @if (!isLoggedIn()) {
+                <a routerLink="/client/login" class="btn btn-dark rounded-pill px-4 fw-semibold login-btn">
+                    Se connecter
+                </a>
+                } @else {
                 <div class="dropdown">
                     <button class="btn btn-dark rounded-pill px-4 fw-semibold login-btn" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        Se connecter
+                        Mon Compte
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg p-2 rounded-4 dropdown-premium">
                         <li>
@@ -76,12 +81,13 @@
                             <hr class="dropdown-divider mx-2">
                         </li>
                         <li>
-                            <button class="dropdown-item rounded-3 py-2 px-3 text-danger">
+                            <button class="dropdown-item rounded-3 py-2 px-3 text-danger" (click)="logout()">
                                 <i class="bi bi-power me-2"></i>Déconnexion
                             </button>
                         </li>
                     </ul>
                 </div>
+                }
             </div>
         </div>
     </div>

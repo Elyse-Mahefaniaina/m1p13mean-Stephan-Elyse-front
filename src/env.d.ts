@@ -11,6 +11,10 @@ interface ImportMetaEnv {
     // Shop credentials
     readonly NG_APP_SHOP_EMAIL: string;
     readonly NG_APP_SHOP_PASSWORD: string;
+
+    // Client credentials
+    readonly NG_APP_CLIENT_EMAIL: string;
+    readonly NG_APP_CLIENT_PASSWORD: string;
 }
 
 interface ImportMeta {
