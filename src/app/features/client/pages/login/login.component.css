@@ -1,0 +1,192 @@
+.login-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 900px;
+    min-height: 600px;
+    border: none;
+    z-index: 10;
+    transition: transform 0.3s ease;
+}
+
+.brand-section {
+    flex: 1;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=600') center/cover;
+    position: relative;
+    min-height: 300px;
+}
+
+.brand-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(4px);
+}
+
+.form-section {
+    flex: 1.2;
+    background: #fff;
+}
+
+/* Custom Input Styling */
+.input-group-premium {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    color: #adb5bd;
+    transition: color 0.3s ease;
+    z-index: 5;
+}
+
+.input-group-premium .form-control {
+    padding: 12px 15px 12px 45px;
+    border-radius: 12px;
+    border: 1.5px solid #e9ecef;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.input-group-premium .form-control:focus {
+    background-color: #fff;
+    border-color: #000;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+    outline: none;
+}
+
+.input-group-premium .form-control:focus+.input-icon {
+    color: #000;
+}
+
+/* Password Toggle */
+.btn-toggle-pass {
+    position: absolute;
+    right: 12px;
+    border: none;
+    background: none;
+    color: #adb5bd;
+    padding: 5px;
+    transition: color 0.3s ease;
+    z-index: 5;
+}
+
+.btn-toggle-pass:hover {
+    color: #495057;
+}
+
+/* Button Styling */
+.login-btn {
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: #000;
+    border: none;
+}
+
+.login-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    background: #212529;
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.hover-underline:hover {
+    text-decoration: underline !important;
+}
+
+/* Animations */
+.animate__animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -30px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 30px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes shakeX {
+
+    from,
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translate3d(-10px, 0, 0);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translate3d(10px, 0, 0);
+    }
+}
+
+.animate__fadeInDown {
+    animation-name: fadeInDown;
+}
+
+.animate__fadeInUp {
+    animation-name: fadeInUp;
+}
+
+.animate__shakeX {
+    animation-name: shakeX;
+}
+
+.animate__delay-1s {
+    animation-delay: 0.3s;
+}
+
+.animate__delay-2s {
+    animation-delay: 0.6s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .login-card {
+        margin: 15px;
+    }
+
+    .brand-section {
+        min-height: 200px;
+        padding: 40px 20px !important;
+    }
+}

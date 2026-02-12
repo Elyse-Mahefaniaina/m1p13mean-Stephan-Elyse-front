@@ -1,0 +1,100 @@
+<div class="login-container d-flex align-items-center justify-content-center min-vh-100 py-5">
+    <div class="login-card shadow-lg rounded-4 overflow-hidden bg-white d-flex flex-column flex-md-row">
+        <!-- Brand Section -->
+        <div
+            class="brand-section p-5 d-flex flex-column justify-content-center align-items-center text-white text-center">
+            <div class="brand-overlay"></div>
+            <div class="position-relative z-1">
+                <div class="logo-wrapper mb-4 animate__animated animate__fadeInDown">
+                    <i class="bi bi-bag-heart-fill display-2"></i>
+                </div>
+                <h1 class="fw-bold mb-2 animate__animated animate__fadeInUp">MEAN</h1>
+                <p class="opacity-75 animate__animated animate__fadeInUp animate__delay-1s">
+                    Votre destination shopping préférée.
+                </p>
+                <div
+                    class="mt-4 pt-3 border-top border-white border-opacity-25 w-100 animate__animated animate__fadeInUp animate__delay-2s">
+                    <p class="small mb-0">Pas encore de compte ?</p>
+                    <a routerLink="/client" class="text-white fw-bold text-decoration-none hover-underline">Créer un
+                        compte</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section p-4 p-md-5 d-flex flex-column justify-content-center">
+            <div class="mb-4">
+                <h2 class="fw-bold text-dark mb-1">Bon retour !</h2>
+                <p class="text-muted">Heureux de vous revoir parmi nous.</p>
+            </div>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="needs-validation">
+                <div class="mb-4">
+                    <label for="email" class="form-label small fw-bold text-uppercase text-secondary">Adresse
+                        Email</label>
+                    <div class="input-group-premium">
+                        <span class="input-icon"><i class="bi bi-envelope"></i></span>
+                        <input type="email" id="email" formControlName="email" class="form-control"
+                            [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+                            placeholder="vous@exemple.com">
+                    </div>
+                    @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+                    <div class="invalid-feedback d-block mt-1">
+                        Veuillez entrer une adresse email valide.
+                    </div>
+                    }
+                </div>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label for="password" class="form-label small fw-bold text-uppercase text-secondary mb-0">Mot de
+                            passe</label>
+                        <a routerLink="/client" class="text-primary text-decoration-none small fw-bold">Oublié ?</a>
+                    </div>
+                    <div class="input-group-premium">
+                        <span class="input-icon"><i class="bi bi-shield-lock"></i></span>
+                        <input [type]="showPassword() ? 'text' : 'password'" id="password" formControlName="password"
+                            class="form-control"
+                            [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+                            placeholder="••••••••">
+                        @if (loginForm.get('password')?.valid) {
+                        <button type="button" (click)="togglePasswordVisibility()" class="btn-toggle-pass" tabindex="-1"
+                            aria-label="Toggle password visibility">
+                            <i class="bi" [class.bi-eye]="!showPassword()" [class.bi-eye-slash]="showPassword()"></i>
+                        </button>
+                        }
+                    </div>
+                    @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+                    <div class="invalid-feedback d-block mt-1">
+                        Le mot de passe est requis (min 6 caractères).
+                    </div>
+                    }
+                </div>
+
+
+                @if (errorMessage()) {
+                <div
+                    class="alert alert-danger mb-4 py-2 border-0 shadow-sm d-flex align-items-center animate__animated animate__shakeX">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span class="small">{{ errorMessage() }}</span>
+                </div>
+                }
+
+                <button type="submit" class="btn btn-dark btn-lg w-100 fw-bold py-3 shadow-sm login-btn"
+                    [disabled]="loginForm.invalid || isLoading()">
+                    @if (isLoading()) {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Connexion en cours...
+                    } @else {
+                    Se connecter <i class="bi bi-arrow-right ms-2"></i>
+                    }
+                </button>
+            </form>
+
+            <div class="mt-4 text-center">
+                <span class="text-muted small">En vous connectant, vous acceptez nos </span>
+                <a href="#" class="text-dark small text-decoration-none fw-bold">Conditions d'utilisation</a>
+            </div>
+        </div>
+    </div>
+</div>

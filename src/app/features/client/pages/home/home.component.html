@@ -93,7 +93,7 @@
             <h2 class="display-5 fw-bold section-title">Par Catégorie</h2>
         </div>
         <div class="row g-4">
-            @for (category of categories; track category.slug) {
+            @for (category of categories(); track category.slug) {
             <div class="col-md-6 col-lg-3">
                 <a routerLink="/client/catalog" [queryParams]="{category: category.name}"
                     class="cat-card-modern shadow-sm">
@@ -120,7 +120,7 @@
             </a>
         </div>
         <div class="row g-4">
-            @for (product of popularProducts; track product.id) {
+            @for (product of popularProducts(); track product.id) {
             <div class="col-md-6 col-lg-3">
                 <div class="product-card card h-100 border-0 overflow-hidden">
                     <!-- Product Image -->

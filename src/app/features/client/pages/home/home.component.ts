@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProductService, Product, Category } from '../../../../core/services/product.service';
 
@@ -15,18 +15,18 @@ export class HomeComponent implements OnInit {
     protected readonly beautyBannerUrl = 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=600';
     protected readonly homeDecorBannerUrl = 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=600';
 
-    protected categories: Category[] = [];
-    protected popularProducts: Product[] = [];
+    protected categories = signal<Category[]>([]);
+    protected popularProducts = signal<Product[]>([]);
 
     constructor(private productService: ProductService) { }
 
     ngOnInit(): void {
         this.productService.getCategories().subscribe(categories => {
-            this.categories = categories.slice(0, 4); // Display first 4 on home
+            this.categories.set(categories.slice(0, 4)); // Display first 4 on home
         });
 
         this.productService.getProducts().subscribe(products => {
-            this.popularProducts = products.slice(0, 4); // Display first 4 as popular
+            this.popularProducts.set(products.slice(0, 4)); // Display first 4 as popular
         });
     }
 

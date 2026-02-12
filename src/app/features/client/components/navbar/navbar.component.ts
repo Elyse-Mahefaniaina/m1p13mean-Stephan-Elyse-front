@@ -1,5 +1,6 @@
-import { Component, HostListener, signal } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
     selector: 'app-client-navbar',
@@ -12,6 +13,9 @@ export class NavbarComponent {
     protected readonly isScrolled = signal(false);
     protected readonly isMobileMenuOpen = signal(false);
     protected readonly cartItemCount = signal(0);
+
+    private authService = inject(AuthService);
+    protected readonly isLoggedIn = this.authService.isLoggedIn;
 
     constructor(private router: Router) { }
 
@@ -30,6 +34,10 @@ export class NavbarComponent {
                 queryParams: { search: query.trim() }
             });
         }
+    }
+
+    logout(): void {
+        this.authService.logout();
     }
 }
 
