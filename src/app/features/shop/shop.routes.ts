@@ -1,9 +1,19 @@
 import { Routes } from '@angular/router';
+import { ShopLayoutComponent } from './layouts/shop-layout/shop-layout.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { LoginComponent } from './pages/login/login.component';
 
 export const SHOP_ROUTES: Routes = [
     {
         path: 'login',
-        loadComponent: () => import('./pages/login/login.component').then(m => m.ShopLoginComponent)
+        component: LoginComponent
     },
-    // { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent) }
+    {
+        path: '',
+        component: ShopLayoutComponent,
+        children: [
+            { path: 'dashboard', component: DashboardComponent },
+            { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+        ]
+    }
 ];

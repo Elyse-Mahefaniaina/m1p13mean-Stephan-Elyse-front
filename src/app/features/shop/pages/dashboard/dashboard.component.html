@@ -1,0 +1,170 @@
+<div class="dashboard-wrapper">
+    <!-- Page Header -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 p-4">
+            <div>
+                <h1 class="h3 mb-1 fw-bold text-shop header-font">Tableau de bord</h1>
+                <p class="text-muted mb-0 small">Bienvenue dans votre espace vendeur</p>
+            </div>
+            <div>
+                <span class="badge bg-light text-secondary px-3 py-2 rounded-3 fw-medium">
+                    {{ today | date:'EEEE, d MMMM yyyy':'':'fr-FR' }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="row g-4 mb-4">
+        @for (stat of stats; track stat.label) {
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 stat-card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="stat-icon-wrapper rounded-3 d-flex align-items-center justify-content-center"
+                            [ngClass]="'stat-icon-' + stat.color">
+                            <i class="bi {{ stat.icon }} fs-4"></i>
+                        </div>
+                        @if (stat.trend) {
+                        <span class="trend-badge d-flex align-items-center gap-1 rounded-pill px-2 py-1 small">
+                            <i class="bi bi-graph-up-arrow"></i> {{ stat.trend }}
+                        </span>
+                        }
+                    </div>
+                    <div>
+                        <span class="h2 fw-bold d-block mb-1 header-font">{{ stat.value }}</span>
+                        <span class="text-secondary fw-semibold small d-block">{{ stat.label }}</span>
+                        @if (stat.description) {
+                        <small class="text-muted mt-2 d-block">{{ stat.description }}</small>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    <div class="row g-4 mb-4">
+        <!-- Recent Orders -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
+                    <h2 class="h5 fw-bold mb-0 header-font">Commandes Récentes</h2>
+                    <a routerLink="/shop/dashboard"
+                        class="btn btn-link text-shop text-decoration-none fw-semibold p-0">Voir tout</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4 py-3 text-muted fw-semibold small text-uppercase">Commande</th>
+                                    <th class="py-3 text-muted fw-semibold small text-uppercase">Client</th>
+                                    <th class="py-3 text-muted fw-semibold small text-uppercase">Statut</th>
+                                    <th class="py-3 text-muted fw-semibold small text-uppercase text-end pe-4">Total
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (order of recentOrders; track order.id) {
+                                <tr>
+                                    <td class="ps-4 py-3">
+                                        <span class="fw-bold text-dark">{{ order.id }}</span>
+                                        <div class="text-muted small">{{ order.date }}</div>
+                                    </td>
+                                    <td class="py-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div
+                                                class="avatar-sm rounded-circle bg-light d-flex align-items-center justify-content-center">
+                                                <i class="bi bi-person text-muted"></i>
+                                            </div>
+                                            <span class="fw-medium">{{ order.client }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3">
+                                        <span class="badge rounded-pill fw-medium px-3 py-2"
+                                            [ngClass]="getStatusClass(order.status)">
+                                            {{ getStatusLabel(order.status) }}
+                                        </span>
+                                    </td>
+                                    <td class="py-3 text-end pe-4">
+                                        <span class="fw-bold text-dark">{{ order.total }}</span>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Products -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
+                    <h2 class="h5 fw-bold mb-0 header-font">Meilleures Ventes</h2>
+                    <a routerLink="/shop/dashboard"
+                        class="btn btn-link text-shop text-decoration-none fw-semibold p-0">Détails</a>
+                </div>
+                <div class="card-body p-4 pt-0">
+                    <div class="product-list">
+                        @for (product of popularProducts; track product.name) {
+                        <div class="product-item d-flex align-items-center gap-3 py-3 border-bottom-dashed">
+                            <div
+                                class="product-img-placeholder rounded-3 bg-light d-flex align-items-center justify-content-center">
+                                <i class="bi bi-image text-muted opacity-50"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h4 class="h6 fw-bold mb-0 text-truncate" style="max-width: 151px;">{{ product.name }}
+                                </h4>
+                                <small class="text-muted">{{ product.sales }} vendus • {{ product.stock }} en
+                                    stock</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="fw-bold text-shop">{{ product.price }}</span>
+                            </div>
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="mt-4">
+                        <h3 class="small text-uppercase text-muted fw-bold mb-3 ls-1">Actions Rapides</h3>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <a routerLink="/shop/dashboard"
+                                    class="btn btn-outline-light border text-dark w-100 py-3 rounded-4 transition-all">
+                                    <i class="bi bi-tag text-shop d-block fs-4 mb-1"></i>
+                                    <span class="small fw-semibold">Créer Promo</span>
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="#"
+                                    class="btn btn-outline-light border text-dark w-100 py-3 rounded-4 transition-all"
+                                    (click)="$event.preventDefault()">
+                                    <i class="bi bi-megaphone text-orange d-block fs-4 mb-1"></i>
+                                    <span class="small fw-semibold">Newsletter</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Banner -->
+    <div
+        class="alert bg-dark text-white rounded-4 p-4 border-0 d-flex flex-column flex-md-row align-items-center gap-4">
+        <div class="help-icon rounded-circle d-flex align-items-center justify-content-center flex-shrink-0">
+            <i class="bi bi-patch-question fs-3 text-shop"></i>
+        </div>
+        <div class="text-center text-md-start">
+            <h5 class="fw-bold mb-1">Besoin d'aide pour booster votre boutique ?</h5>
+            <p class="mb-0 opacity-75 small text-balance">Consultez notre guide vendeur ou contactez le support
+                technique du mall pour tout incident logistique.</p>
+        </div>
+        <button class="btn btn-shop ms-md-auto text-nowrap">Contacter le support</button>
+    </div>
+</div>
