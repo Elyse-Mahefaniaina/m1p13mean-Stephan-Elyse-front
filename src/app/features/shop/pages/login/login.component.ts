@@ -9,13 +9,13 @@ const SHOP_EMAIL = import.meta.env['NG_APP_SHOP_EMAIL'] || '';
 const SHOP_PASSWORD = import.meta.env['NG_APP_SHOP_PASSWORD'] || '';
 
 @Component({
-    selector: 'app-shop-login',
+    selector: 'app-login',
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './login.component.html',
     styleUrl: './login.component.css'
 })
-export class ShopLoginComponent {
+export class LoginComponent {
     loginForm: FormGroup;
     isLoading = signal(false);
     showPassword = signal(false);
@@ -53,7 +53,9 @@ export class ShopLoginComponent {
                     localStorage.setItem('userName', 'Ma Boutique Fashion');
 
                     this.toastService.show('Ravi de vous revoir !', 'success');
-                    this.router.navigate(['/shop/dashboard']);
+
+                    // Use a small delay or ensure navigation is detected
+                    this.router.navigateByUrl('/shop/dashboard');
                 } else {
                     this.toastService.show('Identifiants invalides.', 'danger');
                     this.errorMessage.set('Email ou mot de passe incorrect.');

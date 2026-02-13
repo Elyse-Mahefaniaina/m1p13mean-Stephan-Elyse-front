@@ -1,0 +1,114 @@
+.header-font {
+    font-family: 'Sora', sans-serif;
+}
+
+.text-shop {
+    color: var(--primary) !important;
+}
+
+.btn-shop {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-shop:hover {
+    background-color: var(--primary-dark);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.stat-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.stat-icon-wrapper {
+    width: 50px;
+    height: 50px;
+}
+
+.stat-icon-primary {
+    background: #EEF2FF;
+    color: var(--primary);
+}
+
+.stat-icon-blue {
+    background: #EFF6FF;
+    color: #3B82F6;
+}
+
+.stat-icon-green {
+    background: #ECFDF5;
+    color: #10B981;
+}
+
+.stat-icon-yellow {
+    background: #FFFBEB;
+    color: #F59E0B;
+}
+
+.trend-badge {
+    background: #ECFDF5;
+    color: #10B981;
+    font-weight: 600;
+}
+
+.avatar-sm {
+    width: 32px;
+    height: 32px;
+}
+
+.product-img-placeholder {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+}
+
+.border-bottom-dashed {
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.border-bottom-dashed:last-child {
+    border-bottom: none;
+}
+
+.ls-1 {
+    letter-spacing: 1px;
+}
+
+.transition-all {
+    transition: all 0.2s ease-in-out;
+}
+
+.transition-all:hover {
+    border-color: var(--primary) !important;
+    background-color: #EEF2FF !important;
+    transform: scale(1.02);
+}
+
+.text-orange {
+    color: #f97316;
+}
+
+.help-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.text-balance {
+    text-wrap: balance;
+}
+
+@media (max-width: 768px) {
+    .h2 {
+        font-size: 1.5rem;
+    }
+}

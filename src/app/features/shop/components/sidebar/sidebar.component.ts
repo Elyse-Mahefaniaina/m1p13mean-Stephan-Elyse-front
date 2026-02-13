@@ -1,0 +1,65 @@
+import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { ToastService } from '../../../../core/services/toast.service';
+
+interface NavItem {
+    label: string;
+    icon: string;
+    route: string;
+    badge?: number;
+}
+
+interface NavSection {
+    title?: string;
+    items: NavItem[];
+}
+
+@Component({
+    selector: 'app-sidebar',
+    standalone: true,
+    imports: [CommonModule, RouterLink, RouterLinkActive],
+    templateUrl: './sidebar.component.html',
+    styleUrl: './sidebar.component.css'
+})
+export class SidebarComponent {
+    private router = inject(Router);
+    private toastService = inject(ToastService);
+
+    isMobileMenuOpen = signal(false);
+    isProfileDropdownOpen = signal(false);
+
+    /** Navigation sections for the shop owner - reactive signal */
+    navSections = signal<NavSection[]>([
+        {
+            items: [
+                { label: 'Tableau de bord', icon: 'bi-grid-1x2-fill', route: '/shop/dashboard' }
+            ]
+        }
+    ]);
+
+    toggleMobileMenu() {
+        this.isMobileMenuOpen.update(v => !v);
+    }
+
+    closeMobileMenu() {
+        this.isMobileMenuOpen.set(false);
+    }
+
+    toggleProfileDropdown() {
+        this.isProfileDropdownOpen.update(v => !v);
+    }
+
+    closeProfileDropdown() {
+        this.isProfileDropdownOpen.set(false);
+    }
+
+    logout() {
+        this.closeProfileDropdown();
+        this.closeMobileMenu();
+
+        // Simulating logout for now
+        this.toastService.show('Session boutique clôturée. À bientôt !', 'success');
+        this.router.navigate(['/shop/login']);
+    }
+}
