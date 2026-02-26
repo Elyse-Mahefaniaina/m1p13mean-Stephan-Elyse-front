@@ -12,7 +12,8 @@
                 </p>
             </div>
             <div>
-                <button class="btn btn-premium d-flex align-items-center gap-2 rounded-3 px-4 py-2">
+                <button class="btn btn-premium d-flex align-items-center gap-2 rounded-3 px-4 py-2"
+                    (click)="openCreateModal()">
                     <i class="bi bi-person-plus-fill"></i>
                     <span>Nouvel Utilisateur</span>
                 </button>
@@ -179,13 +180,16 @@
                         </td>
                         <td class="px-4">
                             <div class="d-flex gap-2 justify-content-end">
-                                <button class="btn-action btn-action-view" title="Détails">
+                                <button class="btn-action btn-action-view" title="Détails"
+                                    (click)="openDetailModal(user)">
                                     <i class="bi bi-eye-fill"></i>
                                 </button>
-                                <button class="btn-action btn-action-edit" title="Modifier">
+                                <button class="btn-action btn-action-edit" title="Modifier"
+                                    (click)="openEditModal(user)">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
-                                <button class="btn-action btn-action-delete" title="Désactiver">
+                                <button class="btn-action btn-action-delete" title="Supprimer"
+                                    (click)="openDeleteModal(user)">
                                     <i class="bi bi-trash-fill"></i>
                                 </button>
                             </div>
@@ -197,4 +201,18 @@
         </div>
         }
     </div>
+
+    <!-- User Detail Modal -->
+    <app-user-detail-modal></app-user-detail-modal>
+
+    <!-- User Form Modal (Create / Edit) -->
+    <app-user-form-modal></app-user-form-modal>
+
+    <!-- Delete Confirm Dialog -->
+    <app-confirm-dialog title="Supprimer l'utilisateur"
+        message="Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible."
+        detail="Toutes les données associées seront définitivement supprimées." icon="bi-trash-fill" theme="danger"
+        confirmText="Supprimer" cancelText="Annuler" [itemName]="userToDelete()?.name ?? ''"
+        [itemSubtitle]="userToDelete()?.email ?? ''" (confirmed)="onDeleteConfirmed()">
+    </app-confirm-dialog>
 </div>
