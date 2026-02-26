@@ -1,0 +1,112 @@
+[
+    {
+        "id": "B1",
+        "number": "101",
+        "zone": "Zone A",
+        "dimensions": "25m²",
+        "connections": [
+            "Électricité",
+            "Eau",
+            "Fibre"
+        ],
+        "status": "occupied",
+        "currentShopId": 1,
+        "currentShopName": "Fashion Boutique",
+        "rent": 1200,
+        "charges": 150,
+        "entryDate": "2024-01-15",
+        "exitDate": null,
+        "paymentDay": 5
+    },
+    {
+        "id": "B2",
+        "number": "102",
+        "zone": "Zone A",
+        "dimensions": "15m²",
+        "connections": [
+            "Électricité",
+            "Fibre"
+        ],
+        "status": "free",
+        "currentShopId": null,
+        "currentShopName": "-",
+        "rent": 800,
+        "charges": 100,
+        "entryDate": null,
+        "exitDate": null,
+        "paymentDay": 5
+    },
+    {
+        "id": "B3",
+        "number": "103",
+        "zone": "Zone A",
+        "dimensions": "40m²",
+        "connections": [
+            "Électricité",
+            "Eau",
+            "Fibre"
+        ],
+        "status": "reserved",
+        "currentShopId": 4,
+        "currentShopName": "Beauty Shop",
+        "rent": 1800,
+        "charges": 200,
+        "entryDate": "2025-02-01",
+        "exitDate": null,
+        "paymentDay": 5
+    },
+    {
+        "id": "B4",
+        "number": "201",
+        "zone": "Zone B",
+        "dimensions": "30m²",
+        "connections": [
+            "Électricité",
+            "Fibre"
+        ],
+        "status": "occupied",
+        "currentShopId": 2,
+        "currentShopName": "TechZone",
+        "rent": 1500,
+        "charges": 180,
+        "entryDate": "2024-02-20",
+        "exitDate": null,
+        "paymentDay": 10
+    },
+    {
+        "id": "B5",
+        "number": "202",
+        "zone": "Zone B",
+        "dimensions": "20m²",
+        "connections": [
+            "Électricité"
+        ],
+        "status": "under_repair",
+        "currentShopId": null,
+        "currentShopName": "-",
+        "rent": 1000,
+        "charges": 120,
+        "entryDate": null,
+        "exitDate": null,
+        "paymentDay": 10
+    },
+    {
+        "id": "B6",
+        "number": "301",
+        "zone": "Zone C",
+        "dimensions": "50m²",
+        "connections": [
+            "Électricité",
+            "Eau",
+            "Fibre"
+        ],
+        "status": "occupied",
+        "currentShopId": 3,
+        "currentShopName": "Sport Plus",
+        "rent": 2200,
+        "charges": 250,
+        "entryDate": "2024-03-10",
+        "exitDate": null,
+        "paymentDay": 1
+    }
+]

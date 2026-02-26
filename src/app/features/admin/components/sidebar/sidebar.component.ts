@@ -37,7 +37,7 @@ export class SidebarComponent {
             ]
         },
         {
-            title: 'Gestion Logistique',
+            title: '',
             items: [
                 { label: 'Gestion des Box', icon: 'bi-box-seam-fill', route: '/admin/boxes' }
             ]
