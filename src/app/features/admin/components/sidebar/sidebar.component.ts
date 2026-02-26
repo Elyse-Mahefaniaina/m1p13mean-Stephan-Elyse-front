@@ -39,7 +39,8 @@ export class SidebarComponent {
         {
             title: '',
             items: [
-                { label: 'Gestion des Box', icon: 'bi-box-seam-fill', route: '/admin/boxes' }
+                { label: 'Gestion des Box', icon: 'bi-box-seam-fill', route: '/admin/boxes' },
+                { label: 'Boutiques', icon: 'bi-shop-window', route: '/admin/shops' }
             ]
         }
     ];

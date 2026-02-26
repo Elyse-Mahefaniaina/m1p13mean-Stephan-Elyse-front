@@ -1,0 +1,66 @@
+[
+    {
+        "id": "1",
+        "name": "Elite Tech",
+        "ownerName": "Jean Dupont",
+        "email": "contact@elitetech.fr",
+        "phone": "01 23 45 67 89",
+        "category": "Électronique",
+        "status": "active",
+        "createdAt": "2023-10-15T10:00:00Z",
+        "boxNumber": "A12",
+        "description": "Vente de produits informatiques et high-tech.",
+        "revenue": 15400000
+    },
+    {
+        "id": "2",
+        "name": "Mode & Style",
+        "ownerName": "Marie Claire",
+        "email": "marie@modestyle.fr",
+        "phone": "06 12 34 56 78",
+        "category": "Vêtements",
+        "status": "active",
+        "createdAt": "2023-11-20T09:30:00Z",
+        "boxNumber": "B05",
+        "description": "Boutique de prêt-à-porter tendance.",
+        "revenue": 8900000
+    },
+    {
+        "id": "3",
+        "name": "Bio Délices",
+        "ownerName": "Pierre Martin",
+        "email": "pierre@biodelices.com",
+        "phone": "07 88 99 00 11",
+        "category": "Alimentation",
+        "status": "pending",
+        "createdAt": "2024-01-05T14:15:00Z",
+        "description": "Produits locaux et biologiques.",
+        "revenue": 0
+    },
+    {
+        "id": "4",
+        "name": "Bijoux Éclat",
+        "ownerName": "Sophie Bernard",
+        "email": "sophie@bijouxeclat.fr",
+        "phone": "01 44 55 66 77",
+        "category": "Accessoires",
+        "status": "active",
+        "createdAt": "2023-09-10T11:00:00Z",
+        "boxNumber": "C02",
+        "description": "Création de bijoux artisanaux.",
+        "revenue": 12100000
+    },
+    {
+        "id": "5",
+        "name": "Art de Vivre",
+        "ownerName": "Luc Lefebvre",
+        "email": "luc@artdevivre.fr",
+        "phone": "06 77 88 99 00",
+        "category": "Décoration",
+        "status": "suspended",
+        "createdAt": "2023-08-05T16:45:00Z",
+        "boxNumber": "A08",
+        "description": "Objets de décoration et ameublement.",
+        "revenue": 4500000
+    }
+]
