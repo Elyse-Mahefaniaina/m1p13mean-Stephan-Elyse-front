@@ -1,0 +1,70 @@
+<!-- Generic Confirm Dialog -->
+<div class="modal fade" #confirmModal tabindex="-1" aria-labelledby="confirmDialogLabel" aria-hidden="true"
+    id="confirmDialog">
+    <div class="modal-dialog modal-dialog-centered modal-sm-custom">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+
+            <!-- Visual Accent Bar -->
+            <div class="accent-bar" [ngClass]="'accent-' + theme"></div>
+
+            <!-- Modal Body -->
+            <div class="modal-body text-center px-4 pt-4 pb-3">
+
+                <!-- Animated Icon -->
+                <div class="confirm-icon-wrapper mx-auto mb-3" [ngClass]="'confirm-icon-' + theme">
+                    <i class="bi {{ icon }} fs-3"></i>
+                </div>
+
+                <!-- Title -->
+                <h5 class="fw-bold mb-2" id="confirmDialogLabel">{{ title }}</h5>
+
+                <!-- Message -->
+                <p class="text-muted mb-0" style="font-size: 0.9rem; line-height: 1.6;">
+                    {{ message }}
+                </p>
+
+                <!-- Optional: Item Summary Card -->
+                @if (itemName) {
+                <div class="item-card d-flex align-items-center gap-3 mt-3 mx-auto">
+                    <div class="item-avatar d-flex align-items-center justify-content-center"
+                        [ngClass]="'item-avatar-' + theme">
+                        {{ itemName.charAt(0) }}
+                    </div>
+                    <div class="text-start">
+                        <div class="fw-bold text-dark small">{{ itemName }}</div>
+                        @if (itemSubtitle) {
+                        <div class="text-muted" style="font-size: 0.78rem;">{{ itemSubtitle }}</div>
+                        }
+                    </div>
+                </div>
+                }
+
+                <!-- Optional: Detail / Warning -->
+                @if (detail) {
+                <div class="detail-banner d-flex align-items-center gap-2 mt-3 mx-auto" [ngClass]="'detail-' + theme">
+                    <i class="bi bi-info-circle small"></i>
+                    <span style="font-size: 0.8rem;">{{ detail }}</span>
+                </div>
+                }
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-1 d-flex gap-2 justify-content-end">
+                <button type="button"
+                    class="btn btn-cancel rounded-3 px-4 py-2 fw-medium d-flex align-items-center justify-content-center gap-2"
+                    (click)="dismiss()">
+                    <i class="bi bi-x-lg"></i>
+                    <span>{{ cancelText }}</span>
+                </button>
+                <button type="button"
+                    class="btn btn-confirm rounded-3 px-4 py-2 fw-medium d-flex align-items-center justify-content-center gap-2"
+                    [ngClass]="'btn-confirm-' + theme" (click)="onConfirm()">
+                    <i class="bi {{ icon }}"></i>
+                    <span>{{ confirmText }}</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

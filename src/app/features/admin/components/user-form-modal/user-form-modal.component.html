@@ -1,0 +1,263 @@
+<!-- User Form Modal (Create / Edit) -->
+<div class="modal fade" #userModal tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true" id="userFormModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+
+            <!-- Modal Header -->
+            <div class="modal-header border-0 px-4 pt-4 pb-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrapper d-flex align-items-center justify-content-center"
+                        [class.modal-icon-edit]="isEditMode">
+                        @if (isEditMode) {
+                        <i class="bi bi-pencil-square fs-5"></i>
+                        } @else {
+                        <i class="bi bi-person-plus-fill fs-5"></i>
+                        }
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="userModalLabel">
+                            {{ isEditMode ? 'Modifier l\'utilisateur' : 'Nouvel Utilisateur' }}
+                        </h5>
+                        <p class="text-muted small mb-0">
+                            {{ isEditMode
+                            ? 'Modifiez les informations du compte utilisateur'
+                            : 'Remplissez les informations pour créer un nouveau compte' }}
+                        </p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" (click)="close()" aria-label="Fermer"></button>
+            </div>
+
+            <!-- Separator -->
+            <div class="px-4 pt-3">
+                <hr class="text-muted opacity-25 my-0">
+            </div>
+
+            <!-- Edit Mode: User Info Banner -->
+            @if (isEditMode && editingUser) {
+            <div class="px-4 pt-3">
+                <div class="edit-user-banner d-flex align-items-center gap-3">
+                    <div class="edit-user-avatar d-flex align-items-center justify-content-center">
+                        {{ editingUser.name.charAt(0) }}
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark small">{{ editingUser.name }}</div>
+                        <div class="text-muted" style="font-size: 0.78rem;">{{ editingUser.email }}</div>
+                    </div>
+                    <div class="ms-auto">
+                        <span class="badge rounded-pill edit-badge-role">
+                            {{ editingUser.role === 'admin' ? 'Administrateur'
+                            : editingUser.role === 'shop' ? 'Boutique' : 'Client' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Modal Body -->
+            <div class="modal-body px-4 py-4">
+                <form [formGroup]="userForm" (ngSubmit)="onSubmit()" id="userCreationForm">
+
+                    <!-- Section: Informations personnelles -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-person-vcard text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Informations personnelles
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Full Name -->
+                            <div class="col-md-6">
+                                <label for="userName" class="form-label fw-medium small">
+                                    Nom complet <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-person text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="userName"
+                                        formControlName="name" placeholder="Ex: Jean Dupont"
+                                        [class.is-invalid]="isInvalid('name')">
+                                </div>
+                                @if (isInvalid('name')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('name') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <label for="userEmail" class="form-label fw-medium small">
+                                    Adresse email <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-envelope text-muted"></i>
+                                    </span>
+                                    <input type="email" class="form-control border-start-0 ps-0" id="userEmail"
+                                        formControlName="email" placeholder="Ex: jean.dupont@email.com"
+                                        [class.is-invalid]="isInvalid('email')">
+                                </div>
+                                @if (isInvalid('email')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('email') }}
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Rôle & Statut -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-shield-lock text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Rôle & Statut
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Role -->
+                            <div class="col-md-6">
+                                <label for="userRole" class="form-label fw-medium small">
+                                    Rôle <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-person-gear text-muted"></i>
+                                    </span>
+                                    <select class="form-select border-start-0 ps-0" id="userRole" formControlName="role"
+                                        [class.is-invalid]="isInvalid('role')">
+                                        <option value="" disabled>Sélectionner un rôle</option>
+                                        <option value="admin">Administrateur</option>
+                                        <option value="shop">Boutique</option>
+                                        <option value="client">Client</option>
+                                    </select>
+                                </div>
+                                @if (isInvalid('role')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('role') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-6">
+                                <label for="userStatus" class="form-label fw-medium small">
+                                    Statut <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-toggle2-on text-muted"></i>
+                                    </span>
+                                    <select class="form-select border-start-0 ps-0" id="userStatus"
+                                        formControlName="status" [class.is-invalid]="isInvalid('status')">
+                                        <option value="active">Actif</option>
+                                        <option value="inactive">Inactif</option>
+                                        <option value="pending">En attente</option>
+                                    </select>
+                                </div>
+                                @if (isInvalid('status')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('status') }}
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Sécurité -->
+                    <div class="form-section">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-key text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Sécurité
+                            </span>
+                            @if (isEditMode) {
+                            <span class="badge bg-light text-muted border ms-auto fw-normal"
+                                style="font-size: 0.72rem;">
+                                <i class="bi bi-info-circle me-1"></i>Laissez vide pour ne pas modifier
+                            </span>
+                            }
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Password -->
+                            <div class="col-md-6">
+                                <label for="userPassword" class="form-label fw-medium small">
+                                    {{ isEditMode ? 'Nouveau mot de passe' : 'Mot de passe' }}
+                                    @if (!isEditMode) {
+                                    <span class="text-danger">*</span>
+                                    }
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-lock text-muted"></i>
+                                    </span>
+                                    <input type="password" class="form-control border-start-0 ps-0" id="userPassword"
+                                        formControlName="password" placeholder="Minimum 6 caractères"
+                                        [class.is-invalid]="isInvalid('password')">
+                                </div>
+                                @if (isInvalid('password')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('password') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div class="col-md-6">
+                                <label for="userConfirmPassword" class="form-label fw-medium small">
+                                    {{ isEditMode ? 'Confirmer le nouveau mot de passe' : 'Confirmer le mot de passe' }}
+                                    @if (!isEditMode) {
+                                    <span class="text-danger">*</span>
+                                    }
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-lock-fill text-muted"></i>
+                                    </span>
+                                    <input type="password" class="form-control border-start-0 ps-0"
+                                        id="userConfirmPassword" formControlName="confirmPassword"
+                                        placeholder="Retapez le mot de passe"
+                                        [class.is-invalid]="isInvalid('confirmPassword')">
+                                </div>
+                                @if (isInvalid('confirmPassword')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('confirmPassword')
+                                    }}
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                <button type="button"
+                    class="btn btn-light rounded-3 px-4 py-2 fw-medium d-flex align-items-center justify-content-center gap-2"
+                    (click)="close()">
+                    <i class="bi bi-x-lg"></i>
+                    <span>Annuler</span>
+                </button>
+                <button type="submit" form="userCreationForm"
+                    class="btn btn-modal-submit rounded-3 px-4 py-2 fw-medium d-flex align-items-center justify-content-center gap-2">
+                    @if (isEditMode) {
+                    <i class="bi bi-check-lg"></i>
+                    <span>Enregistrer les modifications</span>
+                    } @else {
+                    <i class="bi bi-check-lg"></i>
+                    <span>Créer l'utilisateur</span>
+                    }
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

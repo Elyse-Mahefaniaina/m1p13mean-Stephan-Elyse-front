@@ -1,17 +1,25 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService, User } from '../../../../core/services/user.service';
+import { UserFormModalComponent } from '../../components/user-form-modal/user-form-modal.component';
+import { UserDetailModalComponent } from '../../components/user-detail-modal/user-detail-modal.component';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'app-users',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, UserFormModalComponent, UserDetailModalComponent, ConfirmDialogComponent],
     templateUrl: './users.component.html',
     styleUrl: './users.component.css'
 })
 export class UsersComponent implements OnInit {
+    @ViewChild(UserFormModalComponent) userFormModal!: UserFormModalComponent;
+    @ViewChild(UserDetailModalComponent) userDetailModal!: UserDetailModalComponent;
+    @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
     private userService = inject(UserService);
+
+    userToDelete = signal<User | null>(null);
 
     allUsers = signal<User[]>([]);
     loading = signal(true);
@@ -108,5 +116,31 @@ export class UsersComponent implements OnInit {
             case 'pending': return 'En attente';
             default: return status;
         }
+    }
+
+    openCreateModal(): void {
+        this.userFormModal.open();
+    }
+
+    openDetailModal(user: User): void {
+        this.userDetailModal.open(user);
+    }
+
+    openEditModal(user: User): void {
+        this.userFormModal.openForEdit(user);
+    }
+
+    openDeleteModal(user: User): void {
+        this.userToDelete.set(user);
+        this.confirmDialog.open();
+    }
+
+    onDeleteConfirmed(): void {
+        const user = this.userToDelete();
+        if (user) {
+            // Business logic will be added later
+            console.log('Delete confirmed for user:', user.id, user.name);
+        }
+        this.userToDelete.set(null);
     }
 }
