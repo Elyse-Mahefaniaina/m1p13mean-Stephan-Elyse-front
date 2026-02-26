@@ -97,9 +97,10 @@ export class BoxesComponent implements OnInit {
 
 
     formatPrice(price: number): string {
-        return new Intl.NumberFormat('fr-FR', {
+        return new Intl.NumberFormat('fr-MG', {
             style: 'currency',
-            currency: 'EUR'
+            currency: 'MGA',
+            minimumFractionDigits: 0
         }).format(price);
     }
 }
