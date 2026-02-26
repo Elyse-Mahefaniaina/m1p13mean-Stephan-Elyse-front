@@ -141,7 +141,7 @@
                 <tbody>
                     @for (shop of filteredShops(); track shop.id) {
                     <tr>
-                        <td class="px-4">
+                        <td class="px-4" data-label="Boutique">
                             <div class="d-flex align-items-center gap-3">
                                 <div
                                     class="shop-avatar d-flex align-items-center justify-content-center bg-light text-primary fw-bold">
@@ -153,35 +153,35 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
+                        <td data-label="Propriétaire">
                             <div class="fw-medium text-dark">{{ shop.ownerName }}</div>
                             <div class="text-muted small">{{ shop.phone }}</div>
                         </td>
-                        <td>
+                        <td data-label="Catégorie">
                             <span class="badge bg-light text-dark border-0 fw-normal">{{ shop.category }}</span>
                         </td>
-                        <td>
+                        <td data-label="Box">
                             @if (shop.boxNumber) {
                             <span class="fw-bold text-primary">{{ shop.boxNumber }}</span>
                             } @else {
                             <span class="text-muted small italic">Non assigné</span>
                             }
                         </td>
-                        <td>
+                        <td data-label="CA Total">
                             <div class="fw-bold text-dark">{{ formatPrice(shop.revenue) }}</div>
                         </td>
-                        <td>
+                        <td data-label="Date d'inscription">
                             <div class="text-muted small">
                                 {{ shop.createdAt | date:'dd/MM/yyyy' }}
                             </div>
                         </td>
-                        <td class="text-center">
+                        <td class="text-center" data-label="Statut">
                             <span class="status-badge" [ngClass]="getStatusClass(shop.status)">
                                 {{ getStatusLabel(shop.status) }}
                             </span>
                         </td>
-                        <td class="px-4">
-                            <div class="d-flex gap-2 justify-content-end">
+                        <td class="px-4" data-label="Actions">
+                            <div class="d-flex gap-2 justify-content-end mobile-justify-start">
                                 <button class="btn-action btn-action-view" title="Détails">
                                     <i class="bi bi-eye-fill"></i>
                                 </button>
