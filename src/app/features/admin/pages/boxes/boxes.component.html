@@ -11,7 +11,8 @@
                 </p>
             </div>
             <div>
-                <button class="btn btn-premium d-flex align-items-center gap-2 rounded-3 px-4 py-2">
+                <button class="btn btn-premium d-flex align-items-center gap-2 rounded-3 px-4 py-2"
+                    (click)="openCreateModal()">
                     <i class="bi bi-plus-circle-fill"></i>
                     <span>Nouveau Box</span>
                 </button>
@@ -197,13 +198,15 @@
                         </td>
                         <td class="px-4" data-label="Actions">
                             <div class="d-flex gap-2 justify-content-end">
-                                <button class="btn-action btn-action-view" title="Détails">
+                                <button class="btn-action btn-action-view" title="Détails"
+                                    (click)="openDetailModal(box)">
                                     <i class="bi bi-eye-fill"></i>
                                 </button>
-                                <button class="btn-action btn-action-edit" title="Éditer">
+                                <button class="btn-action btn-action-edit" title="Éditer" (click)="openEditModal(box)">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
-                                <button class="btn-action btn-action-delete" title="Supprimer">
+                                <button class="btn-action btn-action-delete" title="Supprimer"
+                                    (click)="openDeleteModal(box)">
                                     <i class="bi bi-trash-fill"></i>
                                 </button>
                             </div>
@@ -215,4 +218,19 @@
         </div>
         }
     </div>
+
+    <!-- Box Detail Modal -->
+    <app-box-detail-modal></app-box-detail-modal>
+
+    <!-- Box Form Modal (Create / Edit) -->
+    <app-box-form-modal></app-box-form-modal>
+
+    <!-- Delete Confirm Dialog -->
+    <app-confirm-dialog title="Supprimer le Box"
+        message="Êtes-vous sûr de vouloir supprimer ce box ? Cette action est irréversible."
+        detail="Toutes les données associées, y compris l'historique d'occupation, seront définitivement supprimées."
+        icon="bi-trash-fill" theme="danger" confirmText="Supprimer" cancelText="Annuler"
+        [itemName]="'Box N° ' + (boxToDelete()?.number ?? '')" [itemSubtitle]="boxToDelete()?.zone ?? ''"
+        (confirmed)="onDeleteConfirmed()">
+    </app-confirm-dialog>
 </div>

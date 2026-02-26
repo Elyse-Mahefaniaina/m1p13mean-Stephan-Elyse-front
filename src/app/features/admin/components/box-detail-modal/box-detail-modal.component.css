@@ -1,0 +1,271 @@
+:host {
+    --primary: #4F46E5;
+    --danger: #EF4444;
+    --warning: #F59E0B;
+    --success: #10B981;
+    --info: #0EA5E9;
+}
+
+/* ===========================
+   Profile Header
+   =========================== */
+.detail-header {
+    position: relative;
+    overflow: hidden;
+}
+
+.detail-header::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -20%;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.detail-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -15%;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* Header color variants */
+.detail-header-occupied {
+    background: linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%);
+}
+
+.detail-header-free {
+    background: linear-gradient(135deg, #10B981 0%, #047857 100%);
+}
+
+.detail-header-reserved {
+    background: linear-gradient(135deg, #F59E0B 0%, #B45309 100%);
+}
+
+.detail-header-under_repair {
+    background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
+}
+
+/* Avatar/Icon Circle */
+.detail-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 14px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: white;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    z-index: 1;
+    animation: avatarFadeIn 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes avatarFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Header title typography */
+.detail-header h5 {
+    font-family: 'Sora', sans-serif;
+    position: relative;
+    z-index: 1;
+}
+
+.detail-header span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Status badge in header */
+.detail-badge-status {
+    border-radius: 50px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(4px);
+}
+
+.status-indicator {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    background: white;
+}
+
+/* ===========================
+   Info Grid
+   =========================== */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.9rem 0.75rem;
+    border-bottom: 1px solid #F1F5F9;
+    transition: background 0.2s ease;
+}
+
+.info-item:hover {
+    background: #F8FAFC;
+    border-radius: 8px;
+}
+
+/* Alternate border for grid layout */
+.info-item:nth-child(odd) {
+    border-right: 1px solid #F1F5F9;
+    padding-right: 1.25rem;
+}
+
+.info-item:nth-child(even) {
+    padding-left: 1.25rem;
+}
+
+/* Remove bottom border on last row */
+.info-item:nth-last-child(-n+2) {
+    border-bottom: none;
+}
+
+.info-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(79, 70, 229, 0.15) 100%);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.95rem;
+}
+
+.info-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94A3B8;
+    margin-bottom: 0.15rem;
+}
+
+.info-value {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #1E293B;
+}
+
+/* Occupant Banner */
+.occupant-banner {
+    background: #F8FAFC;
+    border-radius: 14px;
+    border: 1px solid #E2E8F0;
+}
+
+.occupant-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+/* Connections Pills */
+.conn-pill {
+    background: rgba(79, 70, 229, 0.1);
+    color: var(--primary);
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border: 1px solid rgba(79, 70, 229, 0.2);
+}
+
+/* ===========================
+   Footer Button
+   =========================== */
+.btn-detail-close {
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    color: #64748B;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.btn-detail-close:hover {
+    background: #E2E8F0;
+    color: #334155;
+}
+
+/* ===========================
+   Modal
+   =========================== */
+.modal-content {
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+}
+
+.modal.fade .modal-dialog {
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1) translateY(0);
+}
+
+/* ===========================
+   Responsive — stack grid on small screens
+   =========================== */
+@media (max-width: 575.98px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-item:nth-child(odd) {
+        border-right: none;
+        padding-right: 0.75rem;
+    }
+
+    .info-item:nth-child(even) {
+        padding-left: 0.75rem;
+    }
+
+    .info-item:nth-last-child(2) {
+        border-bottom: 1px solid #F1F5F9;
+    }
+}

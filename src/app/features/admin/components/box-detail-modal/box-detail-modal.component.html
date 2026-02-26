@@ -1,0 +1,130 @@
+<!-- Box Detail Modal -->
+<div class="modal fade" #detailModal tabindex="-1" aria-labelledby="boxDetailLabel" aria-hidden="true"
+    id="boxDetailModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+
+            @if (box) {
+
+            <!-- Box Header -->
+            <div class="detail-header" [ngClass]="'detail-header-' + box.status">
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3"
+                    (click)="close()" aria-label="Fermer"></button>
+
+                <div class="d-flex flex-column align-items-center pt-4 pb-4">
+                    <div class="detail-avatar d-flex align-items-center justify-content-center mb-3">
+                        <i class="bi bi-grid-3x3-gap-fill"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-1">Box N° {{ box.number }}</h5>
+                    <span class="text-white-50 small">Zone: {{ box.zone }}</span>
+
+                    <div class="d-flex gap-2 mt-3">
+                        <span class="detail-badge-status">
+                            <span class="status-indicator"></span>
+                            {{ getStatusLabel(box.status) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="modal-body px-4 py-4">
+
+                <!-- Occupant section if occupied -->
+                @if (box.currentShopId) {
+                <div class="occupant-banner p-3 mb-4 d-flex align-items-center gap-3">
+                    <div class="occupant-avatar d-flex align-items-center justify-content-center">
+                        {{ box.currentShopName.charAt(0) }}
+                    </div>
+                    <div>
+                        <div class="info-label">Occupant actuel</div>
+                        <div class="fw-bold text-dark">{{ box.currentShopName }}</div>
+                        <div class="text-muted small">Depuis le {{ box.entryDate }}</div>
+                    </div>
+                </div>
+                }
+
+                <!-- Info Grid -->
+                <div class="info-grid">
+
+                    <!-- Dimensions -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-aspect-ratio"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Dimensions</div>
+                            <div class="info-value">{{ box.dimensions }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Day -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Jour de paiement</div>
+                            <div class="info-value">Le {{ box.paymentDay }} de chaque mois</div>
+                        </div>
+                    </div>
+
+                    <!-- Rent -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-cash"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Loyer mensuel</div>
+                            <div class="info-value text-primary fw-bold">{{ formatPrice(box.rent) }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Charges -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-plus-circle"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Charges</div>
+                            <div class="info-value">{{ formatPrice(box.charges) }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Connections -->
+                    <div class="info-item col-12 w-100" style="grid-column: span 2; border-right: none;">
+                        <div class="info-icon">
+                            <i class="bi bi-plug-fill"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Équipements & Connections</div>
+                            <div class="d-flex flex-wrap gap-2 mt-1">
+                                @for (conn of box.connections; track conn) {
+                                <span class="conn-pill">{{ conn }}</span>
+                                }
+                                @if (box.connections.length === 0) {
+                                <span class="text-muted small italic">Aucun équipement listé</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                <button type="button"
+                    class="btn btn-detail-close w-100 rounded-3 py-2 fw-medium d-flex align-items-center justify-content-center gap-2"
+                    (click)="close()">
+                    <i class="bi bi-x-lg"></i>
+                    <span>Fermer</span>
+                </button>
+            </div>
+
+            }
+
+        </div>
+    </div>
+</div>

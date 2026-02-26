@@ -1,0 +1,265 @@
+<!-- Box Form Modal (Create / Edit) -->
+<div class="modal fade" #boxModal tabindex="-1" aria-labelledby="boxModalLabel" aria-hidden="true" id="boxFormModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+
+            <!-- Modal Header -->
+            <div class="modal-header border-0 px-4 pt-4 pb-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrapper d-flex align-items-center justify-content-center"
+                        [class.modal-icon-edit]="isEditMode">
+                        @if (isEditMode) {
+                        <i class="bi bi-pencil-square fs-5"></i>
+                        } @else {
+                        <i class="bi bi-plus-circle-fill fs-5"></i>
+                        }
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="boxModalLabel">
+                            {{ isEditMode ? 'Modifier le Box' : 'Nouveau Box' }}
+                        </h5>
+                        <p class="text-muted small mb-0">
+                            {{ isEditMode
+                            ? 'Modifiez les informations techniques du box'
+                            : 'Remplissez les informations pour ajouter un nouveau box' }}
+                        </p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" (click)="close()" aria-label="Fermer"></button>
+            </div>
+
+            <!-- Separator -->
+            <div class="px-4 pt-3">
+                <hr class="text-muted opacity-25 my-0">
+            </div>
+
+            <!-- Edit Mode: Box Info Banner -->
+            @if (isEditMode && editingBox) {
+            <div class="px-4 pt-3">
+                <div class="edit-box-banner d-flex align-items-center gap-3">
+                    <div class="edit-box-icon d-flex align-items-center justify-content-center">
+                        <i class="bi bi-grid-3x3-gap-fill"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark small">Box N° {{ editingBox.number }}</div>
+                        <div class="text-muted" style="font-size: 0.78rem;">Zone: {{ editingBox.zone }} | {{
+                            editingBox.dimensions }}</div>
+                    </div>
+                    <div class="ms-auto">
+                        <span class="badge rounded-pill edit-badge-status text-uppercase">
+                            {{ editingBox.status }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Modal Body -->
+            <div class="modal-body px-4 py-4">
+                <form [formGroup]="boxForm" (ngSubmit)="onSubmit()" id="boxCreationForm">
+
+                    <!-- Section: Identification & Caractéristiques -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-info-circle-fill text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Identification & Caractéristiques
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Box Number -->
+                            <div class="col-md-4">
+                                <label for="boxNumber" class="form-label fw-medium small">
+                                    Numéro du Box <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-hash text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="boxNumber"
+                                        formControlName="number" placeholder="Ex: B-101"
+                                        [class.is-invalid]="isInvalid('number')">
+                                </div>
+                                @if (isInvalid('number')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('number') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Zone -->
+                            <div class="col-md-4">
+                                <label for="boxZone" class="form-label fw-medium small">
+                                    Zone <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-map text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="boxZone"
+                                        formControlName="zone" placeholder="Ex: Zone A"
+                                        [class.is-invalid]="isInvalid('zone')">
+                                </div>
+                                @if (isInvalid('zone')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('zone') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Dimensions -->
+                            <div class="col-md-4">
+                                <label for="boxDimensions" class="form-label fw-medium small">
+                                    Dimensions <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-aspect-ratio text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="boxDimensions"
+                                        formControlName="dimensions" placeholder="Ex: 3m x 4m"
+                                        [class.is-invalid]="isInvalid('dimensions')">
+                                </div>
+                                @if (isInvalid('dimensions')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('dimensions') }}
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Statut & Gestion -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-gear-fill text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Statut & Gestion
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Status -->
+                            <div class="col-md-12">
+                                <label for="boxStatus" class="form-label fw-medium small">
+                                    Statut <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-toggle2-on text-muted"></i>
+                                    </span>
+                                    <select class="form-select border-start-0 ps-0" id="boxStatus"
+                                        formControlName="status" [class.is-invalid]="isInvalid('status')">
+                                        <option value="free">Libre</option>
+                                        <option value="occupied">Occupé</option>
+                                        <option value="reserved">Réservé</option>
+                                        <option value="under_repair">En travaux</option>
+                                    </select>
+                                </div>
+                                @if (isInvalid('status')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('status') }}
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Finances -->
+                    <div class="form-section">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-cash-stack text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Informations Financières
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Rent -->
+                            <div class="col-md-4">
+                                <label for="boxRent" class="form-label fw-medium small">
+                                    Loyer (mensuel) <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-cash text-muted"></i>
+                                    </span>
+                                    <input type="number" class="form-control border-start-0 ps-0" id="boxRent"
+                                        formControlName="rent" placeholder="0" [class.is-invalid]="isInvalid('rent')">
+                                </div>
+                                @if (isInvalid('rent')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('rent') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Charges -->
+                            <div class="col-md-4">
+                                <label for="boxCharges" class="form-label fw-medium small">
+                                    Charges <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-plus-circle text-muted"></i>
+                                    </span>
+                                    <input type="number" class="form-control border-start-0 ps-0" id="boxCharges"
+                                        formControlName="charges" placeholder="0"
+                                        [class.is-invalid]="isInvalid('charges')">
+                                </div>
+                                @if (isInvalid('charges')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('charges') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Payment Day -->
+                            <div class="col-md-4">
+                                <label for="boxPaymentDay" class="form-label fw-medium small">
+                                    Jour de paiement <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-calendar-day text-muted"></i>
+                                    </span>
+                                    <input type="number" class="form-control border-start-0 ps-0" id="boxPaymentDay"
+                                        formControlName="paymentDay" placeholder="1" min="1" max="31"
+                                        [class.is-invalid]="isInvalid('paymentDay')">
+                                </div>
+                                @if (isInvalid('paymentDay')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('paymentDay') }}
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                <button type="button"
+                    class="btn btn-light rounded-3 px-4 py-2 fw-medium d-flex align-items-center justify-content-center gap-2"
+                    (click)="close()">
+                    <i class="bi bi-x-lg"></i>
+                    <span>Annuler</span>
+                </button>
+                <button type="submit" form="boxCreationForm"
+                    class="btn btn-modal-submit rounded-3 px-4 py-2 fw-medium d-flex align-items-center justify-content-center gap-2">
+                    @if (isEditMode) {
+                    <i class="bi bi-check-lg"></i>
+                    <span>Enregistrer les modifications</span>
+                    } @else {
+                    <i class="bi bi-check-lg"></i>
+                    <span>Créer le box</span>
+                    }
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
