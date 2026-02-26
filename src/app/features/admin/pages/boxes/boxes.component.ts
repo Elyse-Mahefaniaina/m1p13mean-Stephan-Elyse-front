@@ -1,16 +1,24 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BoxService, Box } from '../../../../core/services/box.service';
+import { BoxFormModalComponent } from '../../components/box-form-modal/box-form-modal.component';
+import { BoxDetailModalComponent } from '../../components/box-detail-modal/box-detail-modal.component';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'app-boxes',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, BoxFormModalComponent, BoxDetailModalComponent, ConfirmDialogComponent],
     templateUrl: './boxes.component.html',
     styleUrl: './boxes.component.css'
 })
 export class BoxesComponent implements OnInit {
+    @ViewChild(BoxFormModalComponent) boxFormModal!: BoxFormModalComponent;
+    @ViewChild(BoxDetailModalComponent) boxDetailModal!: BoxDetailModalComponent;
+    @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
+
+    boxToDelete = signal<Box | null>(null);
     private allBoxes = signal<Box[]>([]);
     loading = signal(true);
     searchTerm = signal('');
@@ -102,6 +110,32 @@ export class BoxesComponent implements OnInit {
             currency: 'MGA',
             minimumFractionDigits: 0
         }).format(price);
+    }
+
+    openCreateModal(): void {
+        this.boxFormModal.open();
+    }
+
+    openDetailModal(box: Box): void {
+        this.boxDetailModal.open(box);
+    }
+
+    openEditModal(box: Box): void {
+        this.boxFormModal.openForEdit(box);
+    }
+
+    openDeleteModal(box: Box): void {
+        this.boxToDelete.set(box);
+        this.confirmDialog.open();
+    }
+
+    onDeleteConfirmed(): void {
+        const box = this.boxToDelete();
+        if (box) {
+            // Business logic will be added later
+            console.log('Delete confirmed for box:', box.id, box.number);
+        }
+        this.boxToDelete.set(null);
     }
 }
 
