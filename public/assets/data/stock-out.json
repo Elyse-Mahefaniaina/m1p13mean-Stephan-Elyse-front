@@ -1,0 +1,55 @@
+[
+    {
+        "id": "SO-001",
+        "date": "2024-02-27T10:30:00Z",
+        "productName": "MacBook Pro M3",
+        "sku": "AAPL-MBP-M3-001",
+        "quantity": 5,
+        "destination": "Client #8821 (Jean Dupont)",
+        "preparedBy": "Alex Martin",
+        "status": "completed",
+        "notes": "Livraison express programmée"
+    },
+    {
+        "id": "SO-002",
+        "date": "2024-02-27T11:15:00Z",
+        "productName": "iPhone 15 Pro",
+        "sku": "AAPL-IP15P-002",
+        "quantity": 12,
+        "destination": "Boutique Sud-Est - Réappro",
+        "preparedBy": "Sarah Connor",
+        "status": "pending",
+        "notes": "Attente validation transporteur"
+    },
+    {
+        "id": "SO-003",
+        "date": "2024-02-26T09:00:00Z",
+        "productName": "AirPods Pro 2",
+        "sku": "AAPL-APP2-003",
+        "quantity": 25,
+        "destination": "Client #9910 (Marc Durand)",
+        "preparedBy": "Kevin Durand",
+        "status": "completed"
+    },
+    {
+        "id": "SO-004",
+        "date": "2024-02-26T14:45:00Z",
+        "productName": "iPad Pro 12.9",
+        "sku": "AAPL-IPP-004",
+        "quantity": 3,
+        "destination": "Retour Fournisseur - Défectueux",
+        "preparedBy": "Alex Martin",
+        "status": "cancelled",
+        "notes": "Annulé car produit réparé sur place"
+    },
+    {
+        "id": "SO-005",
+        "date": "2024-02-25T16:20:00Z",
+        "productName": "Apple Watch Ultra",
+        "sku": "AAPL-AWU-005",
+        "quantity": 8,
+        "destination": "Client #7745 (Sophie Lefebvre)",
+        "preparedBy": "Sarah Connor",
+        "status": "completed"
+    }
+]
