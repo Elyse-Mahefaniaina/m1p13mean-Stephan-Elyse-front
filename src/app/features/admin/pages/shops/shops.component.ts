@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, computed, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ShopService, Shop } from '../../../../core/services/shop.service';
@@ -18,11 +18,14 @@ export class ShopsComponent implements OnInit {
     @ViewChild(ShopDetailModalComponent) shopDetailModal!: ShopDetailModalComponent;
     @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
 
+    currentPage = signal(1);
+    pageSize = signal(10);
+    protected Math = Math;
+
     private allShops = signal<Shop[]>([]);
     loading = signal(true);
     searchTerm = signal('');
     statusFilter = signal('all');
-
     shopToDelete = signal<Shop | null>(null);
 
     // Computed filtered shops
@@ -44,6 +47,28 @@ export class ShopsComponent implements OnInit {
         });
     });
 
+    // Paginated shops
+    paginatedShops = computed(() => {
+        const filtered = this.filteredShops();
+        const start = (this.currentPage() - 1) * this.pageSize();
+        return filtered.slice(start, start + this.pageSize());
+    });
+
+    // Total pages
+    totalPages = computed(() => Math.ceil(this.filteredShops().length / this.pageSize()));
+
+    // Page numbers array
+    pages = computed(() => {
+        const total = this.totalPages();
+        return Array.from({ length: total }, (_, i) => i + 1);
+    });
+
+    onPageChange(page: number): void {
+        if (page >= 1 && page <= this.totalPages()) {
+            this.currentPage.set(page);
+        }
+    }
+
     // Stats for shop management
     stats = signal([
         { label: 'Total Boutiques', value: 0, icon: 'bi-shop', color: 'primary' },
@@ -52,7 +77,13 @@ export class ShopsComponent implements OnInit {
         { label: 'Chiffre d\'Affaires', value: 0, icon: 'bi-cash-coin', color: 'info' }
     ]);
 
-    constructor(private shopService: ShopService) { }
+    constructor(private shopService: ShopService) {
+        effect(() => {
+            this.searchTerm();
+            this.statusFilter();
+            this.currentPage.set(1);
+        }, { allowSignalWrites: true });
+    }
 
     ngOnInit(): void {
         this.shopService.getShops().subscribe({
