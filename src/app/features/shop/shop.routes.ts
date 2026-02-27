@@ -6,6 +6,7 @@ import { StockLevelComponent } from './pages/inventory/stock-level/stock-level.c
 import { StockEntriesComponent } from './pages/inventory/stock-entries/stock-entries.component';
 import { StockOutComponent } from './pages/inventory/stock-out/stock-out.component';
 import { StockMovementsComponent } from './pages/inventory/stock-movements/stock-movements.component';
+import { OrdersComponent } from './pages/orders/orders.component';
 
 export const SHOP_ROUTES: Routes = [
     {
@@ -17,6 +18,7 @@ export const SHOP_ROUTES: Routes = [
         component: ShopLayoutComponent,
         children: [
             { path: 'dashboard', component: DashboardComponent },
+            { path: 'orders', component: OrdersComponent },
             {
                 path: 'inventory',
                 children: [

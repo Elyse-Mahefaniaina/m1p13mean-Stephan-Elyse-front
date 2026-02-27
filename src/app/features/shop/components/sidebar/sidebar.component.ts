@@ -54,6 +54,17 @@ export class SidebarComponent {
                     isOpen: true
                 }
             ]
+        },
+        {
+            title: 'Ventes',
+            items: [
+                {
+                    label: 'Commandes',
+                    icon: 'bi-cart-check-fill',
+                    route: '/shop/orders',
+                    badge: 2
+                }
+            ]
         }
     ]);
 

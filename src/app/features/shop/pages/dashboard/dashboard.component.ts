@@ -27,8 +27,8 @@ export class DashboardComponent {
   stats: DashboardStat[] = [
     {
       label: 'Revenus du mois',
-      value: '4 250,50 €',
-      icon: 'bi-currency-euro',
+      value: '21 250 500 Ar',
+      icon: 'bi-cash-stack',
       color: 'primary',
       trend: '+12.5%',
       description: 'par rapport au mois dernier'
@@ -58,15 +58,15 @@ export class DashboardComponent {
   ];
 
   recentOrders = [
-    { id: '#ORD-7234', client: 'Jean Dupont', status: 'delivered', total: '125,00 €', date: 'Aujourd\'hui' },
-    { id: '#ORD-7233', client: 'Marie Martin', status: 'shipped', total: '45,90 €', date: 'Hier' },
-    { id: '#ORD-7232', client: 'Luc Bernard', status: 'pending', total: '210,00 €', date: 'Il y a 2 jours' }
+    { id: '#ORD-7234', client: 'Jean Dupont', status: 'delivered', total: '625 000 Ar', date: 'Aujourd\'hui' },
+    { id: '#ORD-7233', client: 'Marie Martin', status: 'shipped', total: '229 500 Ar', date: 'Hier' },
+    { id: '#ORD-7232', client: 'Luc Bernard', status: 'pending', total: '1 050 000 Ar', date: 'Il y a 2 jours' }
   ];
 
   popularProducts = [
-    { name: 'Montre Élégance Noir', sales: 45, price: '89,90 €', stock: 12 },
-    { name: 'Sac à main Cuir', sales: 32, price: '120,00 €', stock: 5 },
-    { name: 'Écharpe en Soie', sales: 28, price: '35,00 €', stock: 25 }
+    { name: 'Montre Élégance Noir', sales: 45, price: '449 500 Ar', stock: 12 },
+    { name: 'Sac à main Cuir', sales: 32, price: '600 000 Ar', stock: 5 },
+    { name: 'Écharpe en Soie', sales: 28, price: '175 000 Ar', stock: 25 }
   ];
 
   getStatusClass(status: string): string {
