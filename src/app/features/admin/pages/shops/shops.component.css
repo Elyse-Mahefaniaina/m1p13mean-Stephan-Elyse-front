@@ -1,6 +1,6 @@
 :host {
-    --primary: #0A2540;
-    --primary-light: #1A3A5F;
+    --primary: #4F46E5;
+    --primary-light: #6366F1;
     --accent: #FF3366;
     --success: #10B981;
     --warning: #F59E0B;
@@ -39,13 +39,13 @@
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
     color: white;
     border: none;
-    box-shadow: 0 4px 15px rgba(10, 37, 64, 0.2);
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
     transition: all 0.3s ease;
 }
 
 .btn-premium:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(10, 37, 64, 0.3);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
     color: white;
 }
 

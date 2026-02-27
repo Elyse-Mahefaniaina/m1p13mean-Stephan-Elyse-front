@@ -11,7 +11,8 @@
                 </p>
             </div>
             <div>
-                <button class="btn btn-premium d-flex align-items-center gap-2 rounded-3 px-4 py-2">
+                <button (click)="openCreateModal()"
+                    class="btn btn-premium d-flex align-items-center gap-2 rounded-3 px-4 py-2">
                     <i class="bi bi-plus-circle-fill"></i>
                     <span>Nouvelle Boutique</span>
                 </button>
@@ -182,13 +183,16 @@
                         </td>
                         <td class="px-4" data-label="Actions">
                             <div class="d-flex gap-2 justify-content-end mobile-justify-start">
-                                <button class="btn-action btn-action-view" title="Détails">
+                                <button (click)="openDetailModal(shop)" class="btn-action btn-action-view"
+                                    title="Détails">
                                     <i class="bi bi-eye-fill"></i>
                                 </button>
-                                <button class="btn-action btn-action-edit" title="Modifier">
+                                <button (click)="openEditModal(shop)" class="btn-action btn-action-edit"
+                                    title="Modifier">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
-                                <button class="btn-action btn-action-delete" title="Désactiver">
+                                <button (click)="openDeleteModal(shop)" class="btn-action btn-action-delete"
+                                    title="Supprimer">
                                     <i class="bi bi-trash-fill"></i>
                                 </button>
                             </div>
@@ -201,3 +205,15 @@
         }
     </div>
 </div>
+
+<!-- Modals -->
+<app-shop-form-modal></app-shop-form-modal>
+<app-shop-detail-modal></app-shop-detail-modal>
+
+<!-- Confirm Dialog for Deletion -->
+<app-confirm-dialog title="Supprimer la boutique"
+    message="Êtes-vous sûr de vouloir supprimer cette boutique ? Cette action est irréversible."
+    detail="Toutes les données associées à cet établissement seront définitivement supprimées." icon="bi-trash-fill"
+    theme="danger" confirmText="Supprimer" cancelText="Annuler" [itemName]="shopToDelete()?.name ?? ''"
+    [itemSubtitle]="shopToDelete()?.email ?? ''" (confirmed)="onDeleteConfirmed()">
+</app-confirm-dialog>

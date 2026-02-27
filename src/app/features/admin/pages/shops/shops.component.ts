@@ -1,21 +1,29 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
-// Refresh comment
+import { Component, OnInit, signal, computed, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ShopService, Shop } from '../../../../core/services/shop.service';
+import { ShopFormModalComponent } from '../../components/shop-form-modal/shop-form-modal.component';
+import { ShopDetailModalComponent } from '../../components/shop-detail-modal/shop-detail-modal.component';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'app-shops',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, ShopFormModalComponent, ShopDetailModalComponent, ConfirmDialogComponent],
     templateUrl: './shops.component.html',
     styleUrl: './shops.component.css'
 })
 export class ShopsComponent implements OnInit {
+    @ViewChild(ShopFormModalComponent) shopFormModal!: ShopFormModalComponent;
+    @ViewChild(ShopDetailModalComponent) shopDetailModal!: ShopDetailModalComponent;
+    @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
+
     private allShops = signal<Shop[]>([]);
     loading = signal(true);
     searchTerm = signal('');
     statusFilter = signal('all');
+
+    shopToDelete = signal<Shop | null>(null);
 
     // Computed filtered shops
     filteredShops = computed(() => {
@@ -100,5 +108,31 @@ export class ShopsComponent implements OnInit {
             currency: 'MGA',
             minimumFractionDigits: 0
         }).format(price);
+    }
+
+    openCreateModal(): void {
+        this.shopFormModal.open();
+    }
+
+    openDetailModal(shop: Shop): void {
+        this.shopDetailModal.open(shop);
+    }
+
+    openEditModal(shop: Shop): void {
+        this.shopFormModal.openForEdit(shop);
+    }
+
+    openDeleteModal(shop: Shop): void {
+        this.shopToDelete.set(shop);
+        this.confirmDialog.open();
+    }
+
+    onDeleteConfirmed(): void {
+        const shop = this.shopToDelete();
+        if (shop) {
+            console.log('Delete confirmed for shop:', shop.id, shop.name);
+            // Real deletion logic would go here
+        }
+        this.shopToDelete.set(null);
     }
 }

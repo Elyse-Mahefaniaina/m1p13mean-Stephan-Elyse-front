@@ -1,0 +1,242 @@
+:host {
+    --primary: #4F46E5;
+    --primary-light: #6366F1;
+}
+
+/* Modal Content */
+.modal-content {
+    border: none;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* Modal Icon */
+.modal-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(99, 102, 241, 0.2) 100%);
+    color: var(--primary);
+}
+
+/* Section Label */
+.section-label {
+    color: #475569;
+}
+
+.section-label i {
+    font-size: 1rem;
+}
+
+/* Form Section Styling */
+.form-section {
+    background: #F8FAFC;
+    border-radius: 14px;
+    padding: 1.25rem;
+    border: 1px solid #F1F5F9;
+    transition: border-color 0.3s ease;
+}
+
+.form-section:hover {
+    border-color: rgba(79, 70, 229, 0.15);
+}
+
+/* Custom Input Group */
+.input-group-custom {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1.5px solid #E2E8F0;
+    transition: all 0.3s ease;
+}
+
+.input-group-custom:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+.input-group-custom .input-group-text {
+    border: none;
+    padding: 0.65rem 0.75rem 0.65rem 1rem;
+    font-size: 1.05rem;
+}
+
+.input-group-custom .form-control,
+.input-group-custom .form-select {
+    border: none;
+    padding: 0.65rem 1rem 0.65rem 0.5rem;
+    font-size: 0.9rem;
+    background: white;
+    box-shadow: none !important;
+}
+
+.input-group-custom .form-control:focus,
+.input-group-custom .form-select:focus {
+    box-shadow: none !important;
+}
+
+.input-group-custom .form-control::placeholder {
+    color: #94A3B8;
+    font-size: 0.85rem;
+}
+
+/* Invalid state on input group */
+.input-group-custom:has(.is-invalid) {
+    border-color: #EF4444;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+/* Custom Invalid Feedback */
+.invalid-feedback-custom {
+    color: #EF4444;
+    font-size: 0.78rem;
+    margin-top: 0.35rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+/* Form Labels */
+.form-label {
+    color: #334155;
+    margin-bottom: 0.4rem;
+}
+
+/* Submit Button */
+.btn-modal-submit {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.25);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.btn-modal-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
+    color: white;
+}
+
+.btn-modal-submit:active {
+    transform: translateY(0);
+}
+
+/* Cancel Button */
+.btn-light {
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    color: #64748B;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.btn-light:hover {
+    background: #E2E8F0;
+    color: #334155;
+}
+
+/* Close Button */
+.btn-close:focus {
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+/* Modal Title */
+.modal-title {
+    font-family: 'Sora', sans-serif;
+    color: #1E293B;
+}
+
+/* Animations */
+.modal.fade .modal-dialog {
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1) translateY(0);
+}
+
+/* Select dropdown styling */
+.form-select {
+    cursor: pointer;
+}
+
+.form-select option[value=""][disabled] {
+    color: #94A3B8;
+}
+
+/* Edit Mode Styles */
+.modal-icon-edit {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.2) 100%) !important;
+    color: #D97706 !important;
+}
+
+.edit-user-banner {
+    background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+    border: 1px solid #FDE68A;
+    border-radius: 12px;
+    padding: 0.85rem 1.1rem;
+    animation: bannerSlideIn 0.3s ease;
+}
+
+@keyframes bannerSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.edit-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+    flex-shrink: 0;
+}
+
+.edit-badge-role {
+    background: rgba(245, 158, 11, 0.15);
+    color: #92400E;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    font-weight: 600;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+/* Status dots styles for radios */
+.status-option {
+    border: 1.5px solid #E2E8F0;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.status-option:hover {
+    border-color: #CBD5E1;
+    background: #F8FAFC;
+}
+
+.status-option.selected {
+    border-color: var(--primary);
+    background: rgba(79, 70, 229, 0.05);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+}
+
+.status-bullet {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}

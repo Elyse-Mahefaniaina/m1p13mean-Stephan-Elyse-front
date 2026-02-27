@@ -1,0 +1,267 @@
+<!-- Shop Form Modal (Create / Edit) -->
+<div class="modal fade" #shopModal tabindex="-1" aria-labelledby="shopModalLabel" id="shopFormModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+
+            <!-- Modal Header -->
+            <div class="modal-header border-0 px-4 pt-4 pb-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrapper d-flex align-items-center justify-content-center"
+                        [class.modal-icon-edit]="isEditMode">
+                        @if (isEditMode) {
+                        <i class="bi bi-pencil-square fs-5"></i>
+                        } @else {
+                        <i class="bi bi-shop fs-5"></i>
+                        }
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="shopModalLabel">
+                            {{ isEditMode ? 'Modifier la Boutique' : 'Nouvelle Boutique' }}
+                        </h5>
+                        <p class="text-muted small mb-0">
+                            {{ isEditMode
+                            ? 'Modifiez les informations de l\'établissement'
+                            : 'Enregistrer un nouveau partenaire commerçant' }}
+                        </p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" (click)="close()" aria-label="Fermer"></button>
+            </div>
+
+            <!-- Separator -->
+            <div class="px-4 pt-3">
+                <hr class="text-muted opacity-25 my-0">
+            </div>
+
+            <!-- Edit Mode: Shop Info Banner -->
+            @if (isEditMode && editingShop) {
+            <div class="px-4 pt-3">
+                <div class="edit-user-banner d-flex align-items-center gap-3">
+                    <div class="edit-user-avatar d-flex align-items-center justify-content-center text-uppercase">
+                        {{ editingShop.name.charAt(0) }}
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark small">{{ editingShop.name }}</div>
+                        <div class="text-muted" style="font-size: 0.78rem;">{{ editingShop.email }}</div>
+                    </div>
+                    <div class="ms-auto">
+                        <span class="badge rounded-pill edit-badge-role">
+                            {{ editingShop.category }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Modal Body -->
+            <div class="modal-body px-4 py-4">
+                <form [formGroup]="shopForm" (ngSubmit)="onSubmit()" id="shopCreationForm">
+
+                    <!-- Section: Informations Générales -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-info-circle text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Informations Générales
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Shop Name -->
+                            <div class="col-md-6">
+                                <label for="shopName" class="form-label fw-medium small">
+                                    Nom de la Boutique <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-shop text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="shopName"
+                                        formControlName="name" placeholder="Ex: Elite Tech"
+                                        [class.is-invalid]="isInvalid('name')">
+                                </div>
+                                @if (isInvalid('name')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('name') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Category -->
+                            <div class="col-md-6">
+                                <label for="shopCategory" class="form-label fw-medium small">
+                                    Catégorie <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-tag text-muted"></i>
+                                    </span>
+                                    <select class="form-select border-start-0 ps-0" id="shopCategory"
+                                        formControlName="category" [class.is-invalid]="isInvalid('category')">
+                                        <option value="" disabled>Sélectionner une catégorie</option>
+                                        @for (cat of categories; track cat) {
+                                        <option [value]="cat">{{ cat }}</option>
+                                        }
+                                    </select>
+                                </div>
+                                @if (isInvalid('category')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('category') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Owner Name -->
+                            <div class="col-md-6">
+                                <label for="ownerName" class="form-label fw-medium small">
+                                    Propriétaire <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-person-badge text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="ownerName"
+                                        formControlName="ownerName" placeholder="Nom complet"
+                                        [class.is-invalid]="isInvalid('ownerName')">
+                                </div>
+                                @if (isInvalid('ownerName')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('ownerName') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Box Number -->
+                            <div class="col-md-6">
+                                <label for="boxNumber" class="form-label fw-medium small">
+                                    Numéro de Box
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-grid-3x3-gap text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="boxNumber"
+                                        formControlName="boxNumber" placeholder="Ex: A12">
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="col-12">
+                                <label for="description" class="form-label fw-medium small">
+                                    Description de l'activité <span class="text-danger">*</span>
+                                </label>
+                                <textarea class="form-control rounded-3" id="description" formControlName="description"
+                                    rows="3" placeholder="Décrivez brièvement les produits ou services..."
+                                    style="border: 1.5px solid #E2E8F0; font-size: 0.9rem;"
+                                    [class.is-invalid]="isInvalid('description')"></textarea>
+                                @if (isInvalid('description')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('description') }}
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Coordonnées -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-telephone text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Contact & Communication
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <label for="shopEmail" class="form-label fw-medium small">
+                                    Adresse email <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-envelope text-muted"></i>
+                                    </span>
+                                    <input type="email" class="form-control border-start-0 ps-0" id="shopEmail"
+                                        formControlName="email" placeholder="contact@boutique.mg"
+                                        [class.is-invalid]="isInvalid('email')">
+                                </div>
+                                @if (isInvalid('email')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('email') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="col-md-6">
+                                <label for="shopPhone" class="form-label fw-medium small">
+                                    Téléphone <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-phone text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="shopPhone"
+                                        formControlName="phone" placeholder="+261 ..."
+                                        [class.is-invalid]="isInvalid('phone')">
+                                </div>
+                                @if (isInvalid('phone')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('phone') }}
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Paramètres -->
+                    <div class="form-section">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-shield-check text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Paramètres du compte
+                            </span>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-medium small mb-3">Statut de la boutique</label>
+                            <div class="d-flex flex-wrap gap-3">
+                                @for (status of statuses; track status.value) {
+                                <div class="form-check p-0">
+                                    <input class="form-check-input d-none" type="radio" [id]="'status-' + status.value"
+                                        [value]="status.value" formControlName="status">
+                                    <label
+                                        class="status-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 border cursor-pointer transition-all"
+                                        [for]="'status-' + status.value"
+                                        [class.selected]="shopForm.get('status')?.value === status.value">
+                                        <div class="status-bullet" [ngClass]="status.class"></div>
+                                        <span class="fw-semibold small text-dark">{{ status.label }}</span>
+                                    </label>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                <button type="button"
+                    class="btn btn-light rounded-3 px-4 py-2 fw-medium d-flex align-items-center justify-content-center gap-2"
+                    (click)="close()">
+                    <i class="bi bi-x-lg"></i>
+                    <span>Annuler</span>
+                </button>
+                <button type="submit" form="shopCreationForm"
+                    class="btn btn-modal-submit rounded-3 px-4 py-2 fw-medium d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-check-lg"></i>
+                    <span>{{ isEditMode ? 'Enregistrer les modifications' : 'Créer la boutique' }}</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
