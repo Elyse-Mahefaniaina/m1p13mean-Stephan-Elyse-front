@@ -1,31 +1,31 @@
-<div class="modal fade" #detailModal tabindex="-1" aria-labelledby="userDetailLabel" aria-hidden="false"
-    id="userDetailModal">
+<!-- Shop Detail Modal -->
+<div class="modal fade" #detailModal tabindex="-1" aria-labelledby="shopDetailLabel" id="shopDetailModal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
 
-            @if (user) {
+            @if (shop) {
 
             <!-- Profile Header -->
-            <div class="detail-header" [ngClass]="'detail-header-' + getRoleColor(user.role)">
+            <div class="detail-header" [ngClass]="'detail-header-' + getStatusColor(shop.status)">
                 <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3"
                     (click)="close()" aria-label="Fermer"></button>
 
-                <div class="d-flex flex-column align-items-center pt-4 pb-4">
-                    <div class="detail-avatar d-flex align-items-center justify-content-center mb-3"
-                        [ngClass]="'avatar-' + getRoleColor(user.role)">
-                        {{ user.name.charAt(0) }}
+                <div class="d-flex flex-column align-items-center pt-4 pb-4 px-4 text-center">
+                    <div class="detail-avatar d-flex align-items-center justify-content-center mb-3 text-uppercase"
+                        [ngClass]="'avatar-' + getStatusColor(shop.status)">
+                        {{ shop.name.charAt(0) }}
                     </div>
-                    <h5 class="fw-bold text-white mb-1">{{ user.name }}</h5>
-                    <span class="text-white-50 small">{{ user.email }}</span>
+                    <h5 class="fw-bold text-white mb-1">{{ shop.name }}</h5>
+                    <span class="text-white-50 small">{{ shop.category }}</span>
 
                     <div class="d-flex gap-2 mt-3">
                         <span class="detail-badge-role">
-                            <i class="bi {{ getRoleIcon(user.role) }} me-1"></i>
-                            {{ getRoleLabel(user.role) }}
+                            <i class="bi bi-shop me-1"></i>
+                            ID: {{ shop.id }}
                         </span>
-                        <span class="detail-badge-status" [ngClass]="'status-' + getStatusColor(user.status)">
+                        <span class="detail-badge-status" [ngClass]="'status-' + getStatusColor(shop.status)">
                             <span class="status-indicator"></span>
-                            {{ getStatusLabel(user.status) }}
+                            {{ getStatusLabel(shop.status) }}
                         </span>
                     </div>
                 </div>
@@ -37,14 +37,14 @@
                 <!-- Info Grid -->
                 <div class="info-grid">
 
-                    <!-- ID -->
+                    <!-- ID (Technically redundant but matching User UI) -->
                     <div class="info-item">
                         <div class="info-icon">
                             <i class="bi bi-fingerprint"></i>
                         </div>
                         <div>
                             <div class="info-label">Identifiant</div>
-                            <div class="info-value font-monospace" style="font-size: 0.82rem;">{{ user.id }}</div>
+                            <div class="info-value font-monospace" style="font-size: 0.82rem;">{{ shop.id }}</div>
                         </div>
                     </div>
 
@@ -55,18 +55,18 @@
                         </div>
                         <div>
                             <div class="info-label">Adresse email</div>
-                            <div class="info-value">{{ user.email }}</div>
+                            <div class="info-value">{{ shop.email }}</div>
                         </div>
                     </div>
 
-                    <!-- Role -->
+                    <!-- Owner -->
                     <div class="info-item">
                         <div class="info-icon">
-                            <i class="bi {{ getRoleIcon(user.role) }}"></i>
+                            <i class="bi bi-person-badge-fill"></i>
                         </div>
                         <div>
-                            <div class="info-label">Rôle attribué</div>
-                            <div class="info-value">{{ getRoleLabel(user.role) }}</div>
+                            <div class="info-label">Propriétaire</div>
+                            <div class="info-value">{{ shop.ownerName }}</div>
                         </div>
                     </div>
 
@@ -76,36 +76,45 @@
                             <i class="bi bi-toggle2-on"></i>
                         </div>
                         <div>
-                            <div class="info-label">Statut du compte</div>
+                            <div class="info-label">Statut</div>
                             <div class="info-value d-flex align-items-center gap-2">
-                                <span class="status-dot-inline" [ngClass]="'dot-' + getStatusColor(user.status)"></span>
-                                {{ getStatusLabel(user.status) }}
+                                <span class="status-dot-inline" [ngClass]="'dot-' + getStatusColor(shop.status)"></span>
+                                {{ getStatusLabel(shop.status) }}
                             </div>
                         </div>
                     </div>
 
-                    <!-- Last Login -->
+                    <!-- Box -->
                     <div class="info-item">
                         <div class="info-icon">
-                            <i class="bi bi-clock-history"></i>
+                            <i class="bi bi-grid-3x3-gap-fill"></i>
                         </div>
                         <div>
-                            <div class="info-label">Dernière connexion</div>
-                            <div class="info-value">
-                                {{ user.lastLogin ? (user.lastLogin | date:'dd MMMM yyyy à HH:mm') : 'Jamais connecté'
-                                }}
-                            </div>
+                            <div class="info-label">Emplacement</div>
+                            <div class="info-value text-primary fw-bold">{{ shop.boxNumber || 'Non assigné' }}</div>
                         </div>
                     </div>
 
                     <!-- Created At -->
                     <div class="info-item">
                         <div class="info-icon">
-                            <i class="bi bi-calendar-check"></i>
+                            <i class="bi bi-calendar-check text-success"></i>
                         </div>
                         <div>
-                            <div class="info-label">Date de création</div>
-                            <div class="info-value">{{ user.createdAt | date:'dd MMMM yyyy' }}</div>
+                            <div class="info-label">Date d'inscription</div>
+                            <div class="info-value">{{ shop.createdAt | date:'dd MMMM yyyy' }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Revenue (Special field for shops) -->
+                    <div class="info-item col-12 w-100 border-end-0">
+                        <div class="info-icon text-info">
+                            <i class="bi bi-currency-exchange"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Chiffre d'Affaires</div>
+                            <div class="info-value text-dark fw-bold" style="font-size: 1.1rem;">{{
+                                formatPrice(shop.revenue) }}</div>
                         </div>
                     </div>
 
