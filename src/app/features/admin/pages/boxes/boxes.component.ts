@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, computed, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BoxService, Box } from '../../../../core/services/box.service';
@@ -17,6 +17,10 @@ export class BoxesComponent implements OnInit {
     @ViewChild(BoxFormModalComponent) boxFormModal!: BoxFormModalComponent;
     @ViewChild(BoxDetailModalComponent) boxDetailModal!: BoxDetailModalComponent;
     @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
+
+    currentPage = signal(1);
+    pageSize = signal(10);
+    protected Math = Math;
 
     boxToDelete = signal<Box | null>(null);
     private allBoxes = signal<Box[]>([]);
@@ -42,6 +46,28 @@ export class BoxesComponent implements OnInit {
         });
     });
 
+    // Paginated boxes
+    paginatedBoxes = computed(() => {
+        const filtered = this.filteredBoxes();
+        const start = (this.currentPage() - 1) * this.pageSize();
+        return filtered.slice(start, start + this.pageSize());
+    });
+
+    // Total pages
+    totalPages = computed(() => Math.ceil(this.filteredBoxes().length / this.pageSize()));
+
+    // Page numbers array
+    pages = computed(() => {
+        const total = this.totalPages();
+        return Array.from({ length: total }, (_, i) => i + 1);
+    });
+
+    onPageChange(page: number): void {
+        if (page >= 1 && page <= this.totalPages()) {
+            this.currentPage.set(page);
+        }
+    }
+
     // Stats for box management
     stats = signal([
         { label: 'Total Box', value: 0, icon: 'bi-grid-3x3-gap-fill', color: 'primary' },
@@ -50,7 +76,13 @@ export class BoxesComponent implements OnInit {
         { label: 'Revenus', value: 0, icon: 'bi-cash-stack', color: 'warning' }
     ]);
 
-    constructor(private boxService: BoxService) { }
+    constructor(private boxService: BoxService) {
+        effect(() => {
+            this.searchTerm();
+            this.statusFilter();
+            this.currentPage.set(1);
+        }, { allowSignalWrites: true });
+    }
 
     ngOnInit(): void {
         this.boxService.getBoxes().subscribe({

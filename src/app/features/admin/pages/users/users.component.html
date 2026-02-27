@@ -138,9 +138,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (user of filteredUsers(); track user.id) {
+                    @for (user of paginatedUsers(); track user.id) {
                     <tr>
-                        <td class="px-4">
+                        <td class="px-4" data-label="Utilisateur">
                             <div class="d-flex align-items-center gap-3">
                                 <div
                                     class="user-avatar-circle d-flex align-items-center justify-content-center bg-light text-primary fw-bold">
@@ -152,7 +152,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
+                        <td data-label="Rôle">
                             <span class="badge border py-2 px-3 rounded-pill fw-medium"
                                 [ngClass]="getRoleBadgeClass(user.role)">
                                 <i class="bi me-1"
@@ -160,25 +160,25 @@
                                 {{ getRoleLabel(user.role) }}
                             </span>
                         </td>
-                        <td>
+                        <td data-label="Statut">
                             <div class="d-flex align-items-center gap-2">
                                 <span class="status-dot" [ngClass]="getStatusBadgeClass(user.status)"></span>
                                 <span class="fw-medium text-dark">{{ getStatusLabel(user.status) }}</span>
                             </div>
                         </td>
-                        <td>
+                        <td data-label="Dernière connexion">
                             <div class="text-muted small">
                                 <i class="bi bi-clock-history me-1"></i>
                                 {{ user.lastLogin ? (user.lastLogin | date:'dd/MM/yyyy HH:mm') : 'Jamais' }}
                             </div>
                         </td>
-                        <td>
+                        <td data-label="Création">
                             <div class="text-muted small">
                                 <i class="bi bi-calendar3 me-1"></i>
                                 {{ user.createdAt | date:'dd/MM/yyyy' }}
                             </div>
                         </td>
-                        <td class="px-4">
+                        <td class="px-4" data-label="Actions">
                             <div class="d-flex gap-2 justify-content-end">
                                 <button class="btn-action btn-action-view" title="Détails"
                                     (click)="openDetailModal(user)">
@@ -198,6 +198,40 @@
                     }
                 </tbody>
             </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="card-footer bg-white border-0 p-4 border-top">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                <div class="text-muted small fw-medium">
+                    Affichage de <span class="text-dark fw-bold">{{ (currentPage() - 1) * pageSize() + 1 }}</span>
+                    à <span class="text-dark fw-bold">{{ Math.min(currentPage() * pageSize(), filteredUsers().length)
+                        }}</span>
+                    sur <span class="text-dark fw-bold">{{ filteredUsers().length }}</span> utilisateurs
+                </div>
+
+                <nav aria-label="Table navigation">
+                    <ul class="pagination pagination-premium mb-0">
+                        <li class="page-item" [class.disabled]="currentPage() === 1">
+                            <button class="page-link" (click)="onPageChange(currentPage() - 1)" aria-label="Précédent">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                        </li>
+
+                        @for (page of pages(); track page) {
+                        <li class="page-item" [class.active]="currentPage() === page">
+                            <button class="page-link" (click)="onPageChange(page)">{{ page }}</button>
+                        </li>
+                        }
+
+                        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+                            <button class="page-link" (click)="onPageChange(currentPage() + 1)" aria-label="Suivant">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
         }
     </div>

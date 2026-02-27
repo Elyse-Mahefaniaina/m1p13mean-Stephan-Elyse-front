@@ -11,7 +11,7 @@
         ],
         "status": "occupied",
         "currentShopId": 1,
-        "currentShopName": "Fashion Boutique",
+        "currentShopName": "Elite Tech",
         "rent": 1200000,
         "charges": 150000,
         "entryDate": "2024-01-15",
@@ -48,7 +48,7 @@
         ],
         "status": "reserved",
         "currentShopId": 4,
-        "currentShopName": "Beauty Shop",
+        "currentShopName": "Bijoux Éclat",
         "rent": 1800000,
         "charges": 200000,
         "entryDate": "2025-02-01",
@@ -66,7 +66,7 @@
         ],
         "status": "occupied",
         "currentShopId": 2,
-        "currentShopName": "TechZone",
+        "currentShopName": "Mode & Style",
         "rent": 1500000,
         "charges": 180000,
         "entryDate": "2024-02-20",
@@ -102,11 +102,173 @@
         ],
         "status": "occupied",
         "currentShopId": 3,
-        "currentShopName": "Sport Plus",
+        "currentShopName": "Bio Délices",
         "rent": 2200000,
         "charges": 250000,
         "entryDate": "2024-03-10",
         "exitDate": null,
         "paymentDay": 1
+    },
+    {
+        "id": "B7",
+        "number": "104",
+        "zone": "Zone A",
+        "dimensions": "20m²",
+        "connections": [
+            "Électricité",
+            "Fibre"
+        ],
+        "status": "free",
+        "currentShopId": null,
+        "currentShopName": "-",
+        "rent": 1000000,
+        "charges": 120000,
+        "entryDate": null,
+        "exitDate": null,
+        "paymentDay": 5
+    },
+    {
+        "id": "B8",
+        "number": "105",
+        "zone": "Zone A",
+        "dimensions": "35m²",
+        "connections": [
+            "Électricité",
+            "Eau"
+        ],
+        "status": "free",
+        "currentShopId": null,
+        "currentShopName": "-",
+        "rent": 1600000,
+        "charges": 180000,
+        "entryDate": null,
+        "exitDate": null,
+        "paymentDay": 5
+    },
+    {
+        "id": "B9",
+        "number": "203",
+        "zone": "Zone B",
+        "dimensions": "25m²",
+        "connections": [
+            "Électricité",
+            "Fibre"
+        ],
+        "status": "occupied",
+        "currentShopId": 6,
+        "currentShopName": "Gaming Zone",
+        "rent": 1200000,
+        "charges": 150000,
+        "entryDate": "2024-02-15",
+        "exitDate": null,
+        "paymentDay": 10
+    },
+    {
+        "id": "B10",
+        "number": "204",
+        "zone": "Zone B",
+        "dimensions": "15m²",
+        "connections": [
+            "Électricité"
+        ],
+        "status": "free",
+        "currentShopId": null,
+        "currentShopName": "-",
+        "rent": 750000,
+        "charges": 90000,
+        "entryDate": null,
+        "exitDate": null,
+        "paymentDay": 10
+    },
+    {
+        "id": "B11",
+        "number": "302",
+        "zone": "Zone C",
+        "dimensions": "45m²",
+        "connections": [
+            "Électricité",
+            "Eau",
+            "Fibre"
+        ],
+        "status": "occupied",
+        "currentShopId": 8,
+        "currentShopName": "Sports Connect",
+        "rent": 2000000,
+        "charges": 220000,
+        "entryDate": "2024-01-01",
+        "exitDate": null,
+        "paymentDay": 1
+    },
+    {
+        "id": "B12",
+        "number": "303",
+        "zone": "Zone C",
+        "dimensions": "30m²",
+        "connections": [
+            "Électricité",
+            "Fibre"
+        ],
+        "status": "free",
+        "currentShopId": null,
+        "currentShopName": "-",
+        "rent": 1400000,
+        "charges": 160000,
+        "entryDate": null,
+        "exitDate": null,
+        "paymentDay": 1
+    },
+    {
+        "id": "B13",
+        "number": "401",
+        "zone": "Zone D",
+        "dimensions": "20m²",
+        "connections": [
+            "Électricité"
+        ],
+        "status": "free",
+        "currentShopId": null,
+        "currentShopName": "-",
+        "rent": 950000,
+        "charges": 110000,
+        "entryDate": null,
+        "exitDate": null,
+        "paymentDay": 15
+    },
+    {
+        "id": "B14",
+        "number": "402",
+        "zone": "Zone D",
+        "dimensions": "25m²",
+        "connections": [
+            "Électricité",
+            "Fibre"
+        ],
+        "status": "reserved",
+        "currentShopId": 11,
+        "currentShopName": "Coffee House",
+        "rent": 1300000,
+        "charges": 140000,
+        "entryDate": "2025-03-01",
+        "exitDate": null,
+        "paymentDay": 15
+    },
+    {
+        "id": "B15",
+        "number": "403",
+        "zone": "Zone D",
+        "dimensions": "60m²",
+        "connections": [
+            "Électricité",
+            "Eau",
+            "Fibre"
+        ],
+        "status": "free",
+        "currentShopId": null,
+        "currentShopName": "-",
+        "rent": 2800000,
+        "charges": 300000,
+        "entryDate": null,
+        "exitDate": null,
+        "paymentDay": 15
     }
 ]

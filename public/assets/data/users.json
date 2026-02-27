@@ -52,5 +52,140 @@
         "status": "active",
         "lastLogin": "2026-02-26T11:00:00Z",
         "createdAt": "2025-12-05T14:00:00Z"
+    },
+    {
+        "id": "7",
+        "name": "Alice Martin",
+        "email": "alice.martin@example.com",
+        "role": "client",
+        "status": "active",
+        "lastLogin": "2026-02-27T08:00:00Z",
+        "createdAt": "2026-01-20T09:00:00Z"
+    },
+    {
+        "id": "8",
+        "name": "Boutique Gamers",
+        "email": "support@gamers-shop.mg",
+        "role": "shop",
+        "status": "active",
+        "lastLogin": "2026-02-27T09:15:00Z",
+        "createdAt": "2026-01-15T14:20:00Z"
+    },
+    {
+        "id": "9",
+        "name": "Marc Durand",
+        "email": "marc.durand@yahoo.fr",
+        "role": "client",
+        "status": "active",
+        "lastLogin": "2026-02-26T22:45:00Z",
+        "createdAt": "2026-02-10T10:30:00Z"
+    },
+    {
+        "id": "10",
+        "name": "Pierre Lefebvre",
+        "email": "pierre.lef@hotmail.com",
+        "role": "client",
+        "status": "inactive",
+        "lastLogin": "2026-02-15T10:10:00Z",
+        "createdAt": "2026-01-05T11:20:00Z"
+    },
+    {
+        "id": "11",
+        "name": "Fashion Store",
+        "email": "info@fashion-store.mg",
+        "role": "shop",
+        "status": "active",
+        "lastLogin": "2026-02-27T07:30:00Z",
+        "createdAt": "2026-01-01T12:45:00Z"
+    },
+    {
+        "id": "12",
+        "name": "Admin Support",
+        "email": "support@mean-projet.mg",
+        "role": "admin",
+        "status": "active",
+        "lastLogin": "2026-02-27T10:00:00Z",
+        "createdAt": "2025-11-20T08:00:00Z"
+    },
+    {
+        "id": "13",
+        "name": "Marie Curie",
+        "email": "marie.curie@science.fr",
+        "role": "client",
+        "status": "active",
+        "lastLogin": "2026-02-27T06:00:00Z",
+        "createdAt": "2026-02-20T09:00:00Z"
+    },
+    {
+        "id": "14",
+        "name": "Boutique Zen",
+        "email": "contact@zen-boutique.mg",
+        "role": "shop",
+        "status": "pending",
+        "lastLogin": null,
+        "createdAt": "2026-02-25T11:20:00Z"
+    },
+    {
+        "id": "15",
+        "name": "Thomas Petit",
+        "email": "thomas.p@orange.fr",
+        "role": "client",
+        "status": "active",
+        "lastLogin": "2026-02-26T16:45:00Z",
+        "createdAt": "2026-01-30T15:30:00Z"
+    },
+    {
+        "id": "16",
+        "name": "Laura Blanc",
+        "email": "laura.blanc@gmail.com",
+        "role": "client",
+        "status": "inactive",
+        "lastLogin": "2026-02-10T11:10:00Z",
+        "createdAt": "2026-01-25T11:20:00Z"
+    },
+    {
+        "id": "17",
+        "name": "Electro World",
+        "email": "sales@electroworld.com",
+        "role": "shop",
+        "status": "active",
+        "lastLogin": "2026-02-27T08:45:00Z",
+        "createdAt": "2026-02-05T09:45:00Z"
+    },
+    {
+        "id": "18",
+        "name": "Robert Smith",
+        "email": "robert.smith@outlook.com",
+        "role": "client",
+        "status": "active",
+        "lastLogin": "2026-02-26T19:00:00Z",
+        "createdAt": "2026-02-18T14:00:00Z"
+    },
+    {
+        "id": "19",
+        "name": "Julie Rousseau",
+        "email": "julie.rousseau@gmail.com",
+        "role": "client",
+        "status": "active",
+        "lastLogin": "2026-02-27T09:30:00Z",
+        "createdAt": "2026-02-22T10:00:00Z"
+    },
+    {
+        "id": "20",
+        "name": "Boutique Paris",
+        "email": "paris@boutique.mg",
+        "role": "shop",
+        "status": "active",
+        "lastLogin": "2026-02-27T10:15:00Z",
+        "createdAt": "2026-01-28T11:20:00Z"
+    },
+    {
+        "id": "21",
+        "name": "Kevin Durant",
+        "email": "kevin.d@gmail.com",
+        "role": "client",
+        "status": "pending",
+        "lastLogin": null,
+        "createdAt": "2026-02-26T15:30:00Z"
     }
 ]

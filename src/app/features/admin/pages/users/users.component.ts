@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, computed, inject, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService, User } from '../../../../core/services/user.service';
@@ -18,11 +18,23 @@ export class UsersComponent implements OnInit {
     @ViewChild(UserDetailModalComponent) userDetailModal!: UserDetailModalComponent;
     @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
     private userService = inject(UserService);
+    protected Math = Math;
+
+    constructor() {
+        effect(() => {
+            this.searchTerm();
+            this.roleFilter();
+            this.statusFilter();
+            this.currentPage.set(1);
+        }, { allowSignalWrites: true });
+    }
 
     userToDelete = signal<User | null>(null);
 
     allUsers = signal<User[]>([]);
     loading = signal(true);
+    currentPage = signal(1);
+    pageSize = signal(10);
     searchTerm = signal('');
     roleFilter = signal('all');
     statusFilter = signal('all');
@@ -45,6 +57,28 @@ export class UsersComponent implements OnInit {
             return matchesSearch && matchesRole && matchesStatus;
         });
     });
+
+    // Paginated users
+    paginatedUsers = computed(() => {
+        const filtered = this.filteredUsers();
+        const start = (this.currentPage() - 1) * this.pageSize();
+        return filtered.slice(start, start + this.pageSize());
+    });
+
+    // Total pages
+    totalPages = computed(() => Math.ceil(this.filteredUsers().length / this.pageSize()));
+
+    // Page numbers array for the template
+    pages = computed(() => {
+        const total = this.totalPages();
+        return Array.from({ length: total }, (_, i) => i + 1);
+    });
+
+    onPageChange(page: number): void {
+        if (page >= 1 && page <= this.totalPages()) {
+            this.currentPage.set(page);
+        }
+    }
 
     // Stats for user management
     stats = signal([
