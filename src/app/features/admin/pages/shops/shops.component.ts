@@ -82,7 +82,7 @@ export class ShopsComponent implements OnInit {
             this.searchTerm();
             this.statusFilter();
             this.currentPage.set(1);
-        }, { allowSignalWrites: true });
+        });
     }
 
     ngOnInit(): void {

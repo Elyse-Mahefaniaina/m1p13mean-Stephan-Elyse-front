@@ -26,7 +26,7 @@ export class UsersComponent implements OnInit {
             this.roleFilter();
             this.statusFilter();
             this.currentPage.set(1);
-        }, { allowSignalWrites: true });
+        });
     }
 
     userToDelete = signal<User | null>(null);
