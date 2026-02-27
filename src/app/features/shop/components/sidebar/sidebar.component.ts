@@ -46,7 +46,8 @@ export class SidebarComponent {
                     icon: 'bi-box-seam-fill',
                     route: '/shop/inventory',
                     children: [
-                        { label: 'Niveau de Stock', icon: 'bi-bar-chart-fill', route: '/shop/inventory/stock-level' }
+                        { label: 'Niveau de Stock', icon: 'bi-bar-chart-fill', route: '/shop/inventory/stock-level' },
+                        { label: 'Entrées de Stock', icon: 'bi-plus-square-fill', route: '/shop/inventory/stock-entries' }
                     ],
                     isOpen: true
                 }

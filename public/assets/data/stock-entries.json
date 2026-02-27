@@ -1,0 +1,102 @@
+[
+    {
+        "id": "ENT-001",
+        "date": "2024-03-20T09:30:00",
+        "productName": "Café Arabica Bio",
+        "sku": "COF-ARA-001",
+        "quantity": 50,
+        "supplier": "EcoCoffee Ltd",
+        "receivedBy": "Jean Dupont",
+        "status": "completed"
+    },
+    {
+        "id": "ENT-002",
+        "date": "2024-03-21T11:15:00",
+        "productName": "Thé Vert Matcha",
+        "sku": "TEA-MAT-002",
+        "quantity": 25,
+        "supplier": "ZenTea Imports",
+        "receivedBy": "Marie Curie",
+        "status": "completed"
+    },
+    {
+        "id": "ENT-003",
+        "date": "2024-03-22T14:45:00",
+        "productName": "Sucre de Canne",
+        "sku": "SUG-CAN-003",
+        "quantity": 100,
+        "supplier": "SugarCo",
+        "receivedBy": "Pierre Martin",
+        "status": "pending"
+    },
+    {
+        "id": "ENT-004",
+        "date": "2024-03-23T08:00:00",
+        "productName": "Chocolat Noir 70%",
+        "sku": "CHO-DK70-004",
+        "quantity": 30,
+        "supplier": "ChocoArt",
+        "receivedBy": "Jean Dupont",
+        "status": "completed"
+    },
+    {
+        "id": "ENT-005",
+        "date": "2024-03-24T10:30:00",
+        "productName": "Lait d'Amande",
+        "sku": "MILK-ALM-005",
+        "quantity": 40,
+        "supplier": "DairyFree",
+        "receivedBy": "Marie Curie",
+        "status": "cancelled"
+    },
+    {
+        "id": "ENT-006",
+        "date": "2024-03-25T13:20:00",
+        "productName": "Miel de Fleurs",
+        "sku": "HON-FLW-006",
+        "quantity": 15,
+        "supplier": "BeeHappy",
+        "receivedBy": "Pierre Martin",
+        "status": "completed"
+    },
+    {
+        "id": "ENT-007",
+        "date": "2024-03-26T09:00:00",
+        "productName": "Grains de Vanille",
+        "sku": "VAN-BEA-007",
+        "quantity": 10,
+        "supplier": "SpiceWorld",
+        "receivedBy": "Jean Dupont",
+        "status": "pending"
+    },
+    {
+        "id": "ENT-008",
+        "date": "2024-03-27T15:00:00",
+        "productName": "Cannelle en Poudre",
+        "sku": "SPI-CAN-008",
+        "quantity": 20,
+        "supplier": "SpiceWorld",
+        "receivedBy": "Marie Curie",
+        "status": "completed"
+    },
+    {
+        "id": "ENT-009",
+        "date": "2024-03-28T10:00:00",
+        "productName": "Gingembre Frais",
+        "sku": "SPI-GIN-009",
+        "quantity": 8,
+        "supplier": "FreshFarm",
+        "receivedBy": "Pierre Martin",
+        "status": "pending"
+    },
+    {
+        "id": "ENT-010",
+        "date": "2024-03-29T11:30:00",
+        "productName": "Sirop d'Érable",
+        "sku": "SYR-MAP-010",
+        "quantity": 12,
+        "supplier": "MaplePure",
+        "receivedBy": "Jean Dupont",
+        "status": "completed"
+    }
+]
