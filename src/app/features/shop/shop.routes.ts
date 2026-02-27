@@ -5,6 +5,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { StockLevelComponent } from './pages/inventory/stock-level/stock-level.component';
 import { StockEntriesComponent } from './pages/inventory/stock-entries/stock-entries.component';
 import { StockOutComponent } from './pages/inventory/stock-out/stock-out.component';
+import { StockMovementsComponent } from './pages/inventory/stock-movements/stock-movements.component';
 
 export const SHOP_ROUTES: Routes = [
     {
@@ -21,7 +22,8 @@ export const SHOP_ROUTES: Routes = [
                 children: [
                     { path: 'stock-level', component: StockLevelComponent },
                     { path: 'stock-entries', component: StockEntriesComponent },
-                    { path: 'stock-out', component: StockOutComponent }
+                    { path: 'stock-out', component: StockOutComponent },
+                    { path: 'stock-movements', component: StockMovementsComponent }
                 ]
             },
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' }

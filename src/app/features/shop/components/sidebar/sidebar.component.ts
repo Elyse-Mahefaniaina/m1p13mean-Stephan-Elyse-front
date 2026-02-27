@@ -48,7 +48,8 @@ export class SidebarComponent {
                     children: [
                         { label: 'Niveau de Stock', icon: 'bi-bar-chart-fill', route: '/shop/inventory/stock-level' },
                         { label: 'Entrées de Stock', icon: 'bi-plus-square-fill', route: '/shop/inventory/stock-entries' },
-                        { label: 'Sorties de Stock', icon: 'bi-dash-square-fill', route: '/shop/inventory/stock-out' }
+                        { label: 'Sorties de Stock', icon: 'bi-dash-square-fill', route: '/shop/inventory/stock-out' },
+                        { label: 'Mouvements de stock', icon: 'bi-arrow-left-right', route: '/shop/inventory/stock-movements' }
                     ],
                     isOpen: true
                 }
