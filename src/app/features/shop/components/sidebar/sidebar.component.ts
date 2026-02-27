@@ -8,6 +8,8 @@ interface NavItem {
     icon: string;
     route: string;
     badge?: number;
+    children?: NavItem[];
+    isOpen?: boolean;
 }
 
 interface NavSection {
@@ -35,8 +37,28 @@ export class SidebarComponent {
             items: [
                 { label: 'Tableau de bord', icon: 'bi-grid-1x2-fill', route: '/shop/dashboard' }
             ]
+        },
+        {
+            title: 'Inventaire',
+            items: [
+                {
+                    label: 'Gestion de Stock',
+                    icon: 'bi-box-seam-fill',
+                    route: '/shop/inventory',
+                    children: [
+                        { label: 'Niveau de Stock', icon: 'bi-bar-chart-fill', route: '/shop/inventory/stock-level' }
+                    ],
+                    isOpen: true
+                }
+            ]
         }
     ]);
+
+    toggleSubmenu(item: NavItem) {
+        if (item.children) {
+            item.isOpen = !item.isOpen;
+        }
+    }
 
     toggleMobileMenu() {
         this.isMobileMenuOpen.update(v => !v);

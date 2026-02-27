@@ -1,0 +1,134 @@
+[
+    {
+        "id": "1",
+        "productName": "Sachet de café Arabica 250g",
+        "sku": "CAF-ARA-250",
+        "category": "Epicerie",
+        "currentStock": 45,
+        "minStock": 20,
+        "unit": "unités",
+        "status": "In Stock",
+        "lastUpdated": "2026-02-25T10:30:00Z"
+    },
+    {
+        "id": "2",
+        "productName": "Thé Vert Bio - 20 sachets",
+        "sku": "THE-VER-BIO",
+        "category": "Epicerie",
+        "currentStock": 12,
+        "minStock": 15,
+        "unit": "boîtes",
+        "status": "Low Stock",
+        "lastUpdated": "2026-02-26T08:15:00Z"
+    },
+    {
+        "id": "3",
+        "productName": "Chocolat Noir 70% 100g",
+        "sku": "CHO-NOI-70",
+        "category": "Confiserie",
+        "currentStock": 0,
+        "minStock": 10,
+        "unit": "tablettes",
+        "status": "Out of Stock",
+        "lastUpdated": "2026-02-24T14:20:00Z"
+    },
+    {
+        "id": "4",
+        "productName": "Huile d'Olive Vierge 500ml",
+        "sku": "HUI-OLI-500",
+        "category": "Epicerie",
+        "currentStock": 28,
+        "minStock": 10,
+        "unit": "bouteilles",
+        "status": "In Stock",
+        "lastUpdated": "2026-02-27T09:00:00Z"
+    },
+    {
+        "id": "5",
+        "productName": "Pâtes Penne Rigate 500g",
+        "sku": "PAT-PEN-500",
+        "category": "Epicerie",
+        "currentStock": 150,
+        "minStock": 50,
+        "unit": "sachets",
+        "status": "In Stock",
+        "lastUpdated": "2026-02-27T11:45:00Z"
+    },
+    {
+        "id": "6",
+        "productName": "Riz Basmati 1kg",
+        "sku": "RIZ-BAS-1KG",
+        "category": "Epicerie",
+        "currentStock": 8,
+        "minStock": 20,
+        "unit": "sachets",
+        "status": "Low Stock",
+        "lastUpdated": "2026-02-25T16:20:00Z"
+    },
+    {
+        "id": "7",
+        "productName": "Confiture de Fraise 370g",
+        "sku": "CON-FRA-370",
+        "category": "Epicerie",
+        "currentStock": 15,
+        "minStock": 15,
+        "unit": "pots",
+        "status": "Low Stock",
+        "lastUpdated": "2026-02-26T13:10:00Z"
+    },
+    {
+        "id": "8",
+        "productName": "Miel de Fleurs 500g",
+        "sku": "MIE-FLE-500",
+        "category": "Epicerie",
+        "currentStock": 32,
+        "minStock": 12,
+        "unit": "pots",
+        "status": "In Stock",
+        "lastUpdated": "2026-02-27T10:30:00Z"
+    },
+    {
+        "id": "9",
+        "productName": "Biscuits Sablés Pur Beurre",
+        "sku": "BIS-SAB-BEU",
+        "category": "Confiserie",
+        "currentStock": 2,
+        "minStock": 15,
+        "unit": "paquets",
+        "status": "Low Stock",
+        "lastUpdated": "2026-02-27T08:50:00Z"
+    },
+    {
+        "id": "10",
+        "productName": "Compote de Pommes 4x100g",
+        "sku": "COM-POM-400",
+        "category": "Dessert",
+        "currentStock": 64,
+        "minStock": 20,
+        "unit": "packs",
+        "status": "In Stock",
+        "lastUpdated": "2026-02-27T12:00:00Z"
+    },
+    {
+        "id": "11",
+        "productName": "Jus d'Orange 1L",
+        "sku": "JUS-ORA-1L",
+        "category": "Boissons",
+        "currentStock": 0,
+        "minStock": 24,
+        "unit": "briques",
+        "status": "Out of Stock",
+        "lastUpdated": "2026-02-26T17:40:00Z"
+    },
+    {
+        "id": "12",
+        "productName": "Eau Minérale 6x1.5L",
+        "sku": "EAU-MIN-6X15",
+        "category": "Boissons",
+        "currentStock": 85,
+        "minStock": 30,
+        "unit": "packs",
+        "status": "In Stock",
+        "lastUpdated": "2026-02-27T14:15:00Z"
+    }
+]

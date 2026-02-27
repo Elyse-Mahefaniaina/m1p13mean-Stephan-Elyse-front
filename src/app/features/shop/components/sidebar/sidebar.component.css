@@ -110,6 +110,10 @@
     transform: rotate(180deg);
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 .dropdown-backdrop {
     position: fixed;
     inset: 0;

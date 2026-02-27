@@ -34,6 +34,27 @@
         <ul class="nav flex-column">
             @for (item of section.items; track item.route) {
             <li class="nav-item">
+                @if (item.children) {
+                <div class="nav-link d-flex align-items-center px-3 py-2 text-white-50 cursor-pointer"
+                    [class.active]="item.isOpen" (click)="toggleSubmenu(item)">
+                    <i class="bi {{ item.icon }} me-3 fs-5"></i>
+                    <span class="flex-grow-1">{{ item.label }}</span>
+                    <i class="bi bi-chevron-down small transition-transform" [class.rotate-180]="item.isOpen"></i>
+                </div>
+                @if (item.isOpen) {
+                <ul class="nav flex-column ms-4 py-1">
+                    @for (child of item.children; track child.route) {
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center px-3 py-2 text-white-50 small"
+                            [routerLink]="child.route" routerLinkActive="active" (click)="closeMobileMenu()">
+                            <i class="bi {{ child.icon }} me-3"></i>
+                            <span>{{ child.label }}</span>
+                        </a>
+                    </li>
+                    }
+                </ul>
+                }
+                } @else {
                 <a class="nav-link d-flex align-items-center px-3 py-2 text-white-50" [routerLink]="item.route"
                     routerLinkActive="active" (click)="closeMobileMenu()">
                     <i class="bi {{ item.icon }} me-3 fs-5"></i>
@@ -42,6 +63,7 @@
                     <span class="badge bg-primary rounded-pill">{{ item.badge }}</span>
                     }
                 </a>
+                }
             </li>
             }
         </ul>
