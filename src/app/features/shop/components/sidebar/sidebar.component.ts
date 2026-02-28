@@ -70,6 +70,16 @@ export class SidebarComponent {
                     route: '/shop/promotions'
                 }
             ]
+        },
+        {
+            title: 'Paramètres',
+            items: [
+                {
+                    label: 'Profil & Boutique',
+                    icon: 'bi-person-gear',
+                    route: '/shop/profile'
+                }
+            ]
         }
     ]);
 

@@ -1,0 +1,348 @@
+<div class="profile-wrapper">
+    <!-- Page Header -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4 header-glass">
+        <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 p-4">
+            <div>
+                <h1 class="h3 mb-1 fw-bold text-shop header-font">Mon Profil</h1>
+                <p class="text-muted mb-0 small fw-medium">
+                    <i class="bi bi-person-badge me-1"></i> Gérez vos informations personnelles et les paramètres de
+                    votre boutique
+                </p>
+            </div>
+            <div>
+                <span class="badge bg-light text-secondary px-3 py-2 rounded-3 fw-medium">
+                    {{ today | date:'EEEE, d MMMM yyyy':'':'fr-FR' }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Sidebar Navigation (Profile Tabs) -->
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="p-4 text-center border-bottom bg-light bg-opacity-10">
+                        <div class="profile-avatar-container mx-auto mb-3">
+                            <div
+                                class="profile-avatar bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center border border-white shadow-sm">
+                                <i class="bi bi-person-circle fs-1"></i>
+                            </div>
+                            <button
+                                class="btn btn-sm btn-shop btn-icon rounded-circle position-absolute bottom-0 end-0 shadow-sm border border-white">
+                                <i class="bi bi-camera-fill"></i>
+                            </button>
+                        </div>
+                        <h5 class="fw-bold mb-1 header-font">{{ user.firstName }} {{ user.lastName }}</h5>
+                        <p class="text-muted small mb-0 fw-medium">{{ user.role }}</p>
+                        <span
+                            class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-1 mt-2 small fw-bold">Compte
+                            Vérifié</span>
+                    </div>
+                    <div class="nav flex-column nav-pills p-3" id="v-pills-tab" role="tablist">
+                        <button class="nav-link text-start py-3 px-4 rounded-3 mb-2 d-flex align-items-center gap-3"
+                            [class.active]="activeTab === 'personal'" (click)="setActiveTab('personal')">
+                            <i class="bi bi-person-lines-fill fs-5"></i>
+                            <span class="fw-medium">Informations Personnelles</span>
+                        </button>
+                        <button class="nav-link text-start py-3 px-4 rounded-3 mb-2 d-flex align-items-center gap-3"
+                            [class.active]="activeTab === 'shop'" (click)="setActiveTab('shop')">
+                            <i class="bi bi-shop-window fs-5"></i>
+                            <span class="fw-medium">Paramètres Boutique</span>
+                        </button>
+                        <button class="nav-link text-start py-3 px-4 rounded-3 mb-2 d-flex align-items-center gap-3"
+                            [class.active]="activeTab === 'security'" (click)="setActiveTab('security')">
+                            <i class="bi bi-shield-lock-fill fs-5"></i>
+                            <span class="fw-medium">Sécurité</span>
+                        </button>
+                        <button class="nav-link text-start py-3 px-4 rounded-3 mb-0 d-flex align-items-center gap-3"
+                            [class.active]="activeTab === 'notifications'" (click)="setActiveTab('notifications')">
+                            <i class="bi bi-bell-fill fs-5"></i>
+                            <span class="fw-medium">Notifications</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card border-0 shadow-sm rounded-4 mt-4 bg-shop text-white overflow-hidden">
+                <div class="card-body p-4 position-relative">
+                    <i class="bi bi-gem fs-1 opacity-25 position-absolute top-0 end-0 m-3"></i>
+                    <h6 class="text-white-50 small text-uppercase fw-bold mb-3">Membre depuis</h6>
+                    <p class="h4 fw-bold mb-0 header-font">{{ user.joinedDate }}</p>
+                    <hr class="my-3 opacity-25">
+                    <p class="small mb-0 opacity-75">Statut : Vendeur Premium</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <!-- Personal Info Tab -->
+                    @if (activeTab === 'personal') {
+                    <div class="tab-pane-content fade-in">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="h5 fw-bold mb-0 header-font">Informations Personnelles</h2>
+                        </div>
+
+                        <form (ngSubmit)="saveProfile()">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Prénom</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i
+                                                class="bi bi-person"></i></span>
+                                        <input type="text" class="form-control bg-light border-0"
+                                            [(ngModel)]="user.firstName" name="firstName">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Nom</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i
+                                                class="bi bi-person"></i></span>
+                                        <input type="text" class="form-control bg-light border-0"
+                                            [(ngModel)]="user.lastName" name="lastName">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Email</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i
+                                                class="bi bi-envelope"></i></span>
+                                        <input type="email" class="form-control bg-light border-0"
+                                            [(ngModel)]="user.email" name="email">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Téléphone</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i
+                                                class="bi bi-telephone"></i></span>
+                                        <input type="text" class="form-control bg-light border-0"
+                                            [(ngModel)]="user.phone" name="phone">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Bio / Description
+                                        Courte</label>
+                                    <textarea class="form-control bg-light border-0" rows="4" [(ngModel)]="user.bio"
+                                        name="bio"></textarea>
+                                </div>
+                                <div class="col-12 mt-4 text-end">
+                                    <button type="button"
+                                        class="btn btn-light px-4 me-2 rounded-3 border">Annuler</button>
+                                    <button type="submit" class="btn btn-shop px-4 rounded-3 shadow-sm">Enregistrer les
+                                        modifications</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    }
+
+                    <!-- Shop Settings Tab -->
+                    @if (activeTab === 'shop') {
+                    <div class="tab-pane-content fade-in">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="h5 fw-bold mb-0 header-font">Paramètres de la Boutique</h2>
+                        </div>
+
+                        <div class="shop-banner rounded-4 mb-4 overflow-hidden position-relative"
+                            style="height: 150px; background: linear-gradient(135deg, rgba(var(--shop-primary-rgb), 0.2), rgba(var(--shop-primary-rgb), 0.1)); border: 2px dashed #ddd;">
+                            <div class="h-100 d-flex flex-column align-items-center justify-content-center text-muted">
+                                <i class="bi bi-image fs-1 mb-2"></i>
+                                <span class="small fw-medium">Image de couverture (Optionnel)</span>
+                                <button class="btn btn-sm btn-light border rounded-pill mt-2">Modifier</button>
+                            </div>
+                        </div>
+
+                        <form (ngSubmit)="saveShop()">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Nom de la
+                                        boutique</label>
+                                    <input type="text" class="form-control bg-light border-0" [(ngModel)]="shop.name"
+                                        name="shopName">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Catégorie</label>
+                                    <select class="form-select bg-light border-0" [(ngModel)]="shop.category"
+                                        name="shopCategory">
+                                        <option value="Mode & Accessoires">Mode & Accessoires</option>
+                                        <option value="Électronique">Électronique</option>
+                                        <option value="Maison & Jardin">Maison & Jardin</option>
+                                        <option value="Alimentation">Alimentation</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Adresse
+                                        complète</label>
+                                    <textarea class="form-control bg-light border-0" rows="2" [(ngModel)]="shop.address"
+                                        name="shopAddress"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Horaires
+                                        d'ouverture</label>
+                                    <input type="text" class="form-control bg-light border-0"
+                                        [(ngModel)]="shop.openingHours" name="openingHours">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Ville</label>
+                                    <input type="text" class="form-control bg-light border-0" [(ngModel)]="shop.city"
+                                        name="city">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Description de la
+                                        boutique</label>
+                                    <textarea class="form-control bg-light border-0" rows="3"
+                                        [(ngModel)]="shop.description" name="shopDescription"></textarea>
+                                </div>
+                                <div class="col-12 mt-4 text-end">
+                                    <button type="button"
+                                        class="btn btn-light px-4 me-2 rounded-3 border">Réinitialiser</button>
+                                    <button type="submit" class="btn btn-shop px-4 rounded-3 shadow-sm">Mettre à jour la
+                                        boutique</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    }
+
+                    <!-- Security Tab -->
+                    @if (activeTab === 'security') {
+                    <div class="tab-pane-content fade-in">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="h5 fw-bold mb-0 header-font">Sécurité & Mot de passe</h2>
+                        </div>
+
+                        <div class="alert alert-warning border-0 rounded-4 d-flex align-items-center gap-3 mb-4">
+                            <i class="bi bi-info-circle-fill fs-4"></i>
+                            <div class="small">
+                                Pour des raisons de sécurité, nous vous recommandons de changer votre mot de passe tous
+                                les 3 mois.
+                            </div>
+                        </div>
+
+                        <form (ngSubmit)="changePassword()">
+                            <div class="row g-4">
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Mot de passe
+                                        actuel</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i
+                                                class="bi bi-lock"></i></span>
+                                        <input type="password" class="form-control bg-light border-0"
+                                            placeholder="••••••••">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Nouveau mot de
+                                        passe</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i
+                                                class="bi bi-key"></i></span>
+                                        <input type="password" class="form-control bg-light border-0"
+                                            placeholder="Minimum 8 caractères">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted text-uppercase">Confirmer le
+                                        nouveau mot de passe</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0"><i
+                                                class="bi bi-key"></i></span>
+                                        <input type="password" class="form-control bg-light border-0"
+                                            placeholder="Répéter le mot de passe">
+                                    </div>
+                                </div>
+
+                                <hr class="my-4 opacity-10">
+
+                                <div class="col-12">
+                                    <h3 class="h6 fw-bold mb-3">Double Authentification (2FA)</h3>
+                                    <div class="d-flex align-items-center justify-content-between p-3 border rounded-4">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="icon-box bg-light rounded-3 p-2">
+                                                <i class="bi bi-phone fs-4 text-muted"></i>
+                                            </div>
+                                            <div>
+                                                <p class="mb-0 fw-semibold">Authentification par SMS</p>
+                                                <p class="text-muted small mb-0">Recevoir un code sur {{ user.phone }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" checked>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-4 text-end">
+                                    <button type="submit" class="btn btn-dark px-4 rounded-3 shadow-sm">Mettre à jour la
+                                        sécurité</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    }
+
+                    <!-- Notifications Tab -->
+                    @if (activeTab === 'notifications') {
+                    <div class="tab-pane-content fade-in">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="h5 fw-bold mb-0 header-font">Préférences de Notification</h2>
+                        </div>
+
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item px-0 py-3 border-0 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Nouvelles Commandes</h6>
+                                        <p class="text-muted small mb-0">Recevoir une alerte instantanée pour chaque
+                                            nouvelle vente.</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item px-0 py-3 border-0 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Alertes de Stock</h6>
+                                        <p class="text-muted small mb-0">Être notifié quand un produit est en rupture de
+                                            stock.</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item px-0 py-3 border-0 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Promotions & Newsletters</h6>
+                                        <p class="text-muted small mb-0">Recevoir des conseils pour améliorer vos
+                                            ventes.</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4 text-end">
+                            <button type="button" class="btn btn-shop px-4 rounded-3 shadow-sm">Enregistrer</button>
+                        </div>
+                    </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

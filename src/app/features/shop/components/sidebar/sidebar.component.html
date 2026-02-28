@@ -89,6 +89,12 @@
 
             <!-- Dropdown Menu -->
             <div class="dropdown-menu shadow-lg border-0 rounded-3 p-2 w-100" [class.show]="isProfileDropdownOpen()">
+                <a class="dropdown-item d-flex align-items-center gap-2 rounded-2 py-2 mb-1" routerLink="/shop/profile"
+                    (click)="closeProfileDropdown()">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon Profil</span>
+                </a>
+                <hr class="dropdown-divider opacity-10">
                 <button class="dropdown-item d-flex align-items-center gap-2 rounded-2 py-2 text-danger logout-item"
                     type="button" (click)="logout()">
                     <i class="bi bi-box-arrow-right"></i>

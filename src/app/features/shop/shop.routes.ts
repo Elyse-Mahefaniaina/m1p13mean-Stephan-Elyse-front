@@ -9,6 +9,7 @@ import { StockMovementsComponent } from './pages/inventory/stock-movements/stock
 import { OrdersComponent } from './pages/orders/orders.component';
 
 import { PromotionsComponent } from './pages/promotions/promotions.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const SHOP_ROUTES: Routes = [
     {
@@ -22,6 +23,7 @@ export const SHOP_ROUTES: Routes = [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'orders', component: OrdersComponent },
             { path: 'promotions', component: PromotionsComponent },
+            { path: 'profile', component: ProfileComponent },
             {
                 path: 'inventory',
                 children: [
