@@ -63,10 +63,16 @@ export class SidebarComponent {
                     icon: 'bi-cart-check-fill',
                     route: '/shop/orders',
                     badge: 2
+                },
+                {
+                    label: 'Promotions',
+                    icon: 'bi-megaphone-fill',
+                    route: '/shop/promotions'
                 }
             ]
         }
     ]);
+
 
     toggleSubmenu(item: NavItem) {
         if (item.children) {

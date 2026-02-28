@@ -8,6 +8,8 @@ import { StockOutComponent } from './pages/inventory/stock-out/stock-out.compone
 import { StockMovementsComponent } from './pages/inventory/stock-movements/stock-movements.component';
 import { OrdersComponent } from './pages/orders/orders.component';
 
+import { PromotionsComponent } from './pages/promotions/promotions.component';
+
 export const SHOP_ROUTES: Routes = [
     {
         path: 'login',
@@ -19,6 +21,7 @@ export const SHOP_ROUTES: Routes = [
         children: [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'orders', component: OrdersComponent },
+            { path: 'promotions', component: PromotionsComponent },
             {
                 path: 'inventory',
                 children: [
