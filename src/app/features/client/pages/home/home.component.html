@@ -122,34 +122,50 @@
         <div class="row g-4">
             @for (product of popularProducts(); track product.id) {
             <div class="col-md-6 col-lg-3">
-                <div class="product-card card h-100 border-0 overflow-hidden">
-                    <!-- Product Image -->
-                    <div class="product-img-container position-relative" [routerLink]="['/client/product', product.id]"
+                <div class="catalog-product-card card h-100 border-0 overflow-hidden">
+                    <!-- Image -->
+                    <div class="catalog-img-container position-relative" [routerLink]="['/client/product', product.id]"
                         style="cursor: pointer;">
-                        <img [src]="product.image" [alt]="product.name" class="product-real-img">
+                        <img [src]="product.image" [alt]="product.name" class="catalog-product-img">
+                        @if (getDiscount(product) > 0) {
+                        <span class="discount-badge">-{{ getDiscount(product) }}%</span>
+                        }
                         <button class="wishlist-btn" [class.active]="product.isWishlisted"
-                            (click)="toggleWishlist(product)"
-                            [attr.aria-label]="product.isWishlisted ? 'Retirer des favoris' : 'Ajouter aux favoris'">
+                            (click)="toggleWishlist(product, $event)">
                             <i class="bi" [class.bi-heart-fill]="product.isWishlisted"
                                 [class.bi-heart]="!product.isWishlisted"></i>
                         </button>
                     </div>
-                    <!-- Product Info -->
+                    <!-- Info -->
                     <div class="card-body p-4 d-flex flex-column">
-                        <div class="small text-muted mb-2">
-                            <i class="bi bi-shop me-1"></i>{{ product.shop }}
+                        <h3 class="h6 fw-bold mb-2 catalog-product-name">
+                            <a [routerLink]="['/client/product', product.id]" class="text-decoration-none text-dark">{{
+                                product.name
+                                }}</a>
+                        </h3>
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <div class="d-flex gap-0">
+                                @for (filled of getStars(product.rating); track $index) {
+                                <i class="bi star-icon" [class.bi-star-fill]="filled" [class.bi-star]="!filled"
+                                    [class.text-warning]="filled" [class.text-muted]="!filled">
+                                </i>
+                                }
+                            </div>
+                            <span class="text-muted review-count">({{ product.reviews }})</span>
                         </div>
-                        <h6 class="fw-bold mb-3">
-                            <a [routerLink]="['/client/product', product.id]"
-                                class="text-dark text-decoration-none product-name">
-                                {{ product.name }}
-                            </a>
-                        </h6>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="h6 fw-bold text-primary mb-0">{{ formatPrice(product.price) }}</span>
-                            <button class="btn btn-primary rounded-pill btn-sm px-3 add-to-cart-btn"
-                                (click)="addToCart(product)">
-                                <i class="bi bi-plus me-1"></i> Panier
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="fw-bold text-primary fs-5">{{ formatPrice(product.price) }}</span>
+                                @if (product.originalPrice) {
+                                <span class="text-muted text-decoration-line-through small ms-2">
+                                    {{ formatPrice(product.originalPrice) }}
+                                </span>
+                                }
+                            </div>
+                            <button
+                                class="btn btn-primary btn-sm rounded-circle catalog-cart-btn d-flex align-items-center justify-content-center"
+                                (click)="addToCart(product, $event)" title="Ajouter au panier">
+                                <i class="bi bi-cart-plus"></i>
                             </button>
                         </div>
                     </div>

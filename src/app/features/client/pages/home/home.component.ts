@@ -38,11 +38,24 @@ export class HomeComponent implements OnInit {
         }).format(price);
     }
 
-    toggleWishlist(product: Product): void {
-        product.isWishlisted = !product.isWishlisted;
+    toggleWishlist(product: Product, event: Event): void {
+        event.stopPropagation();
+        this.popularProducts.update(products =>
+            products.map(p => p.id === product.id ? { ...p, isWishlisted: !p.isWishlisted } : p)
+        );
     }
 
-    addToCart(product: Product): void {
+    addToCart(product: Product, event: Event): void {
+        event.stopPropagation();
         console.log('Added to cart:', product.name);
+    }
+
+    getStars(rating: number): boolean[] {
+        return Array.from({ length: 5 }, (_, i) => i < rating);
+    }
+
+    getDiscount(product: Product): number {
+        if (!product.originalPrice) return 0;
+        return Math.round((1 - product.price / product.originalPrice) * 100);
     }
 }
