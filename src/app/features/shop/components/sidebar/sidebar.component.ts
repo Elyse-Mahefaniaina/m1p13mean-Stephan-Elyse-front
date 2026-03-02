@@ -1,3 +1,4 @@
+import { AuthService } from './../../../../core/services/auth.service';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -30,6 +31,8 @@ export class SidebarComponent {
 
     isMobileMenuOpen = signal(false);
     isProfileDropdownOpen = signal(false);
+
+    constructor(private authService: AuthService) {}
 
     /** Navigation sections for the shop owner - reactive signal */
     navSections = signal<NavSection[]>([
@@ -110,8 +113,11 @@ export class SidebarComponent {
         this.closeProfileDropdown();
         this.closeMobileMenu();
 
-        // Simulating logout for now
-        this.toastService.show('Session boutique clôturée. À bientôt !', 'success');
-        this.router.navigate(['/shop/login']);
+        this.authService.logout().subscribe({
+          next : () => {
+            this.toastService.show('Session boutique clôturée. À bientôt !', 'success');
+            this.router.navigate(['/shop/login']);
+          }
+        });
     }
 }

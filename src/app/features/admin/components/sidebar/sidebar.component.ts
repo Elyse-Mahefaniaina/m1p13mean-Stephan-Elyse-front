@@ -1,3 +1,4 @@
+import { AuthService } from './../../../../core/services/auth.service';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -28,6 +29,8 @@ export class SidebarComponent {
 
     isMobileMenuOpen = signal(false);
     isProfileDropdownOpen = signal(false);
+
+    constructor(private authService: AuthService) {}
 
     /** Navigation sections - easily extendable for future features */
     navSections: NavSection[] = [
@@ -71,13 +74,11 @@ export class SidebarComponent {
         this.closeProfileDropdown();
         this.closeMobileMenu();
 
-        // TODO: Call logout API endpoint when backend is ready
-        // await this.authService.logout();
-
-        // Show success message
-        this.toastService.show('Déconnexion réussie. À bientôt !', 'success');
-
-        // Redirect to login page
-        this.router.navigate(['/admin/login']);
+        this.authService.logout().subscribe({
+          next : () => {
+            this.toastService.show('Déconnexion réussie. À bientôt !', 'success');
+            this.router.navigate(['/admin/login']);
+          }
+        });
     }
 }

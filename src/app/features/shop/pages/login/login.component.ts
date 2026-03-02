@@ -1,3 +1,4 @@
+import { AuthService } from './../../../../core/services/auth.service';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,7 +26,9 @@ export class LoginComponent {
     private router = inject(Router);
     private toastService = inject(ToastService);
 
-    constructor() {
+    constructor(
+      private authService: AuthService
+    ) {
         // Pre-fill form with env credentials for dev convenience
         this.loginForm = this.fb.group({
             email: [SHOP_EMAIL, [Validators.required, Validators.email]],
@@ -38,31 +41,28 @@ export class LoginComponent {
     }
 
     onSubmit() {
-        if (this.loginForm.valid) {
-            this.isLoading.set(true);
-            this.errorMessage.set(null);
+      if (this.loginForm.valid) {
+        this.isLoading.set(true);
+        this.errorMessage.set(null);
 
-            const { email, password } = this.loginForm.value;
+        const { email, password } = this.loginForm.value;
 
-            // Simulate API call - validates against env credentials
-            setTimeout(() => {
-                this.isLoading.set(false);
-                if (email === SHOP_EMAIL && password === SHOP_PASSWORD) {
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('userRole', 'shop');
-                    localStorage.setItem('userName', 'Ma Boutique Fashion');
-
-                    this.toastService.show('Ravi de vous revoir !', 'success');
-
-                    // Use a small delay or ensure navigation is detected
-                    this.router.navigateByUrl('/shop/dashboard');
-                } else {
-                    this.toastService.show('Identifiants invalides.', 'danger');
-                    this.errorMessage.set('Email ou mot de passe incorrect.');
-                }
-            }, 1500);
-        } else {
-            this.loginForm.markAllAsTouched();
-        }
+        this.authService.login(email, password).subscribe({
+          next: (res:any) => {
+            this.isLoading.set(false);
+            const user = res.user;
+            this.toastService.show('Ravi de vous revoir !', 'success');
+            localStorage.setItem("currentUser", user);
+            this.router.navigateByUrl('/shop/dashboard');
+          },
+          error: (err) => {
+            this.isLoading.set(false);
+            this.toastService.show('Identifiants invalides ou profil non autorisé.', 'danger');
+            this.errorMessage.set('Échec de l\'authentification.');
+          }
+        });
+      } else {
+        this.loginForm.markAllAsTouched();
+      }
     }
 }

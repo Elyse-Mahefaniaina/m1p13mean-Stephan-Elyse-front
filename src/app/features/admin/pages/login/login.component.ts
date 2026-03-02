@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../../core/services/toast.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 // Get credentials from environment variables
 const ADMIN_EMAIL = import.meta.env['NG_APP_ADMIN_EMAIL'] || '';
@@ -24,8 +25,10 @@ export class LoginComponent {
     private toastService = inject(ToastService);
     private router = inject(Router);
 
-    constructor(private fb: FormBuilder) {
-        // Pre-fill form with env credentials for dev convenience
+    constructor(
+      private fb: FormBuilder,
+      private authService: AuthService
+    ) {
         this.loginForm = this.fb.group({
             email: [ADMIN_EMAIL, [Validators.required, Validators.email]],
             password: [ADMIN_PASSWORD, [Validators.required, Validators.minLength(6)]]
@@ -37,27 +40,27 @@ export class LoginComponent {
     }
 
     onSubmit() {
-        if (this.loginForm.valid) {
-            this.isLoading.set(true);
-            this.errorMessage.set(null);
+      if (this.loginForm.valid) {
+        this.isLoading.set(true);
+        this.errorMessage.set(null);
 
-            const { email, password } = this.loginForm.value;
+        const { email, password } = this.loginForm.value;
 
-            // Simulate API call - validates against env credentials
-            setTimeout(() => {
-                this.isLoading.set(false);
-
-                if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-                    this.toastService.show('Connexion réussie !', 'success');
-                    // Redirect to dashboard after successful login
-                    this.router.navigate(['/admin/dashboard']);
-                } else {
-                    this.toastService.show('Identifiants invalides ou profil non autorisé.', 'danger');
-                    this.errorMessage.set('Échec de l\'authentification.');
-                }
-            }, 1500);
-        } else {
-            this.loginForm.markAllAsTouched();
-        }
+        this.authService.login(email, password).subscribe({
+          next: (res:any) => {
+            this.isLoading.set(false);
+            const user = res.user;
+            localStorage.setItem("currentUser", user);
+            this.router.navigate(['/admin/dashboard']);
+          },
+          error: (err) => {
+            this.isLoading.set(false);
+            this.toastService.show('Identifiants invalides ou profil non autorisé.', 'danger');
+            this.errorMessage.set('Échec de l\'authentification.');
+          }
+        });
+      } else {
+        this.loginForm.markAllAsTouched();
+      }
     }
 }
