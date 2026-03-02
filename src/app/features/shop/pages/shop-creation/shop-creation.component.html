@@ -1,0 +1,165 @@
+<div class="creation-wrapper">
+    <!-- Decorative background elements -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="auth-card backdrop-blur">
+        <div class="form-side bg-white bg-opacity-75">
+            <div class="form-content">
+                <div class="mb-4 text-center">
+                    <h2 class="fw-800 text-dark mb-2">Créez votre Boutique</h2>
+                    <p class="text-muted">Rejoignez-nous et commencez à vendre vos produits dès aujourd'hui.</p>
+                </div>
+
+                <form [formGroup]="shopForm" (ngSubmit)="onSubmit()" class="mt-4">
+                    <div class="row g-4">
+                        <!-- Shop Name -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold text-uppercase tracking-wider text-secondary">
+                                <i class="bi bi-shop"></i> Nom de la boutique
+                            </label>
+                            <div class="input-group-custom">
+                                <span class="input-icon"><i class="bi bi-shop text-shop"></i></span>
+                                <input type="text" formControlName="shopName" class="form-control"
+                                    placeholder="Ma Super Boutique"
+                                    [class.is-invalid]="shopForm.get('shopName')?.touched && shopForm.get('shopName')?.invalid">
+                            </div>
+                            @if (shopForm.get('shopName')?.touched && shopForm.get('shopName')?.errors?.['required']) {
+                            <div class="invalid-feedback d-block small">Le nom est obligatoire.</div>
+                            }
+                        </div>
+
+                        <!-- Owner Name -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold text-uppercase tracking-wider text-secondary">
+                                <i class="bi bi-person"></i> Nom du gérant
+                            </label>
+                            <div class="input-group-custom">
+                                <span class="input-icon"><i class="bi bi-person text-shop"></i></span>
+                                <input type="text" formControlName="ownerName" class="form-control"
+                                    placeholder="Rakoto Be"
+                                    [class.is-invalid]="shopForm.get('ownerName')?.touched && shopForm.get('ownerName')?.invalid">
+                            </div>
+                            @if (shopForm.get('ownerName')?.touched && shopForm.get('ownerName')?.errors?.['required'])
+                            {
+                            <div class="invalid-feedback d-block small">Le nom du gérant est obligatoire.</div>
+                            }
+                        </div>
+
+                        <!-- Category -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold text-uppercase tracking-wider text-secondary">
+                                <i class="bi bi-tag"></i> Catégorie
+                            </label>
+                            <div class="input-group-custom">
+                                <span class="input-icon"><i class="bi bi-tag text-shop"></i></span>
+                                <select formControlName="category" class="form-select"
+                                    [class.is-invalid]="shopForm.get('category')?.touched && shopForm.get('category')?.invalid">
+                                    <option value="" disabled selected>Choisir une catégorie</option>
+                                    <option value="fashion">Mode & Accessoires</option>
+                                    <option value="electronics">Électronique</option>
+                                    <option value="home">Maison & Jardin</option>
+                                    <option value="food">Alimentation</option>
+                                    <option value="other">Autre</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold text-uppercase tracking-wider text-secondary">
+                                <i class="bi bi-envelope"></i> Email boutique
+                            </label>
+                            <div class="input-group-custom">
+                                <span class="input-icon"><i class="bi bi-envelope text-shop"></i></span>
+                                <input type="email" formControlName="email" class="form-control"
+                                    placeholder="contact@boutique.com"
+                                    [class.is-invalid]="shopForm.get('email')?.touched && shopForm.get('email')?.invalid">
+                            </div>
+                            @if (shopForm.get('email')?.touched && shopForm.get('email')?.errors?.['email']) {
+                            <div class="invalid-feedback d-block small">Format email invalide.</div>
+                            }
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold text-uppercase tracking-wider text-secondary">
+                                <i class="bi bi-telephone"></i> Téléphone
+                            </label>
+                            <div class="input-group-custom">
+                                <span class="input-icon"><i class="bi bi-telephone text-shop"></i></span>
+                                <input type="tel" formControlName="phone" class="form-control"
+                                    placeholder="+261 XX XX XXX XX"
+                                    [class.is-invalid]="shopForm.get('phone')?.touched && shopForm.get('phone')?.invalid">
+                            </div>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold text-uppercase tracking-wider text-secondary">
+                                <i class="bi bi-geo-alt"></i> Ville
+                            </label>
+                            <div class="input-group-custom">
+                                <span class="input-icon"><i class="bi bi-geo-alt text-shop"></i></span>
+                                <input type="text" formControlName="city" class="form-control"
+                                    placeholder="Antananarivo"
+                                    [class.is-invalid]="shopForm.get('city')?.touched && shopForm.get('city')?.invalid">
+                            </div>
+                        </div>
+
+                        <!-- Full Address -->
+                        <div class="col-12 mb-3">
+                            <label class="form-label small fw-bold text-uppercase tracking-wider text-secondary">
+                                <i class="bi bi-map"></i> Adresse Complète
+                            </label>
+                            <div class="input-group-custom">
+                                <span class="input-icon"><i class="bi bi-map text-shop"></i></span>
+                                <input type="text" formControlName="address" class="form-control"
+                                    placeholder="Lot IV G 123 Analamahitsy"
+                                    [class.is-invalid]="shopForm.get('address')?.touched && shopForm.get('address')?.invalid">
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12 mb-3">
+                            <label class="form-label small fw-bold text-uppercase tracking-wider text-secondary">
+                                <i class="bi bi-textarea-t"></i> Description (Activités principales)
+                            </label>
+                            <div class="input-group-custom">
+                                <span class="input-icon"><i class="bi bi-card-text text-shop"></i></span>
+                                <textarea formControlName="description" class="form-control"
+                                    placeholder="Dites-nous en plus sur votre boutique..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (errorMessage()) {
+                    <div class="alert alert-danger mb-4 py-3 border-0 shadow-sm d-flex align-items-center">
+                        <i class="bi bi-exclamation-circle-fill me-2"></i>
+                        <span class="small">{{ errorMessage() }}</span>
+                    </div>
+                    }
+
+                    <div class="mt-4 mb-3">
+                        <button type="submit" class="btn btn-primary btn-submit w-100 py-3 fw-bold"
+                            [disabled]="shopForm.invalid || isLoading()">
+                            @if (isLoading()) {
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                            Création en cours...
+                            } @else {
+                            Finaliser l'inscription
+                            }
+                        </button>
+                    </div>
+
+                    <div class="text-center">
+                        <p class="text-muted small">Vous avez déjà une boutique ?
+                            <a routerLink="/shop/login" class="text-shop fw-bold text-decoration-none">Se
+                                connecter</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

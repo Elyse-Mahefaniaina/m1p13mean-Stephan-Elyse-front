@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService, Product, Category as BaseCategory } from '../../../../core/services/product.service';
 
@@ -14,7 +14,7 @@ import { ProductCardComponent } from '../../components/product-card/product-card
 @Component({
     selector: 'app-catalog',
     standalone: true,
-    imports: [RouterLink, FormsModule, ProductCardComponent],
+    imports: [FormsModule, ProductCardComponent],
     templateUrl: './catalog.component.html',
     styleUrl: './catalog.component.css'
 })

@@ -1,8 +1,10 @@
 :host {
     display: block;
-    --primary-solid: #1e3a8a;
+    --primary-solid: #312e81;
+    /* Deep Indigo used in sidebar */
     --surface-blur: blur(16px);
-    --accent-color: #3b82f6;
+    --accent-color: #6366f1;
+    /* Primary Indigo */
     --border-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -27,7 +29,7 @@
 .blob-1 {
     width: 400px;
     height: 400px;
-    background: #1e3a8a;
+    background: var(--primary);
     top: -100px;
     right: -100px;
     animation: move1 10s infinite alternate;
@@ -36,7 +38,7 @@
 .blob-2 {
     width: 300px;
     height: 300px;
-    background: #2563eb;
+    background: var(--primary-light);
     bottom: -50px;
     left: -50px;
     animation: move2 15s infinite alternate;
@@ -74,7 +76,7 @@
 }
 
 .banner-side {
-    background: var(--primary-solid);
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
     position: relative;
     overflow: hidden;
 }
@@ -174,7 +176,7 @@
 .form-control:focus {
     border-color: var(--accent-color);
     background-color: white;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
     color: #0f172a;
 }
 
@@ -201,8 +203,8 @@
 
 .btn-submit:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 20px 25px -5px rgba(30, 58, 138, 0.4);
-    background: #1e40af;
+    box-shadow: 0 20px 25px -5px rgba(49, 46, 129, 0.4);
+    background: #1e1b4b;
 }
 
 .btn-submit:active:not(:disabled) {

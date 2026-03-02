@@ -11,7 +11,7 @@ const SHOP_PASSWORD = import.meta.env['NG_APP_SHOP_PASSWORD'] || '';
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, RouterLink],
     templateUrl: './login.component.html',
     styleUrl: './login.component.css'
 })
