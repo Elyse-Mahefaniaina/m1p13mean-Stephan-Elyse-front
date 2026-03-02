@@ -15,7 +15,8 @@
                 <div
                     class="mt-4 pt-3 border-top border-white border-opacity-25 w-100 animate__animated animate__fadeInUp animate__delay-2s">
                     <p class="small mb-0">Pas encore de compte ?</p>
-                    <a routerLink="/client" class="text-white fw-bold text-decoration-none hover-underline">Créer un
+                    <a routerLink="/client/register"
+                        class="text-white fw-bold text-decoration-none hover-underline">Créer un
                         compte</a>
                 </div>
             </div>
@@ -57,7 +58,7 @@
                             class="form-control"
                             [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
                             placeholder="••••••••">
-                        @if (loginForm.get('password')?.valid) {
+                        @if (!(loginForm.get('password')?.touched && loginForm.get('password')?.invalid)) {
                         <button type="button" (click)="togglePasswordVisibility()" class="btn-toggle-pass" tabindex="-1"
                             aria-label="Toggle password visibility">
                             <i class="bi" [class.bi-eye]="!showPassword()" [class.bi-eye-slash]="showPassword()"></i>

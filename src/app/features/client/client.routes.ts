@@ -5,6 +5,8 @@ import { CatalogComponent } from './pages/catalog/catalog.component';
 import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 import { WishlistComponent } from './pages/wishlist/wishlist.component';
 import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { OrdersComponent } from './pages/orders/orders.component';
 
 import { CartComponent } from './pages/cart/cart.component';
 
@@ -19,9 +21,10 @@ export const CLIENT_ROUTES: Routes = [
             { path: 'cart', component: CartComponent },
             { path: 'product/:id', component: ProductDetailComponent },
             { path: 'login', component: LoginComponent },
+            { path: 'register', component: RegisterComponent },
             // Future routes:
             // { path: 'checkout', component: CheckoutComponent },
-            { path: 'orders', loadComponent: () => import('./pages/orders/orders.component').then(m => m.OrdersComponent) },
+            { path: 'orders', component: OrdersComponent },
             // { path: 'profile', component: ProfileComponent },
         ]
     }
