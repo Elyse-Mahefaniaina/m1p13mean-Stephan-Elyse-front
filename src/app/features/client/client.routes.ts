@@ -6,6 +6,8 @@ import { ProductDetailComponent } from './pages/product-detail/product-detail.co
 import { WishlistComponent } from './pages/wishlist/wishlist.component';
 import { LoginComponent } from './pages/login/login.component';
 
+import { CartComponent } from './pages/cart/cart.component';
+
 export const CLIENT_ROUTES: Routes = [
     {
         path: '',
@@ -14,10 +16,10 @@ export const CLIENT_ROUTES: Routes = [
             { path: '', component: HomeComponent },
             { path: 'catalog', component: CatalogComponent },
             { path: 'wishlist', component: WishlistComponent },
+            { path: 'cart', component: CartComponent },
             { path: 'product/:id', component: ProductDetailComponent },
             { path: 'login', component: LoginComponent },
             // Future routes:
-            // { path: 'cart', component: CartComponent },
             // { path: 'checkout', component: CheckoutComponent },
             // { path: 'orders', component: OrdersComponent },
             // { path: 'profile', component: ProfileComponent },
