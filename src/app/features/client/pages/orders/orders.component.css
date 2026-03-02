@@ -1,0 +1,170 @@
+/* ===== Orders Page Styles ===== */
+
+:host {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #ec4899;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --bg-light: #f8fafc;
+    --border: #e2e8f0;
+}
+
+.orders-page {
+    background-color: #f8fafc;
+    min-height: 80vh;
+}
+
+.section-title {
+    font-family: 'Sora', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ===== Order Card ===== */
+.order-card {
+    border-radius: 1.5rem;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.order-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08) !important;
+}
+
+.order-item-thumbnail {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.order-item-thumbnail:hover {
+    transform: scale(1.1);
+}
+
+.order-item-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.item-qty-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--text);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+
+/* ===== Status Badges Customization ===== */
+.bg-success-subtle {
+    background-color: rgba(34, 197, 94, 0.1) !important;
+}
+
+.bg-primary-subtle {
+    background-color: rgba(99, 102, 241, 0.1) !important;
+}
+
+.bg-warning-subtle {
+    background-color: rgba(245, 158, 11, 0.1) !important;
+}
+
+.bg-danger-subtle {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* ===== Buttons ===== */
+.shadow-primary {
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.25) !important;
+}
+
+.btn-primary {
+    background: var(--primary);
+    border: none;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.35) !important;
+}
+
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+/* ===== Animations ===== */
+.animate-slide-up {
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Empty State ===== */
+.empty-icon-wrapper {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+}
+
+/* ===== Mobile Adjustments ===== */
+@media (max-width: 767.98px) {
+    .order-card {
+        border-radius: 1rem;
+    }
+
+    .card-header {
+        padding: 1.25rem !important;
+    }
+}

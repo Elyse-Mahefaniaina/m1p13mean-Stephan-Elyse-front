@@ -1,0 +1,95 @@
+<div class="orders-page py-5">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4 animate-slide-up">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/client" class="text-decoration-none text-muted">Accueil</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Mes Commandes</li>
+            </ol>
+        </nav>
+
+        <div class="header-section mb-5 animate-slide-up">
+            <h1 class="display-5 fw-bold section-title">Mes Commandes</h1>
+            <p class="text-muted">Suivez l'état de vos commandes passées et en cours.</p>
+        </div>
+
+        @if (isLoading()) {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+        </div>
+        } @else {
+        @if (orders().length > 0) {
+        <div class="orders-list animate-slide-up">
+            @for (order of orders(); track order.id) {
+            <div class="order-card card border-0 shadow-sm mb-4 overflow-hidden">
+                <!-- Order Header -->
+                <div class="card-header bg-white border-bottom py-3 px-4">
+                    <div class="row align-items-center g-3">
+                        <div class="col-6 col-md-3">
+                            <span class="text-muted small text-uppercase fw-bold d-block mb-1">Commande</span>
+                            <span class="fw-bold text-dark">#{{ order.id }}</span>
+                        </div>
+                        <div class="col-6 col-md-3 text-end text-md-start">
+                            <span class="text-muted small text-uppercase fw-bold d-block mb-1">Date</span>
+                            <span class="text-dark">{{ formatDate(order.date) }}</span>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <span class="text-muted small text-uppercase fw-bold d-block mb-1">Total</span>
+                            <span class="fw-bold text-primary">{{ formatPrice(order.total) }}</span>
+                        </div>
+                        <div class="col-6 col-md-3 text-end">
+                            <span class="badge rounded-pill px-3 py-2" [ngClass]="getStatusClass(order.status)">
+                                {{ getStatusLabel(order.status) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Items (collapsed view) -->
+                <div class="card-body p-4">
+                    <div class="d-flex flex-wrap gap-3">
+                        @for (item of order.items; track item.id) {
+                        <div class="order-item-thumbnail position-relative" [title]="item.name">
+                            <img [src]="item.image" [alt]="item.name" class="rounded-3 shadow-sm border">
+                            @if (item.quantity > 1) {
+                            <span class="item-qty-badge">{{ item.quantity }}</span>
+                            }
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Order Footer Actions -->
+                <div class="card-footer bg-light border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+                    <span class="text-muted small">{{ order.itemsCount }} article(s)</span>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-primary btn-sm rounded-pill px-4">
+                            <i class="bi bi-file-earmark-text me-2"></i>Facture
+                        </button>
+                        <button class="btn btn-primary btn-sm rounded-pill px-4 shadow-primary">
+                            Détails <i class="bi bi-chevron-right ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        } @else {
+        <!-- Empty State -->
+        <div class="empty-orders text-center py-5 animate-slide-up">
+            <div class="empty-icon-wrapper mb-4">
+                <i class="bi bi-box-seam text-muted opacity-25" style="font-size: 8rem;"></i>
+            </div>
+            <h2 class="fw-bold mb-3">Aucune commande trouvée</h2>
+            <p class="text-muted mb-5 lead">Vous n'avez pas encore passé de commande sur notre boutique.</p>
+            <a routerLink="/client/catalog" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow">
+                Commencer vos achats
+            </a>
+        </div>
+        }
+        }
+    </div>
+</div>

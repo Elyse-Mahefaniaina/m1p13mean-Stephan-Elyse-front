@@ -21,7 +21,7 @@ export const CLIENT_ROUTES: Routes = [
             { path: 'login', component: LoginComponent },
             // Future routes:
             // { path: 'checkout', component: CheckoutComponent },
-            // { path: 'orders', component: OrdersComponent },
+            { path: 'orders', loadComponent: () => import('./pages/orders/orders.component').then(m => m.OrdersComponent) },
             // { path: 'profile', component: ProfileComponent },
         ]
     }
