@@ -7,6 +7,7 @@ import { WishlistComponent } from './pages/wishlist/wishlist.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { OrdersComponent } from './pages/orders/orders.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 import { CartComponent } from './pages/cart/cart.component';
 
@@ -25,7 +26,7 @@ export const CLIENT_ROUTES: Routes = [
             // Future routes:
             // { path: 'checkout', component: CheckoutComponent },
             { path: 'orders', component: OrdersComponent },
-            // { path: 'profile', component: ProfileComponent },
+            { path: 'profile', component: ProfileComponent },
         ]
     }
 ];
