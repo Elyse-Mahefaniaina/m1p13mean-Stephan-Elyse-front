@@ -1,0 +1,151 @@
+<div class="register-container d-flex align-items-center justify-content-center min-vh-100 py-5">
+    <div class="register-card shadow-lg rounded-4 overflow-hidden bg-white d-flex flex-column flex-md-row">
+        <!-- Brand Section -->
+        <div
+            class="brand-section p-5 d-flex flex-column justify-content-center align-items-center text-white text-center">
+            <div class="brand-overlay"></div>
+            <div class="position-relative z-1">
+                <div class="logo-wrapper mb-4 animate__animated animate__fadeInDown">
+                    <i class="bi bi-person-plus-fill display-2"></i>
+                </div>
+                <h1 class="fw-bold mb-2 animate__animated animate__fadeInUp">Rejoignez-nous</h1>
+                <p class="opacity-75 animate__animated animate__fadeInUp animate__delay-1s">
+                    Créez votre compte pour commencer votre expérience shopping.
+                </p>
+                <div
+                    class="mt-4 pt-3 border-top border-white border-opacity-25 w-100 animate__animated animate__fadeInUp animate__delay-2s">
+                    <p class="small mb-0">Déjà un compte ?</p>
+                    <a routerLink="/client/login" class="text-white fw-bold text-decoration-none hover-underline">Se
+                        connecter</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section p-4 p-md-5 d-flex flex-column justify-content-center">
+            <div class="mb-4 text-center text-md-start">
+                <h2 class="fw-bold text-dark mb-1">Créer un compte</h2>
+                <p class="text-muted">C'est rapide et facile.</p>
+            </div>
+
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="needs-validation">
+                <div class="row g-3">
+                    <div class="col-md-6 mb-3">
+                        <label for="firstName"
+                            class="form-label small fw-bold text-uppercase text-secondary">Prénom</label>
+                        <div class="input-group-premium">
+                            <span class="input-icon"><i class="bi bi-person"></i></span>
+                            <input type="text" id="firstName" formControlName="firstName" class="form-control"
+                                [class.is-invalid]="registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid"
+                                placeholder="Prénom">
+                        </div>
+                        @if (registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid) {
+                        <div class="invalid-feedback d-block mt-1">
+                            Le prénom est requis.
+                        </div>
+                        }
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="lastName" class="form-label small fw-bold text-uppercase text-secondary">Nom</label>
+                        <div class="input-group-premium">
+                            <span class="input-icon"><i class="bi bi-person"></i></span>
+                            <input type="text" id="lastName" formControlName="lastName" class="form-control"
+                                [class.is-invalid]="registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid"
+                                placeholder="Nom">
+                        </div>
+                        @if (registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid) {
+                        <div class="invalid-feedback d-block mt-1">
+                            Le nom est requis.
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label small fw-bold text-uppercase text-secondary">Adresse
+                        Email</label>
+                    <div class="input-group-premium">
+                        <span class="input-icon"><i class="bi bi-envelope"></i></span>
+                        <input type="email" id="email" formControlName="email" class="form-control"
+                            [class.is-invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
+                            placeholder="vous@exemple.com">
+                    </div>
+                    @if (registerForm.get('email')?.touched && registerForm.get('email')?.invalid) {
+                    <div class="invalid-feedback d-block mt-1">
+                        Veuillez entrer une adresse email valide.
+                    </div>
+                    }
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label small fw-bold text-uppercase text-secondary">Mot de
+                        passe</label>
+                    <div class="input-group-premium">
+                        <span class="input-icon"><i class="bi bi-shield-lock"></i></span>
+                        <input [type]="showPassword() ? 'text' : 'password'" id="password" formControlName="password"
+                            class="form-control"
+                            [class.is-invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
+                            placeholder="••••••••">
+                        @if (!(registerForm.get('password')?.touched && registerForm.get('password')?.invalid)) {
+                        <button type="button" (click)="togglePasswordVisibility()" class="btn-toggle-pass"
+                            tabindex="-1">
+                            <i class="bi" [class.bi-eye]="!showPassword()" [class.bi-eye-slash]="showPassword()"></i>
+                        </button>
+                        }
+                    </div>
+                    @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
+                    <div class="invalid-feedback d-block mt-1">
+                        Le mot de passe doit contenir au moins 6 caractères.
+                    </div>
+                    }
+                </div>
+
+                <div class="mb-4">
+                    <label for="confirmPassword"
+                        class="form-label small fw-bold text-uppercase text-secondary">Confirmer le mot de passe</label>
+                    <div class="input-group-premium">
+                        <span class="input-icon"><i class="bi bi-shield-check"></i></span>
+                        <input [type]="showConfirmPassword() ? 'text' : 'password'" id="confirmPassword"
+                            formControlName="confirmPassword" class="form-control"
+                            [class.is-invalid]="(registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid) || (registerForm.touched && registerForm.hasError('mismatch'))"
+                            placeholder="••••••••">
+                        @if (!((registerForm.get('confirmPassword')?.touched &&
+                        registerForm.get('confirmPassword')?.invalid) || (registerForm.touched &&
+                        registerForm.hasError('mismatch')))) {
+                        <button type="button" (click)="toggleConfirmPasswordVisibility()" class="btn-toggle-pass"
+                            tabindex="-1">
+                            <i class="bi" [class.bi-eye]="!showConfirmPassword()"
+                                [class.bi-eye-slash]="showConfirmPassword()"></i>
+                        </button>
+                        }
+                    </div>
+                    @if ((registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid)
+                    || (registerForm.touched && registerForm.hasError('mismatch'))) {
+                    <div class="invalid-feedback d-block mt-1">
+                        @if (registerForm.get('confirmPassword')?.hasError('required')) {
+                        La confirmation du mot de passe est requise.
+                        } @else if (registerForm.hasError('mismatch')) {
+                        Les mots de passe ne correspondent pas.
+                        }
+                    </div>
+                    }
+                </div>
+
+                <button type="submit" class="btn btn-dark btn-lg w-100 fw-bold py-3 shadow-sm login-btn"
+                    [disabled]="registerForm.invalid || isLoading()">
+                    @if (isLoading()) {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Création en cours...
+                    } @else {
+                    S'inscrire <i class="bi bi-person-check ms-2"></i>
+                    }
+                </button>
+            </form>
+
+            <div class="mt-4 text-center">
+                <span class="text-muted small">En vous inscrivant, vous acceptez nos </span>
+                <a href="#" class="text-dark small text-decoration-none fw-bold">Conditions d'utilisation</a>
+            </div>
+        </div>
+    </div>
+</div>

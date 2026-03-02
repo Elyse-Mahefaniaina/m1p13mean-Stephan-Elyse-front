@@ -45,7 +45,7 @@
                     <i class="bi bi-heart fs-5"></i>
                 </a>
                 <!-- Cart -->
-                <a routerLink="/client" class="btn btn-link text-dark p-0 position-relative nav-icon-btn"
+                <a routerLink="/client/cart" class="btn btn-link text-dark p-0 position-relative nav-icon-btn"
                     title="Panier">
                     <i class="bi bi-cart3 fs-5"></i>
                     @if (cartItemCount() > 0) {
@@ -68,12 +68,12 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg p-2 rounded-4 dropdown-premium">
                         <li>
-                            <a class="dropdown-item rounded-3 py-2 px-3" routerLink="/client">
+                            <a class="dropdown-item rounded-3 py-2 px-3" routerLink="/client/profile">
                                 <i class="bi bi-person-circle me-2"></i>Mon Profil
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item rounded-3 py-2 px-3" routerLink="/client">
+                            <a class="dropdown-item rounded-3 py-2 px-3" routerLink="/client/orders">
                                 <i class="bi bi-box-seam me-2"></i>Mes Commandes
                             </a>
                         </li>

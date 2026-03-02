@@ -1,0 +1,34 @@
+[
+    {
+        "id": "1",
+        "name": "Sony WH-1000XM5",
+        "price": 349.99,
+        "image": "https://images.unsplash.com/photo-1613040819284-93fa7f033e9d?w=800&auto=format&fit=crop&q=60",
+        "quantity": 1,
+        "category": "High-Tech"
+    },
+    {
+        "id": "2",
+        "name": "iPhone 15 Pro Max",
+        "price": 1299.00,
+        "image": "https://images.unsplash.com/photo-1696446701796-da61225697cc?w=800&auto=format&fit=crop&q=60",
+        "quantity": 1,
+        "category": "Mobilité"
+    },
+    {
+        "id": "3",
+        "name": "MacBook Air M2",
+        "price": 1199.00,
+        "image": "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800&auto=format&fit=crop&q=60",
+        "quantity": 1,
+        "category": "Informatique"
+    },
+    {
+        "id": "4",
+        "name": "Nike Air Max Pulse",
+        "price": 159.99,
+        "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=60",
+        "quantity": 1,
+        "category": "Mode"
+    }
+]

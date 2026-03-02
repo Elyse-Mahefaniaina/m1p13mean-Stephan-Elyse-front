@@ -1,107 +1,59 @@
-<div class="wishlist-container container">
-
-    <!-- ========== TYPOGRAPHIC HEADER SECTION ========== -->
-    <header class="wishlist-minimal-header mb-5">
-        <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb custom-breadcrumb mb-0">
+<div class="wishlist-page py-5">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4 animate-slide-up">
+            <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a routerLink="/client" class="text-decoration-none text-muted">Accueil</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">Mes Favoris</li>
             </ol>
         </nav>
 
-        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-end gap-3">
-            <div class="title-group">
-                <h1 class="wishlist-title-minimal display-4 fw-bold mb-0">
-                    Mes Favoris
-                    <span class="count-pill">
-                        {{ wishlistProducts.length }}
-                    </span>
-                </h1>
-                <p class="text-muted mt-2 mb-0">Découvrez et gérez vos articles préférés</p>
+        <div class="header-section mb-5 animate-slide-up">
+            <div class="d-flex justify-content-between align-items-end">
+                <div>
+                    <h1 class="display-5 fw-bold section-title">Mes Favoris</h1>
+                    <p class="text-muted">Vous avez <span class="fw-bold text-primary">{{ wishlistProducts().length
+                            }}</span> articles épinglés</p>
+                </div>
+                @if (wishlistProducts().length > 0) {
+                <button class="btn btn-outline-danger btn-sm rounded-pill px-3 mb-2" (click)="clearWishlist()">
+                    <i class="bi bi-trash3 me-2"></i>Vider la liste
+                </button>
+                }
             </div>
-
-            @if (wishlistProducts.length > 0) {
-            <button class="btn btn-link text-danger text-decoration-none p-0 fw-600 align-self-start align-self-md-auto"
-                (click)="clearWishlist()">
-                <i class="bi bi-trash3 me-2"></i>Vider la liste complète
-            </button>
-            }
         </div>
-        <div class="header-divider"></div>
-    </header>
 
-    <!-- ========== CONTENT SECTION ========== -->
-    <main>
-        @if (isLoading) {
+        @if (isLoading()) {
         <div class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Chargement...</span>
             </div>
         </div>
         } @else {
-        @if (wishlistProducts.length > 0) {
-        <div class="row g-4 h-100">
-            @for (product of wishlistProducts; track product.id) {
-            <div class="col-sm-6 col-lg-4 col-xl-3 wishlist-item">
-                <div class="product-card card h-100 border-0 shadow-sm overflow-hidden">
-                    <!-- Remove Button -->
-                    <button class="remove-btn shadow" (click)="removeFromWishlist(product)"
-                        aria-label="Retirer des favoris">
-                        <i class="bi bi-x-lg"></i>
-                    </button>
-
-                    <!-- Product Image -->
-                    <div class="product-img-container" [routerLink]="['/client/product', product.id]"
-                        style="cursor: pointer;">
-                        <img [src]="product.image" [alt]="product.name" class="product-real-img">
-                    </div>
-
-                    <!-- Product Info -->
-                    <div class="card-body p-4 d-flex flex-column">
-                        <div class="small text-muted mb-2 d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-shop me-1"></i>{{ product.shop }}</span>
-                            <span class="badge bg-light text-dark rounded-pill">{{ product.category }}</span>
-                        </div>
-                        <h6 class="fw-bold mb-3 flex-grow-1">
-                            <a [routerLink]="['/client/product', product.id]"
-                                class="text-dark text-decoration-none product-name">
-                                {{ product.name }}
-                            </a>
-                        </h6>
-
-                        <div class="mb-3 d-flex align-items-center gap-2">
-                            <span class="h5 fw-bold text-primary mb-0">{{ formatPrice(product.price) }}</span>
-                            @if (product.originalPrice) {
-                            <span class="text-muted text-decoration-line-through small">{{
-                                formatPrice(product.originalPrice) }}</span>
-                            }
-                        </div>
-
-                        <button class="btn btn-primary rounded-pill w-100 add-to-cart-btn" (click)="addToCart(product)">
-                            <i class="bi bi-cart-plus me-2"></i>Ajouter au panier
-                        </button>
-                    </div>
-                </div>
+        @if (wishlistProducts().length > 0) {
+        <div class="row g-4 animate-slide-up">
+            @for (product of wishlistProducts(); track product.id) {
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <app-product-card [product]="product" (toggleWishlist)="onToggleWishlist($event)"
+                    (addToCart)="addToCart($event)">
+                </app-product-card>
             </div>
             }
         </div>
         } @else {
-        <!-- ========== EMPTY STATE ========== -->
-        <section class="empty-wishlist animate-slide-up">
-            <div class="empty-icon-wrapper shadow-inner">
-                <i class="bi bi-heartbreak"></i>
+        <!-- Empty Wishlist -->
+        <div class="empty-wishlist-container text-center py-5 animate-slide-up">
+            <div class="empty-wishlist-icon mb-4">
+                <i class="bi bi-heart-break text-muted opacity-25" style="font-size: 8rem;"></i>
             </div>
-            <h2 class="empty-title">Votre liste est vide</h2>
-            <p class="empty-description">
-                Vous n'avez pas encore ajouté d'articles à vos favoris.
-                Parcourez notre catalogue pour trouver votre bonheur !
-            </p>
-            <a routerLink="/client/catalog" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow">
-                Découvrir le Catalogue
+            <h2 class="fw-bold mb-3">Votre liste est vide</h2>
+            <p class="text-muted mb-5 lead">Vous n'avez pas encore d'articles favoris.</p>
+            <a routerLink="/client/catalog" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow">
+                Explorer le catalogue
             </a>
-        </section>
+        </div>
         }
         }
-    </main>
+    </div>
 </div>

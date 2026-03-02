@@ -17,6 +17,10 @@ export const SHOP_ROUTES: Routes = [
         component: LoginComponent
     },
     {
+        path: 'create',
+        loadComponent: () => import('./pages/shop-creation/shop-creation.component').then(m => m.ShopCreationComponent)
+    },
+    {
         path: '',
         component: ShopLayoutComponent,
         children: [

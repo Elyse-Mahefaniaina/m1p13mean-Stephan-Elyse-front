@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "name": "Sony WH-1000XM5 Black",
+        "price": 349.99,
+        "image": "https://images.unsplash.com/photo-1613040819284-93fa7f033e9d?w=800&auto=format&fit=crop&q=60",
+        "shop": "Sony Store",
+        "category": "Électronique",
+        "rating": 5,
+        "reviews": 128,
+        "isWishlisted": true
+    },
+    {
+        "id": 2,
+        "name": "Apple Watch Series 9",
+        "price": 429.00,
+        "image": "https://images.unsplash.com/photo-1434493907317-a46b53b81882?w=800&auto=format&fit=crop&q=60",
+        "shop": "Apple Mall",
+        "category": "Mobilité",
+        "rating": 4,
+        "reviews": 85,
+        "isWishlisted": true
+    },
+    {
+        "id": 3,
+        "name": "Samsung Galaxy S24 Ultra",
+        "price": 1159.00,
+        "originalPrice": 1259.00,
+        "image": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=800&auto=format&fit=crop&q=60",
+        "shop": "Samsung Galaxy",
+        "category": "Mobilité",
+        "rating": 5,
+        "reviews": 210,
+        "isWishlisted": true
+    },
+    {
+        "id": 4,
+        "name": "Nike Air Force 1 '07",
+        "price": 119.99,
+        "image": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&auto=format&fit=crop&q=60",
+        "shop": "Nike Factory",
+        "category": "Mode",
+        "rating": 4,
+        "reviews": 156,
+        "isWishlisted": true
+    }
+]
