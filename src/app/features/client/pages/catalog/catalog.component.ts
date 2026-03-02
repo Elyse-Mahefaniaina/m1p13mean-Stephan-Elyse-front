@@ -9,10 +9,12 @@ interface Category extends BaseCategory {
 
 type SortOption = 'popular' | 'newest' | 'price-asc' | 'price-desc';
 
+import { ProductCardComponent } from '../../components/product-card/product-card.component';
+
 @Component({
     selector: 'app-catalog',
     standalone: true,
-    imports: [RouterLink, FormsModule],
+    imports: [RouterLink, FormsModule, ProductCardComponent],
     templateUrl: './catalog.component.html',
     styleUrl: './catalog.component.css'
 })
@@ -179,15 +181,13 @@ export class CatalogComponent implements OnInit {
         this.isMobileFiltersOpen.update(v => !v);
     }
 
-    toggleWishlist(product: Product, event: Event): void {
-        event.stopPropagation();
+    toggleWishlist(product: Product): void {
         this.allProducts.update(products =>
             products.map(p => p.id === product.id ? { ...p, isWishlisted: !p.isWishlisted } : p)
         );
     }
 
-    addToCart(product: Product, event: Event): void {
-        event.stopPropagation();
+    addToCart(product: Product): void {
         console.log('Added to cart:', product.name);
     }
 

@@ -1,65 +1,58 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ProductService, Product } from '../../../../core/services/product.service';
+import { HttpClient } from '@angular/common/http';
+import { Product } from '../../../../core/services/product.service';
+import { ProductCardComponent } from '../../components/product-card/product-card.component';
 
 @Component({
     selector: 'app-wishlist',
     standalone: true,
-    imports: [CommonModule, RouterLink],
+    imports: [CommonModule, RouterLink, ProductCardComponent],
     templateUrl: './wishlist.component.html',
     styleUrl: './wishlist.component.css'
 })
 export class WishlistComponent implements OnInit {
-    protected wishlistProducts: Product[] = [];
-    protected isLoading = true;
+    private http = inject(HttpClient);
 
-    constructor(private productService: ProductService) { }
+    wishlistProducts = signal<Product[]>([]);
+    isLoading = signal<boolean>(true);
 
     ngOnInit(): void {
         this.loadWishlist();
     }
 
     loadWishlist(): void {
-        this.isLoading = true;
-        this.productService.getProducts().subscribe({
+        this.isLoading.set(true);
+        this.http.get<Product[]>('/assets/data/wishlist.json').subscribe({
             next: (products) => {
-                // For now, we simulate wishlist items by filtering products that have isWishlisted: true
-                // In a real app, this would be fetched from a dedicated wishlist service or user profile
-                this.wishlistProducts = products.filter(p => p.isWishlisted);
-                this.isLoading = false;
+                this.wishlistProducts.set(products);
+                this.isLoading.set(false);
             },
             error: (err) => {
                 console.error('Error loading wishlist:', err);
-                this.isLoading = false;
+                this.isLoading.set(false);
             }
         });
     }
 
-    formatPrice(price: number): string {
-        return new Intl.NumberFormat('fr-MG', {
-            style: 'currency',
-            currency: 'MGA',
-            minimumFractionDigits: 0
-        }).format(price);
+    onToggleWishlist(product: Product): void {
+        // Since we are in the favorites page, toggling wishlist usually means removing it
+        this.removeFromWishlist(product);
     }
 
     removeFromWishlist(product: Product): void {
-        // Animation logic can be handled via CSS/Angular animations
-        this.wishlistProducts = this.wishlistProducts.filter(p => p.id !== product.id);
-
-        // In a real app, we would call the service here
-        console.log('Removed from wishlist:', product.name);
+        this.wishlistProducts.set(this.wishlistProducts().filter(p => p.id !== product.id));
     }
 
     addToCart(product: Product): void {
         console.log('Added to cart:', product.name);
-        // Logic to add to cart service would go here
+        // Implement cart logic later
     }
 
     clearWishlist(): void {
         if (confirm('Voulez-vous vraiment vider votre liste de souhaits ?')) {
-            this.wishlistProducts = [];
+            this.wishlistProducts.set([]);
         }
     }
 }

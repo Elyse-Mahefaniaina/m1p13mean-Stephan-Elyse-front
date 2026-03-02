@@ -2,10 +2,12 @@ import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProductService, Product, Category } from '../../../../core/services/product.service';
 
+import { ProductCardComponent } from '../../components/product-card/product-card.component';
+
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [RouterLink],
+    imports: [RouterLink, ProductCardComponent],
     templateUrl: './home.component.html',
     styleUrl: './home.component.css'
 })
@@ -38,15 +40,13 @@ export class HomeComponent implements OnInit {
         }).format(price);
     }
 
-    toggleWishlist(product: Product, event: Event): void {
-        event.stopPropagation();
+    toggleWishlist(product: Product): void {
         this.popularProducts.update(products =>
             products.map(p => p.id === product.id ? { ...p, isWishlisted: !p.isWishlisted } : p)
         );
     }
 
-    addToCart(product: Product, event: Event): void {
-        event.stopPropagation();
+    addToCart(product: Product): void {
         console.log('Added to cart:', product.name);
     }
 
