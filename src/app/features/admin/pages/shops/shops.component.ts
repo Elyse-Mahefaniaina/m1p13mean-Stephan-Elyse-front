@@ -86,17 +86,21 @@ export class ShopsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.shopService.getShops().subscribe({
-            next: (data) => {
-                this.allShops.set(data);
-                this.calculateStats(data);
-                this.loading.set(false);
-            },
-            error: (err) => {
-                console.error('Error fetching shops:', err);
-                this.loading.set(false);
-            }
-        });
+      this.loadAllData();
+    }
+
+    loadAllData() {
+      this.shopService.getShops().subscribe({
+          next: (res: any) => {
+              this.allShops.set(res.data);
+              this.calculateStats(res.data);
+              this.loading.set(false);
+          },
+          error: (err) => {
+              console.error('Error fetching shops:', err);
+              this.loading.set(false);
+          }
+      });
     }
 
     private calculateStats(shops: Shop[]): void {
@@ -133,12 +137,14 @@ export class ShopsComponent implements OnInit {
         }
     }
 
-    formatPrice(price: number): string {
-        return new Intl.NumberFormat('fr-MG', {
-            style: 'currency',
-            currency: 'MGA',
-            minimumFractionDigits: 0
-        }).format(price);
+    formatPrice(price: number | null | undefined): string {
+      const safePrice = isNaN(Number(price)) ? 0 : Number(price);
+
+      return new Intl.NumberFormat('fr-MG', {
+        style: 'currency',
+        currency: 'MGA',
+        minimumFractionDigits: 0
+      }).format(safePrice);
     }
 
     openCreateModal(): void {
@@ -161,8 +167,12 @@ export class ShopsComponent implements OnInit {
     onDeleteConfirmed(): void {
         const shop = this.shopToDelete();
         if (shop) {
-            console.log('Delete confirmed for shop:', shop.id, shop.name);
-            // Real deletion logic would go here
+            console.log('Delete confirmed for shop:', shop._id, shop.name);
+            this.shopService.deleteOne(shop._id).subscribe({
+              next: (res: any) => {
+                this.loadAllData();
+              }
+            })
         }
         this.shopToDelete.set(null);
     }

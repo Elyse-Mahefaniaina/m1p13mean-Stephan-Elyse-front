@@ -1,7 +1,8 @@
 import { Component, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Shop } from '../../../../core/services/shop.service';
+import { Shop, ShopService } from '../../../../core/services/shop.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 declare var bootstrap: any;
 
@@ -39,7 +40,10 @@ export class ShopFormModalComponent implements AfterViewInit, OnDestroy {
         { value: 'closed', label: 'Fermée', icon: 'bi-x-circle-fill', class: 'text-secondary' }
     ];
 
-    constructor(private fb: FormBuilder) {
+    constructor(
+      private shopService: ShopService,
+      private toastService: ToastService,
+      private fb: FormBuilder) {
         this.shopForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
             ownerName: ['', [Validators.required]],
@@ -119,9 +123,19 @@ export class ShopFormModalComponent implements AfterViewInit, OnDestroy {
             this.shopForm.markAllAsTouched();
             return;
         }
-        console.log(this.isEditMode ? 'Edit shop values:' : 'Create shop values:', this.shopForm.value);
-        if (this.isEditMode) {
-            console.log('Editing shop ID:', this.editingShop?.id);
+        if (this.isEditMode && this.editingShop?._id) {
+            console.log('Editing shop ID:', this.editingShop?._id);
+            this.shopService.updadteOne(this.shopForm.value, this.editingShop?._id).subscribe({
+              next: (res: any) => {
+                this.toastService.show("Modification effectué", "success");
+              }
+            })
+        } else {
+          this.shopService.saveOne(this.shopForm.value).subscribe({
+            next: (res: any) => {
+              this.toastService.show("Enregistrement effectué", "success");
+            }
+          });
         }
         this.close();
     }

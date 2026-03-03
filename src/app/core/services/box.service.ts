@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface Box {
     _id: string;
@@ -22,17 +23,27 @@ export interface Box {
     providedIn: 'root'
 })
 export class BoxService {
-    private readonly boxesUrl = '/assets/data/boxes.json';
+    private _baseUrl = environment.apiBaseUrl + "/boxes";
 
     constructor(private http: HttpClient) { }
 
-    getBoxes(): Observable<Box[]> {
-        return this.http.get<Box[]>(this.boxesUrl).pipe(
-            tap(boxes => console.log('Boxes loaded:', boxes.length)),
-            catchError(error => {
-                console.error('Error loading boxes:', error);
-                return throwError(() => error);
-            })
-        );
+    getBoxes() {
+      return this.http.get(this._baseUrl);
+    }
+
+    saveOne(box: Box) {
+      return this.http.post(this._baseUrl, box);
+    }
+
+    findOne(id: string) {
+      this.http.get(this._baseUrl+'/'+id);
+    }
+
+    updadteOne(box: Box, id: string) {
+      return this.http.put(this._baseUrl+'/'+id, box);
+    }
+
+    deleteOne(id: string) {
+      return this.http.delete(this._baseUrl+'/'+id);
     }
 }

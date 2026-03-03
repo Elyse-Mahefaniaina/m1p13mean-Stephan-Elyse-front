@@ -257,7 +257,9 @@
     <app-box-detail-modal></app-box-detail-modal>
 
     <!-- Box Form Modal (Create / Edit) -->
-    <app-box-form-modal></app-box-form-modal>
+    <app-box-form-modal
+      (closed)="loadDataAllData()"
+    ></app-box-form-modal>
 
     <!-- Delete Confirm Dialog -->
     <app-confirm-dialog title="Supprimer le Box"
