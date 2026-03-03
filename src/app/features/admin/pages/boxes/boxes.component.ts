@@ -5,6 +5,7 @@ import { BoxService, Box } from '../../../../core/services/box.service';
 import { BoxFormModalComponent } from '../../components/box-form-modal/box-form-modal.component';
 import { BoxDetailModalComponent } from '../../components/box-detail-modal/box-detail-modal.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
     selector: 'app-boxes',
@@ -76,7 +77,10 @@ export class BoxesComponent implements OnInit {
         { label: 'Revenus', value: 0, icon: 'bi-cash-stack', color: 'warning' }
     ]);
 
-    constructor(private boxService: BoxService) {
+    constructor(
+      private toastService: ToastService,
+      private boxService: BoxService
+    ) {
         effect(() => {
             this.searchTerm();
             this.statusFilter();
@@ -85,17 +89,23 @@ export class BoxesComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.boxService.getBoxes().subscribe({
-            next: (data) => {
-                this.allBoxes.set(data);
-                this.calculateStats(data);
-                this.loading.set(false);
-            },
-            error: (err) => {
-                console.error('Error fetching boxes:', err);
-                this.loading.set(false);
-            }
-        });
+      this.loadDataAllData();
+    }
+
+    loadDataAllData() {
+      this.boxService.getBoxes().subscribe({
+        next: (res: any) => {
+          console.log(res);
+
+          this.allBoxes.set(res.data);
+          this.calculateStats(res.data);
+          this.loading.set(false);
+        },
+        error: (err) => {
+          console.error('Error fetching boxes:', err);
+          this.loading.set(false);
+        }
+      });
     }
 
     private calculateStats(boxes: Box[]): void {
@@ -157,15 +167,20 @@ export class BoxesComponent implements OnInit {
     }
 
     openDeleteModal(box: Box): void {
-        this.boxToDelete.set(box);
-        this.confirmDialog.open();
+      this.boxToDelete.set(box);
+      this.confirmDialog.open();
     }
 
     onDeleteConfirmed(): void {
         const box = this.boxToDelete();
         if (box) {
-            // Business logic will be added later
-            console.log('Delete confirmed for box:', box.id, box.number);
+            console.log('Delete confirmed for box:', box._id, box.number);
+            this.boxService.deleteOne(box._id).subscribe({
+              next: (res: any) => {
+                this.toastService.show("Element supprimé", "success");
+                this.loadDataAllData();
+              }
+            })
         }
         this.boxToDelete.set(null);
     }

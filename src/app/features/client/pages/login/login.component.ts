@@ -27,7 +27,6 @@ export class LoginComponent {
     private authService = inject(AuthService);
 
     constructor(private fb: FormBuilder) {
-        // Pre-fill form with env credentials for dev convenience
         this.loginForm = this.fb.group({
             email: [CLIENT_EMAIL, [Validators.required, Validators.email]],
             password: [CLIENT_PASSWORD, [Validators.required, Validators.minLength(6)]]
@@ -39,28 +38,28 @@ export class LoginComponent {
     }
 
     onSubmit() {
-        if (this.loginForm.valid) {
-            this.isLoading.set(true);
-            this.errorMessage.set(null);
+      if (this.loginForm.valid) {
+        this.isLoading.set(true);
+        this.errorMessage.set(null);
 
-            const { email, password } = this.loginForm.value;
+        const { email, password } = this.loginForm.value;
 
-            // Simulate API call - validates against env credentials
-            setTimeout(() => {
-                this.isLoading.set(false);
-
-                if (email === CLIENT_EMAIL && password === CLIENT_PASSWORD) {
-                    this.toastService.show('Connexion réussie !', 'success');
-                    this.authService.login();
-                    // Redirect to home/catalog after successful login
-                    this.router.navigate(['/client']);
-                } else {
-                    this.toastService.show('Identifiants invalides.', 'danger');
-                    this.errorMessage.set('Email ou mot de passe incorrect.');
-                }
-            }, 1500);
-        } else {
-            this.loginForm.markAllAsTouched();
-        }
+        this.authService.login(email, password).subscribe({
+          next: (res:any) => {
+            this.isLoading.set(false);
+            const user = res.user;
+            this.toastService.show('Connexion réussie !', 'success');
+            localStorage.setItem("currentUser", user);
+            this.router.navigate(['/client/dashboard']);
+          },
+          error: (err) => {
+            this.isLoading.set(false);
+            this.toastService.show('Identifiants invalides ou profil non autorisé.', 'danger');
+            this.errorMessage.set('Échec de l\'authentification.');
+          }
+        });
+      } else {
+        this.loginForm.markAllAsTouched();
+      }
     }
 }

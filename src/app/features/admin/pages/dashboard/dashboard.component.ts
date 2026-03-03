@@ -33,12 +33,12 @@ export class DashboardComponent implements OnInit {
             shops: this.shopService.getShops(),
             boxes: this.boxService.getBoxes()
         }).subscribe({
-            next: ({ shops, boxes }) => {
+            next: (res: any) => {
                 this.stats = [
-                    { label: 'Total Boutiques', value: shops.length, icon: 'bi-shop', color: 'primary' },
-                    { label: 'Boutiques Actifs', value: shops.filter(s => s.status === 'active').length, icon: 'bi-check-circle-fill', color: 'success' },
-                    { label: 'En Attente', value: shops.filter(s => s.status === 'pending').length, icon: 'bi-hourglass-split', color: 'warning' },
-                    { label: 'Box Disponibles', value: boxes.filter(b => b.status === 'free').length, icon: 'bi-box-seam', color: 'info' }
+                    { label: 'Total Boutiques', value: res.shops.data.length, icon: 'bi-shop', color: 'primary' },
+                    // { label: 'Boutiques Actifs', value: res.shops.data.filter(s => s.status === 'active').length, icon: 'bi-check-circle-fill', color: 'success' },
+                    // { label: 'En Attente', value: res.shops.data.filter(s => s.status === 'pending').length, icon: 'bi-hourglass-split', color: 'warning' },
+                    // { label: 'Box Disponibles', value: res.boxes.data.filter(b => b.status === 'free').length, icon: 'bi-box-seam', color: 'info' }
                 ];
             }
         });

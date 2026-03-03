@@ -130,6 +130,12 @@
     background: var(--primary-dark);
 }
 
+
+.add-to-cart-btn.animate-cart {
+  transform: translateY(-200vh) scale(3);
+  transition: transform 1s ease-in-out;
+}
+
 /* Responsiveness */
 @media (max-width: 991.98px) {
     .product-img-container {

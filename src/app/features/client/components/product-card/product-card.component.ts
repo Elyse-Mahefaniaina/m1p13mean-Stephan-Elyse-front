@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../../../core/services/product.service';
 
 @Component({
@@ -14,6 +14,9 @@ export class ProductCardComponent {
     @Input({ required: true }) product!: Product;
     @Output() toggleWishlist = new EventEmitter<Product>();
     @Output() addToCart = new EventEmitter<Product>();
+    protected cartAnimation = signal(false);
+
+    constructor(private router: Router) {}
 
     onToggleWishlist(event: Event): void {
         event.stopPropagation();
@@ -22,7 +25,12 @@ export class ProductCardComponent {
 
     onAddToCart(event: Event): void {
         event.stopPropagation();
-        this.addToCart.emit(this.product);
+        this.cartAnimation.set(true);
+        setTimeout(() => {
+          this.cartAnimation.set(false);
+          this.addToCart.emit(this.product);
+        }, 2000);
+
     }
 
     getDiscount(product: Product): number {

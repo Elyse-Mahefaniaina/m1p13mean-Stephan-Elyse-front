@@ -1,29 +1,25 @@
-import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private readonly AUTH_KEY = 'mean_client_auth';
-    private _isLoggedIn = signal<boolean>(this.getInitialAuthState());
+  private _baseUrl = environment.apiBaseUrl + "/auth";
 
-    // Expose as read-only signal
-    readonly isLoggedIn = this._isLoggedIn.asReadonly();
+  constructor(private http: HttpClient) {}
 
-    private getInitialAuthState(): boolean {
-        if (typeof window !== 'undefined') {
-            return localStorage.getItem(this.AUTH_KEY) === 'true';
-        }
-        return false;
-    }
+  login(email: string, password: string): Observable<any> {
+    return this.http.post(this._baseUrl + '/login', {
+      email: email,
+      password: password
+    });
+  }
 
-    login() {
-        this._isLoggedIn.set(true);
-        localStorage.setItem(this.AUTH_KEY, 'true');
-    }
-
-    logout() {
-        this._isLoggedIn.set(false);
-        localStorage.removeItem(this.AUTH_KEY);
-    }
+  logout() {
+    localStorage.removeItem("currentUser");
+    return this.http.post(this._baseUrl + '/logout', {});
+  }
 }

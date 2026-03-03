@@ -130,12 +130,12 @@ export class StockLevelComponent implements OnInit {
     }
 
     onProductSaved(productData: Partial<Product>) {
-        if (productData.id) {
+        if (productData._id) {
             // Update
-            this.productService.updateProduct(productData.id, productData).subscribe({
+            this.productService.updateProduct(productData._id, productData).subscribe({
                 next: (updated) => {
                     this.allProducts.update(products =>
-                        products.map(p => p.id === updated.id ? { ...p, ...updated } : p)
+                        products.map(p => p._id === updated._id ? { ...p, ...updated } : p)
                     );
                     this.toastService.show('Produit mis à jour avec succès', 'success');
                 }
@@ -154,9 +154,9 @@ export class StockLevelComponent implements OnInit {
     onDeleteConfirmed() {
         const product = this.productToDelete();
         if (product) {
-            this.productService.deleteProduct(product.id).subscribe({
+            this.productService.deleteProduct(product._id).subscribe({
                 next: () => {
-                    this.allProducts.update(products => products.filter(p => p.id !== product.id));
+                    this.allProducts.update(products => products.filter(p => p._id !== product._id));
                     this.toastService.show('Produit supprimé', 'success');
                 }
             });

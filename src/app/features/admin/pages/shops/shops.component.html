@@ -140,7 +140,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (shop of paginatedShops(); track shop.id) {
+                    @for (shop of paginatedShops(); track shop._id) {
                     <tr>
                         <td class="px-4" data-label="Boutique">
                             <div class="d-flex align-items-center gap-3">
@@ -241,7 +241,8 @@
 </div>
 
 <!-- Modals -->
-<app-shop-form-modal></app-shop-form-modal>
+<app-shop-form-modal
+(closed)="loadAllData()"></app-shop-form-modal>
 <app-shop-detail-modal></app-shop-detail-modal>
 
 <!-- Confirm Dialog for Deletion -->

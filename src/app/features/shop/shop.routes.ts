@@ -10,6 +10,7 @@ import { OrdersComponent } from './pages/orders/orders.component';
 
 import { PromotionsComponent } from './pages/promotions/promotions.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { canActivePageGuard } from '../../core/guard/canActivePage/can-active-page-guard';
 
 export const SHOP_ROUTES: Routes = [
     {
@@ -23,6 +24,8 @@ export const SHOP_ROUTES: Routes = [
     {
         path: '',
         component: ShopLayoutComponent,
+        canActivate: [canActivePageGuard],
+        canActivateChild: [canActivePageGuard],
         children: [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'product-creation', component: StockLevelComponent },
