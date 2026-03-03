@@ -42,7 +42,6 @@ export class SidebarComponent {
         {
             title: 'Gestion',
             items: [
-                { label: 'Utilisateurs', icon: 'bi-people-fill', route: '/admin/users' },
                 { label: 'Box', icon: 'bi-box-seam-fill', route: '/admin/boxes' },
                 { label: 'Boutiques', icon: 'bi-shop-window', route: '/admin/shops' }
             ]

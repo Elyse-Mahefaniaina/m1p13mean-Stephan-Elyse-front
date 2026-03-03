@@ -97,6 +97,18 @@
     color: #f97316;
 }
 
+.bg-success-light {
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+.bg-warning-light {
+    background-color: rgba(245, 158, 11, 0.1);
+}
+
+.bg-danger-light {
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
 .help-icon {
     width: 60px;
     height: 60px;

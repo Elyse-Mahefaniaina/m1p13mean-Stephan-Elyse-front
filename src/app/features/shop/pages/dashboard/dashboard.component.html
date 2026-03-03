@@ -17,7 +17,7 @@
     <!-- Stats Grid -->
     <div class="row g-4 mb-4">
         @for (stat of stats; track stat.label) {
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-12 col-md-4">
             <div class="card border-0 shadow-sm rounded-4 h-100 stat-card">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-3">
@@ -45,12 +45,12 @@
     </div>
 
     <div class="row g-4 mb-4">
-        <!-- Recent Orders -->
-        <div class="col-lg-8">
+        <!-- Orders -->
+        <div class="col-12">
             <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
-                    <h2 class="h5 fw-bold mb-0 header-font">Commandes Récentes</h2>
-                    <a routerLink="/shop/dashboard"
+                    <h2 class="h5 fw-bold mb-0 header-font">Liste des Commandes</h2>
+                    <a routerLink="/shop/orders"
                         class="btn btn-link text-shop text-decoration-none fw-semibold p-0">Voir tout</a>
                 </div>
                 <div class="card-body p-0">
@@ -58,19 +58,25 @@
                         <table class="table table-hover align-middle mb-0">
                             <thead class="bg-light">
                                 <tr>
-                                    <th class="ps-4 py-3 text-muted fw-semibold small text-uppercase">Commande</th>
+                                    <th class="ps-4 py-3 text-muted fw-semibold small text-uppercase">Réf. Commande</th>
                                     <th class="py-3 text-muted fw-semibold small text-uppercase">Client</th>
+                                    <th class="py-3 text-muted fw-semibold small text-uppercase">Date</th>
+                                    <th class="py-3 text-muted fw-semibold small text-uppercase text-center">Articles</th>
+                                    <th class="py-3 text-muted fw-semibold small text-uppercase">Montant</th>
+                                    <th class="py-3 text-muted fw-semibold small text-uppercase">Paiement</th>
                                     <th class="py-3 text-muted fw-semibold small text-uppercase">Statut</th>
-                                    <th class="py-3 text-muted fw-semibold small text-uppercase text-end pe-4">Total
-                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (order of recentOrders; track order.id) {
+                                @if (orders.length === 0) {
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4">Aucune commande.</td>
+                                </tr>
+                                } @else {
+                                @for (order of orders; track order.id) {
                                 <tr>
                                     <td class="ps-4 py-3">
-                                        <span class="fw-bold text-dark">{{ order.id }}</span>
-                                        <div class="text-muted small">{{ order.date }}</div>
+                                        <span class="fw-bold text-dark">#{{ order.id }}</span>
                                     </td>
                                     <td class="py-3">
                                         <div class="d-flex align-items-center gap-2">
@@ -78,8 +84,24 @@
                                                 class="avatar-sm rounded-circle bg-light d-flex align-items-center justify-content-center">
                                                 <i class="bi bi-person text-muted"></i>
                                             </div>
-                                            <span class="fw-medium">{{ order.client }}</span>
+                                            <span class="fw-medium">{{ order.customerName || 'Client' }}</span>
                                         </div>
+                                    </td>
+                                    <td class="py-3 text-muted small">
+                                        {{ order.date | date:'dd/MM/yyyy' }}<br>
+                                        <span class="opacity-75">{{ order.date | date:'HH:mm' }}</span>
+                                    </td>
+                                    <td class="py-3 text-center">
+                                        <span class="badge bg-light text-dark border fw-normal">{{ order.items.length }}</span>
+                                    </td>
+                                    <td class="py-3">
+                                        <span class="fw-bold text-dark">{{ order.total | number:'1.0-0' }} Ar</span>
+                                    </td>
+                                    <td class="py-3">
+                                        <span class="badge rounded-pill px-3 py-2 fw-medium"
+                                            [ngClass]="getPaymentStatusClass(order.paymentStatus)">
+                                            {{ getPaymentStatusLabel(order.paymentStatus) }}
+                                        </span>
                                     </td>
                                     <td class="py-3">
                                         <span class="badge rounded-pill fw-medium px-3 py-2"
@@ -87,10 +109,8 @@
                                             {{ getStatusLabel(order.status) }}
                                         </span>
                                     </td>
-                                    <td class="py-3 text-end pe-4">
-                                        <span class="fw-bold text-dark">{{ order.total }}</span>
-                                    </td>
                                 </tr>
+                                }
                                 }
                             </tbody>
                         </table>
@@ -98,74 +118,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Popular Products -->
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 h-100">
-                <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
-                    <h2 class="h5 fw-bold mb-0 header-font">Meilleures Ventes</h2>
-                    <a routerLink="/shop/dashboard"
-                        class="btn btn-link text-shop text-decoration-none fw-semibold p-0">Détails</a>
-                </div>
-                <div class="card-body p-4 pt-0">
-                    <div class="product-list">
-                        @for (product of popularProducts; track product.name) {
-                        <div class="product-item d-flex align-items-center gap-3 py-3 border-bottom-dashed">
-                            <div
-                                class="product-img-placeholder rounded-3 bg-light d-flex align-items-center justify-content-center">
-                                <i class="bi bi-image text-muted opacity-50"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h4 class="h6 fw-bold mb-0 text-truncate" style="max-width: 151px;">{{ product.name }}
-                                </h4>
-                                <small class="text-muted">{{ product.sales }} vendus • {{ product.stock }} en
-                                    stock</small>
-                            </div>
-                            <div class="text-end">
-                                <span class="fw-bold text-shop">{{ product.price }}</span>
-                            </div>
-                        </div>
-                        }
-                    </div>
-
-                    <!-- Quick Actions -->
-                    <div class="mt-4">
-                        <h3 class="small text-uppercase text-muted fw-bold mb-3 ls-1">Actions Rapides</h3>
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <a routerLink="/shop/promotions"
-                                    class="btn btn-outline-light border text-dark w-100 py-3 rounded-4 transition-all">
-                                    <i class="bi bi-tag text-shop d-block fs-4 mb-1"></i>
-                                    <span class="small fw-semibold">Créer Promo</span>
-                                </a>
-                            </div>
-
-                            <div class="col-6">
-                                <a href="#"
-                                    class="btn btn-outline-light border text-dark w-100 py-3 rounded-4 transition-all"
-                                    (click)="$event.preventDefault()">
-                                    <i class="bi bi-megaphone text-orange d-block fs-4 mb-1"></i>
-                                    <span class="small fw-semibold">Newsletter</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- Help Banner -->
-    <div
-        class="alert bg-dark text-white rounded-4 p-4 border-0 d-flex flex-column flex-md-row align-items-center gap-4">
-        <div class="help-icon rounded-circle d-flex align-items-center justify-content-center flex-shrink-0">
-            <i class="bi bi-patch-question fs-3 text-shop"></i>
-        </div>
-        <div class="text-center text-md-start">
-            <h5 class="fw-bold mb-1">Besoin d'aide pour booster votre boutique ?</h5>
-            <p class="mb-0 opacity-75 small text-balance">Consultez notre guide vendeur ou contactez le support
-                technique du mall pour tout incident logistique.</p>
-        </div>
-        <button class="btn btn-shop ms-md-auto text-nowrap">Contacter le support</button>
-    </div>
 </div>
