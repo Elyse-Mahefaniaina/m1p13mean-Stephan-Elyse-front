@@ -274,11 +274,10 @@
     <!-- Modals -->
     <app-product-form-modal (saved)="onProductSaved($event)"></app-product-form-modal>
     <app-product-detail-modal></app-product-detail-modal>
-    <app-confirm-dialog title="Supprimer le produit"
-        message="Êtes-vous sûr de vouloir supprimer ce produit du catalogue ?"
-        detail="Cette action supprimera toutes les données associées, y compris l'historique de stock."
-        icon="bi-trash-fill" theme="danger" confirmText="Supprimer" cancelText="Annuler"
-        [itemName]="productToDelete()?.name ?? ''" [itemSubtitle]="productToDelete()?.sku ?? ''"
+    <app-confirm-dialog title="Supprimer le produit" message="Voulez-vous vraiment supprimer ce produit du catalogue ?"
+        detail="Cette action est irréversible et supprimera toutes les données ainsi que l'historique associé."
+        icon="bi-trash3-fill" theme="danger" confirmText="Supprimer" cancelText="Annuler"
+        [itemName]="productToDelete()?.name ?? ''" [itemSubtitle]="'SKU: ' + (productToDelete()?.sku ?? '')"
         (confirmed)="onDeleteConfirmed()">
     </app-confirm-dialog>
 </div>

@@ -26,6 +26,19 @@ export interface StockOut {
     notes?: string;
 }
 
+export interface StockMovement {
+    id: string;
+    date: string | Date;
+    productName: string;
+    sku: string;
+    type: 'in' | 'out' | 'adjustment';
+    quantity: number;
+    reason: string;
+    user: string;
+    status: 'completed' | 'pending' | 'cancelled';
+    notes?: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -63,6 +76,22 @@ export class StockService {
 
     getStockOutById(id: string): Observable<StockOut | undefined> {
         return this.getStockOuts().pipe(
+            map(entries => entries.find(e => e.id === id))
+        );
+    }
+
+    getStockMovements(): Observable<StockMovement[]> {
+        return this.http.get<StockMovement[]>('/assets/data/stock-movements.json').pipe(
+            tap(entries => console.log('Stock movements loaded:', entries.length)),
+            catchError(error => {
+                console.error('Error loading stock movements:', error);
+                return throwError(() => error);
+            })
+        );
+    }
+
+    getStockMovementById(id: string): Observable<StockMovement | undefined> {
+        return this.getStockMovements().pipe(
             map(entries => entries.find(e => e.id === id))
         );
     }

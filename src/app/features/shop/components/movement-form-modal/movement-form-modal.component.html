@@ -1,0 +1,144 @@
+<div class="modal fade" #movementModal tabindex="-1" aria-labelledby="movementModalLabel" id="movementFormModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+
+            <!-- Modal Header -->
+            <div class="modal-header border-0 px-4 pt-4 pb-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrapper d-flex align-items-center justify-content-center"
+                        [class.modal-icon-edit]="isEditMode">
+                        <i class="bi" [ngClass]="isEditMode ? 'bi-pencil-square' : 'bi-plus-circle-fill'"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0">
+                            {{ isEditMode ? 'Modifier le mouvement' : 'Nouveau Mouvement' }}
+                        </h5>
+                        <p class="text-muted small mb-0">
+                            {{ isEditMode ? 'Modifiez les détails de ce mouvement de stock' : 'Enregistrez un nouveau
+                            flux de marchandises' }}
+                        </p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" (click)="close()" aria-label="Fermer"></button>
+            </div>
+
+            <div class="px-4 pt-3">
+                <hr class="text-muted opacity-25 my-0">
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body px-4 py-4">
+                <form [formGroup]="movementForm" (ngSubmit)="onSubmit()" id="movementCreationForm">
+
+                    <!-- Section: Produit -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-box-seam text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">Informations
+                                Produit</span>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label class="form-label fw-medium small">Désignation du produit <span
+                                        class="text-danger">*</span></label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text bg-white border-end-0"><i
+                                            class="bi bi-tag text-muted"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0"
+                                        formControlName="productName" placeholder="Ex: iPhone 15 Pro"
+                                        [class.is-invalid]="isInvalid('productName')">
+                                </div>
+                                @if (isInvalid('productName')) { <div class="invalid-feedback-custom">{{
+                                    getErrorMessage('productName') }}</div> }
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-medium small">SKU / Code <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" formControlName="sku" placeholder="IP15P-256"
+                                    [class.is-invalid]="isInvalid('sku')">
+                                @if (isInvalid('sku')) { <div class="invalid-feedback-custom">{{ getErrorMessage('sku')
+                                    }}</div> }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Détails du mouvement -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-arrow-left-right text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">Détails du
+                                Mouvement</span>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-medium small">Type de flux <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" formControlName="type"
+                                    [class.is-invalid]="isInvalid('type')">
+                                    <option value="in">Entrée</option>
+                                    <option value="out">Sortie</option>
+                                    <option value="adjustment">Ajustement</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-medium small">Quantité <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control" formControlName="quantity"
+                                    [class.is-invalid]="isInvalid('quantity')">
+                                @if (isInvalid('quantity')) { <div class="invalid-feedback-custom">{{
+                                    getErrorMessage('quantity') }}</div> }
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-medium small">Statut <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" formControlName="status">
+                                    <option value="completed">Complété</option>
+                                    <option value="pending">En attente</option>
+                                    <option value="cancelled">Annulé</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Raison & Notes -->
+                    <div class="form-section">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-chat-left-text text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">Raison &
+                                Notes</span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-medium small">Motif du mouvement <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="reason"
+                                placeholder="Ex: Nouvel arrivage, Vente client, etc."
+                                [class.is-invalid]="isInvalid('reason')">
+                            @if (isInvalid('reason')) { <div class="invalid-feedback-custom">{{
+                                getErrorMessage('reason') }}</div> }
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label fw-medium small">Notes additionnelles</label>
+                            <textarea class="form-control" formControlName="notes" rows="2"
+                                placeholder="Informations complémentaires..."></textarea>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                <button type="button" class="btn btn-light rounded-3 px-4 py-2" (click)="close()">Annuler</button>
+                <button type="submit" form="movementCreationForm"
+                    class="btn btn-modal-submit rounded-3 px-4 py-2 fw-medium d-flex align-items-center gap-2">
+                    <i class="bi bi-check-lg"></i>
+                    <span>{{ isEditMode ? 'Enregistrer les modifications' : 'Créer le mouvement' }}</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

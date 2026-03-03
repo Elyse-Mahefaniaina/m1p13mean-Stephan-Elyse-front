@@ -276,7 +276,9 @@
 <!-- Modals -->
 <app-stock-entry-form-modal (saved)="onEntrySaved($event)"></app-stock-entry-form-modal>
 <app-stock-entry-detail-modal></app-stock-entry-detail-modal>
-<app-confirm-dialog title="Supprimer l'entrée"
-    [message]="'Êtes-vous sûr de vouloir supprimer cette entrée de stock ? Cette action est irréversible.'"
-    confirmText="Supprimer" cancelText="Annuler" (confirmed)="onDeleteConfirmed()">
+<app-confirm-dialog title="Supprimer l'entrée" message="Voulez-vous vraiment supprimer cette entrée de stock ?"
+    detail="Cette action est irréversible et supprimera l'enregistrement de l'historique des arrivages."
+    icon="bi-trash3-fill" theme="danger" confirmText="Supprimer" cancelText="Annuler"
+    [itemName]="entryToDelete()?.productName ?? ''" [itemSubtitle]="'Entrée ID: #' + (entryToDelete()?.id ?? '')"
+    (confirmed)="onDeleteConfirmed()">
 </app-confirm-dialog>

@@ -209,10 +209,9 @@
     <app-stock-out-form-modal (saved)="onEntrySaved($event)"></app-stock-out-form-modal>
 
     <!-- Delete Confirm Dialog -->
-    <app-confirm-dialog title="Supprimer la sortie"
-        message="Êtes-vous sûr de vouloir supprimer ce rapport de sortie ? Cette action est irréversible."
-        detail="Les données d'inventaire associées pourraient être impactées." icon="bi-trash-fill" theme="danger"
-        confirmText="Supprimer" cancelText="Annuler" [itemName]="entryToDelete()?.productName ?? ''"
-        [itemSubtitle]="'SKU: ' + (entryToDelete()?.sku ?? '')" (confirmed)="onDeleteConfirmed()">
+    <app-confirm-dialog title="Supprimer la sortie" message="Voulez-vous vraiment supprimer ce rapport de sortie ?"
+        detail="Cette action est irréversible et impactera l'historique des expéditions." icon="bi-trash3-fill"
+        theme="danger" confirmText="Supprimer" cancelText="Annuler" [itemName]="entryToDelete()?.productName ?? ''"
+        [itemSubtitle]="'Sortie ID: #' + (entryToDelete()?.id ?? '')" (confirmed)="onDeleteConfirmed()">
     </app-confirm-dialog>
 </div>
