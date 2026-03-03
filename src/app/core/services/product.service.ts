@@ -16,7 +16,7 @@ export interface Review {
 }
 
 export interface Product {
-    id: number;
+    id: number | string;
     name: string;
     shop: string;
     category: string;
@@ -28,6 +28,11 @@ export interface Product {
     reviews: number;
     isWishlisted: boolean;
     stock: number;
+    minStock?: number;
+    sku?: string;
+    unit?: string;
+    status?: 'In Stock' | 'Low Stock' | 'Out of Stock';
+    lastUpdated?: string;
     description?: string;
     variants?: {
         type: string;
@@ -62,7 +67,7 @@ export class ProductService {
         );
     }
 
-    getProductById(id: number): Observable<Product | undefined> {
+    getProductById(id: number | string): Observable<Product | undefined> {
         return forkJoin({
             products: this.getProducts(),
             details: this.http.get<any[]>(this.productDetailsUrl).pipe(
@@ -91,5 +96,41 @@ export class ProductService {
                 return throwError(() => error);
             })
         );
+    }
+
+    // --- CRUD Operations for Shop Management ---
+
+    getShopProducts(): Observable<Product[]> {
+        // In a real app, this would filter by the current shop's ID
+        return this.http.get<Product[]>(this.productsUrl).pipe(
+            map(products => products.map(p => ({
+                ...p,
+                sku: p.sku || `PROD-${p.id}`,
+                unit: p.unit || 'unités',
+                minStock: p.minStock || 5,
+                status: this.calculateStatus(p.stock, p.minStock || 5)
+            })))
+        );
+    }
+
+    createProduct(product: Partial<Product>): Observable<Product> {
+        console.log('Creating product:', product);
+        return of({ ...product, id: Date.now() } as Product);
+    }
+
+    updateProduct(id: number | string, product: Partial<Product>): Observable<Product> {
+        console.log('Updating product:', id, product);
+        return of({ ...product, id } as Product);
+    }
+
+    deleteProduct(id: number | string): Observable<void> {
+        console.log('Deleting product:', id);
+        return of(undefined);
+    }
+
+    private calculateStatus(stock: number, minStock: number): 'In Stock' | 'Low Stock' | 'Out of Stock' {
+        if (stock <= 0) return 'Out of Stock';
+        if (stock <= minStock) return 'Low Stock';
+        return 'In Stock';
     }
 }
