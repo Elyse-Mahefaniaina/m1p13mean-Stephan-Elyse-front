@@ -52,11 +52,26 @@ export interface Product {
 export class ProductService {
     private readonly categoriesUrl = '/assets/data/categories.json';
     private readonly productDetailsUrl = '/assets/data/product-details.json';
+    private readonly productsUrl = '/assets/data/product-details.json';
     private _baseUrl = environment.apiBaseUrl + "/products";
 
     constructor(private http: HttpClient) { }
 
+    private getStoredWishlistIds(): string[] {
+      const data = localStorage.getItem('wishlist');
+      if (!data) return [];
+
+      try {
+        const wishlist: any[] = JSON.parse(data);
+        return wishlist.map(item => item._id).filter(Boolean) as string[];
+      } catch (e) {
+        console.error('Erreur lors de la lecture de la wishlist depuis localStorage', e);
+        return [];
+      }
+    }
+
     getProducts(): Observable<Product[]> {
+      const wishlistIds = this.getStoredWishlistIds();
       return this.http
         .get<{ count: number; data: any[] }>(this._baseUrl + '?$expand=details')
         .pipe(
@@ -75,7 +90,7 @@ export class ProductService {
                 images: detail?.images || [],
                 rating: p.rating,
                 reviews: p.reviews,
-                isWishlisted: false,
+                isWishlisted: wishlistIds.includes(p._id),
                 stock: detail?.stock || 0,
                 description: detail?.description || '',
                 variants: detail?.variants || [],
@@ -84,7 +99,7 @@ export class ProductService {
               } as Product;
             })
           ),
-          tap(products => console.log('Products loaded:', products.length)),
+          tap(),
           catchError(error => {
             console.error('Error loading products:', error);
             return throwError(() => error);
@@ -93,6 +108,7 @@ export class ProductService {
     }
 
     getProductById(id: string): Observable<Product | undefined> {
+      const wishlistIds = this.getStoredWishlistIds();
       return this.http
         .get<any>(`${this._baseUrl}/${id}?$expand=details`)
         .pipe(
@@ -112,7 +128,7 @@ export class ProductService {
               images: detail?.images || [],
               rating: p.rating,
               reviews: p.reviews,
-              isWishlisted: false,
+              isWishlisted: wishlistIds.includes(p._id),
               stock: detail?.stock || 0,
               description: detail?.description || '',
               variants: detail?.variants || [],
@@ -128,9 +144,8 @@ export class ProductService {
     }
 
     getCategories(): Observable<Category[]> {
-        console.log('Fetching categories from:', this.categoriesUrl);
         return this.http.get<Category[]>(this.categoriesUrl).pipe(
-            tap(categories => console.log('Categories loaded:', categories.length)),
+            tap(),
             catchError(error => {
                 console.error('Error loading categories:', error);
                 return throwError(() => error);
@@ -139,7 +154,6 @@ export class ProductService {
     }
 
     // --- CRUD Operations for Shop Management ---
-
     getShopProducts(): Observable<Product[]> {
         // In a real app, this would filter by the current shop's ID
         return this.http.get<Product[]>(this.productsUrl).pipe(

@@ -150,7 +150,7 @@ export class ProductFormModalComponent implements AfterViewInit, OnDestroy {
         };
 
         if (this.isEditMode && this.editingProduct) {
-            productData.id = this.editingProduct.id;
+            productData._id = this.editingProduct._id;
         }
 
         this.saved.emit(productData);

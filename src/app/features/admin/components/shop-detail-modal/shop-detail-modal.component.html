@@ -21,7 +21,7 @@
                     <div class="d-flex gap-2 mt-3">
                         <span class="detail-badge-role">
                             <i class="bi bi-shop me-1"></i>
-                            ID: {{ shop.id }}
+                            ID: {{ shop._id }}
                         </span>
                         <span class="detail-badge-status" [ngClass]="'status-' + getStatusColor(shop.status)">
                             <span class="status-indicator"></span>
@@ -44,7 +44,7 @@
                         </div>
                         <div>
                             <div class="info-label">Identifiant</div>
-                            <div class="info-value font-monospace" style="font-size: 0.82rem;">{{ shop.id }}</div>
+                            <div class="info-value font-monospace" style="font-size: 0.82rem;">{{ shop._id }}</div>
                         </div>
                     </div>
 

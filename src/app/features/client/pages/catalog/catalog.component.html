@@ -32,17 +32,29 @@
 
                     <!-- Categories -->
                     <div class="filter-group">
-                        <h6 class="filter-title">Catégories</h6>
-                        @for (category of categories(); track category.slug; let i = $index) {
-                        <div class="filter-option" (click)="toggleCategory(i)">
-                            <input class="form-check-input" type="checkbox" [checked]="category.checked"
-                                [id]="'cat-' + category.slug">
-                            <label class="small" [for]="'cat-' + category.slug">
-                                <i class="bi {{ category.icon }} me-1"></i>
-                                {{ category.name }}
-                            </label>
-                        </div>
-                        }
+                      <h6 class="filter-title">Catégories</h6>
+
+                      @for (category of categories(); track category.slug; let i = $index) {
+                      <div class="filter-option">
+
+                          <input
+                              class="form-check-input"
+                              type="checkbox"
+                              [checked]="category.checked"
+                              [id]="'cat-' + category.slug"
+                              (change)="toggleCategory(i)"
+                          >
+
+                          <label
+                              class="small"
+                              [for]="'cat-' + category.slug"
+                          >
+                              <i class="bi {{ category.icon }} me-1"></i>
+                              {{ category.name }}
+                          </label>
+
+                      </div>
+                      }
                     </div>
 
                     <!-- Price Range -->
@@ -160,8 +172,10 @@
                 <div class="row g-4">
                     @for (product of paginatedProducts(); track product._id) {
                     <div class="col-sm-6 col-lg-4">
-                        <app-product-card [product]="product" (toggleWishlist)="toggleWishlist($event)"
-                            (addToCart)="addToCart($event)">
+                        <app-product-card
+                          [product]="product"
+                          (toggleWishlist)="toggleWishlist($event)"
+                          (addToCart)="addToCart($event)">
                         </app-product-card>
                     </div>
                     }

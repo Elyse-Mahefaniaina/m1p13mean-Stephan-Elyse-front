@@ -1,9 +1,9 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Product } from '../../../../core/services/product.service';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-wishlist',
@@ -13,46 +13,65 @@ import { ProductCardComponent } from '../../components/product-card/product-card
     styleUrl: './wishlist.component.css'
 })
 export class WishlistComponent implements OnInit {
-    private http = inject(HttpClient);
-
     wishlistProducts = signal<Product[]>([]);
     isLoading = signal<boolean>(true);
+
+    constructor(private router: Router) {}
 
     ngOnInit(): void {
         this.loadWishlist();
     }
 
     loadWishlist(): void {
-        this.isLoading.set(true);
-        this.http.get<Product[]>('/assets/data/wishlist.json').subscribe({
-            next: (products) => {
-                this.wishlistProducts.set(products);
-                this.isLoading.set(false);
-            },
-            error: (err) => {
-                console.error('Error loading wishlist:', err);
-                this.isLoading.set(false);
-            }
-        });
+      this.isLoading.set(true);
+
+      try {
+        const data = localStorage.getItem('wishlist');
+        const products: Product[] = data ? JSON.parse(data) : [];
+
+        this.wishlistProducts.set(products);
+      } catch (err) {
+        console.error('Erreur lors du chargement de la wishlist depuis localStorage', err);
+        this.wishlistProducts.set([]);
+      } finally {
+        this.isLoading.set(false);
+      }
     }
 
     onToggleWishlist(product: Product): void {
-        // Since we are in the favorites page, toggling wishlist usually means removing it
         this.removeFromWishlist(product);
     }
 
     removeFromWishlist(product: Product): void {
-        this.wishlistProducts.set(this.wishlistProducts().filter(p => p._id !== product._id));
+      this.wishlistProducts.set(
+        this.wishlistProducts().filter(p => p._id !== product._id)
+      );
+
+      const updated = this.wishlistProducts().map(p => ({ ...p }));
+      localStorage.setItem('wishlist', JSON.stringify(updated));
     }
 
     addToCart(product: Product): void {
         console.log('Added to cart:', product.name);
-        // Implement cart logic later
     }
 
+
     clearWishlist(): void {
-        if (confirm('Voulez-vous vraiment vider votre liste de souhaits ?')) {
-            this.wishlistProducts.set([]);
+      Swal.fire({
+        title: 'Vider la liste de souhaits ?',
+        text: "Voulez-vous vraiment supprimer tous les produits de votre wishlist ?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Oui, vider',
+        cancelButtonText: 'Annuler'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.wishlistProducts.set([]);
+          localStorage.removeItem('wishlist');
+          this.router.navigate(['/client/catalog']);
         }
+      });
     }
 }
