@@ -79,6 +79,8 @@ export class ProductService {
             res.data.map((p: any) => {
               const detail = p.details && p.details.length > 0 ? p.details[0] : null;
 
+              const stock = detail?.stock || 0;
+              const minStock = detail?.minStock || 0;
               return {
                 _id: p._id,
                 name: p.name,
@@ -91,11 +93,14 @@ export class ProductService {
                 rating: p.rating,
                 reviews: p.reviews,
                 isWishlisted: wishlistIds.includes(p._id),
-                stock: detail?.stock || 0,
+                stock,
+                minStock,
+                sku: p.sku || String(p._id ?? ''),
                 description: detail?.description || '',
                 variants: detail?.variants || [],
                 specifications: detail?.specifications || [],
-                detailedReviews: detail?.detailedReviews || []
+                detailedReviews: detail?.detailedReviews || [],
+                status: this.calculateStatus(stock, minStock)
               } as Product;
             })
           ),
@@ -107,6 +112,7 @@ export class ProductService {
         );
     }
 
+
     getProductById(id: string): Observable<Product | undefined> {
       const wishlistIds = this.getStoredWishlistIds();
       return this.http
@@ -117,6 +123,8 @@ export class ProductService {
 
             const detail = p.details && p.details.length > 0 ? p.details[0] : null;
 
+            const stock = detail?.stock || 0;
+            const minStock = detail?.minStock || 0;
             return {
               _id: p._id,
               name: p.name,
@@ -129,11 +137,14 @@ export class ProductService {
               rating: p.rating,
               reviews: p.reviews,
               isWishlisted: wishlistIds.includes(p._id),
-              stock: detail?.stock || 0,
+              stock,
+              minStock,
+              sku: p.sku || String(p._id ?? ''),
               description: detail?.description || '',
               variants: detail?.variants || [],
               specifications: detail?.specifications || [],
-              detailedReviews: detail?.detailedReviews || []
+              detailedReviews: detail?.detailedReviews || [],
+              status: this.calculateStatus(stock, minStock)
             } as Product;
           }),
           catchError(error => {
@@ -153,31 +164,94 @@ export class ProductService {
         );
     }
 
-    getShopProducts(): Observable<Product[]> {
-        return this.http.get<Product[]>(this.productsUrl).pipe(
-            map(products => products.map(p => ({
-                ...p,
-                sku: p.sku || `PROD-${p._id}`,
-                unit: p.unit || 'unités',
-                minStock: p.minStock || 5,
-                status: this.calculateStatus(p.stock, p.minStock || 5)
-            })))
+    getShopProducts(shopId: string): Observable<Product[]> {
+        const wishlistIds = this.getStoredWishlistIds();
+        const filter = encodeURIComponent(`shop eq '${shopId}'`);
+        const url = `${this._baseUrl}?$expand=details&$filter=${filter}`;
+        return this.http
+        .get<{ count: number; data: any[] }>(url)
+        .pipe(
+          map(res =>
+            res.data.map((p: any) => {
+              const detail = p.details && p.details.length > 0 ? p.details[0] : null;
+
+              const stock = detail?.stock || 0;
+              const minStock = detail?.minStock || 0;
+              return {
+                _id: p._id,
+                name: p.name,
+                shop: p.shop || '',
+                category: p.category,
+                price: p.price,
+                originalPrice: p.originalPrice,
+                image: p.image,
+                images: detail?.images || [],
+                rating: p.rating,
+                reviews: p.reviews,
+                isWishlisted: wishlistIds.includes(p._id),
+                stock,
+                minStock,
+                sku: p.sku || String(p._id ?? ''),
+                description: detail?.description || '',
+                variants: detail?.variants || [],
+                specifications: detail?.specifications || [],
+                detailedReviews: detail?.detailedReviews || [],
+                status: this.calculateStatus(stock, minStock)
+              } as Product;
+            })
+          ),
+          tap(),
+          catchError(error => {
+            console.error('Error loading products:', error);
+            return throwError(() => error);
+          })
         );
     }
 
     createProduct(product: Partial<Product>): Observable<Product> {
-        console.log('Creating product:', product);
-        return of({ ...product, id: Date.now() } as Product);
+        const payload = this.buildCreatePayload(product);
+        return this.http.post<Product>(this._baseUrl, payload).pipe(
+            catchError(error => {
+                console.error('Error creating product:', error);
+                return throwError(() => error);
+            })
+        );
     }
 
     updateProduct(id: number | string, product: Partial<Product>): Observable<Product> {
-        console.log('Updating product:', id, product);
-        return of({ ...product, id } as Product);
+        const payload = this.buildCreatePayload(product);
+        return this.http.put<Product>(`${this._baseUrl}/${id}`, payload).pipe(
+            catchError(error => {
+                console.error('Error updating product:', error);
+                return throwError(() => error);
+            })
+        );
     }
 
     deleteProduct(id: number | string): Observable<void> {
-        console.log('Deleting product:', id);
-        return of(undefined);
+        return this.http.delete<void>(`${this._baseUrl}/${id}`).pipe(
+            catchError(error => {
+                console.error('Error deleting product:', error);
+                return throwError(() => error);
+            })
+        );
+    }
+
+    private buildCreatePayload(product: Partial<Product>) {
+        const payload = {
+            name: product.name,
+            shop: product.shop,
+            category: product.category,
+            price: product.price,
+            originalPrice: product.originalPrice,
+            image: product.image,
+            rating: product.rating,
+            reviews: product.reviews
+        };
+
+        return Object.fromEntries(
+            Object.entries(payload).filter(([, value]) => value !== undefined && value !== null)
+        );
     }
 
     private calculateStatus(stock: number, minStock: number): 'In Stock' | 'Low Stock' | 'Out of Stock' {

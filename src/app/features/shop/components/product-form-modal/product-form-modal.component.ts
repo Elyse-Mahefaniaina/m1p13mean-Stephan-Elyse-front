@@ -1,7 +1,7 @@
-import { Component, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { Product } from '../../../../core/services/product.service';
+import { Product, ProductService } from '../../../../core/services/product.service';
 
 declare var bootstrap: any;
 
@@ -12,7 +12,7 @@ declare var bootstrap: any;
     templateUrl: './product-form-modal.component.html',
     styleUrl: './product-form-modal.component.css'
 })
-export class ProductFormModalComponent implements AfterViewInit, OnDestroy {
+export class ProductFormModalComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('productModal') modalRef!: ElementRef;
     @Output() closed = new EventEmitter<void>();
     @Output() saved = new EventEmitter<Partial<Product>>();
@@ -22,13 +22,11 @@ export class ProductFormModalComponent implements AfterViewInit, OnDestroy {
     editingProduct: Product | null = null;
     private modalInstance: any;
 
-    categories = [
-        'Epicerie', 'Confiserie', 'Boissons', 'Dessert', 'Boulangerie', 'Frais', 'Hygiène', 'Entretien'
-    ];
+    categories: string[] = [];
 
     units = ['unités', 'kg', 'g', 'L', 'ml', 'packs', 'boîtes', 'tablettes', 'pots', 'briques', 'sachets'];
 
-    constructor(private fb: FormBuilder) {
+    constructor(private fb: FormBuilder, private productService: ProductService) {
         this.productForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
             sku: ['', [Validators.required]],
@@ -37,9 +35,12 @@ export class ProductFormModalComponent implements AfterViewInit, OnDestroy {
             stock: [0, [Validators.required, Validators.min(0)]],
             minStock: [5, [Validators.required, Validators.min(0)]],
             unit: ['unités', [Validators.required]],
-            description: [''],
             variants: this.fb.array([])
         });
+    }
+
+    ngOnInit(): void {
+        this.loadCategories();
     }
 
     get variants() {
@@ -61,11 +62,35 @@ export class ProductFormModalComponent implements AfterViewInit, OnDestroy {
         this.modalInstance?.dispose();
     }
 
+    private generateSku(): string {
+        const now = Date.now().toString(36).toUpperCase();
+        const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+        return `REF-${now}-${rand}`;
+    }
+
+    private loadCategories(): void {
+        this.productService.getProducts().subscribe({
+            next: (products) => {
+                const unique = new Set(
+                    products
+                        .map(p => p.category)
+                        .filter((c): c is string => !!c && c.trim().length > 0)
+                );
+                this.categories = Array.from(unique).sort((a, b) => a.localeCompare(b));
+            },
+            error: (err) => {
+                console.error('Error loading categories from products', err);
+                this.categories = [];
+            }
+        });
+    }
+
     /** Opens the modal in CREATE mode */
     open(): void {
         this.isEditMode = false;
         this.editingProduct = null;
         this.productForm.reset({
+            sku: this.generateSku(),
             price: 0,
             stock: 0,
             minStock: 5,
@@ -86,13 +111,12 @@ export class ProductFormModalComponent implements AfterViewInit, OnDestroy {
         // Patch main values
         this.productForm.patchValue({
             name: product.name,
-            sku: product.sku,
+            sku: String(product._id),
             category: product.category,
             price: product.price,
             stock: product.stock,
             minStock: product.minStock,
-            unit: product.unit || 'unités',
-            description: product.description || ''
+            unit: product.unit || 'unités'
         });
 
         // Add variants if any
