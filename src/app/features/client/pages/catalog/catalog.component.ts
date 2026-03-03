@@ -61,8 +61,10 @@ export class CatalogComponent implements OnInit {
             });
         });
 
-        this.productService.getProducts().subscribe(products => {
-            this.allProducts.set(products);
+        this.productService.getProducts().subscribe({
+          next: ( res: any) => {
+            this.allProducts.set(res);
+          }
         });
     }
 
@@ -85,7 +87,7 @@ export class CatalogComponent implements OnInit {
 
         switch (sort) {
             case 'popular': results.sort((a, b) => b.reviews - a.reviews); break;
-            case 'newest': results.sort((a, b) => b.id - a.id); break;
+            case 'newest': results.sort((a, b) => b._id - a._id); break;
             case 'price-asc': results.sort((a, b) => a.price - b.price); break;
             case 'price-desc': results.sort((a, b) => b.price - a.price); break;
         }
@@ -183,7 +185,7 @@ export class CatalogComponent implements OnInit {
 
     toggleWishlist(product: Product): void {
         this.allProducts.update(products =>
-            products.map(p => p.id === product.id ? { ...p, isWishlisted: !p.isWishlisted } : p)
+            products.map(p => p._id === product._id ? { ...p, isWishlisted: !p.isWishlisted } : p)
         );
     }
 

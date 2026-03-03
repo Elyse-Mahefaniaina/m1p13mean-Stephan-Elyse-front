@@ -42,7 +42,7 @@ export class WishlistComponent implements OnInit {
     }
 
     removeFromWishlist(product: Product): void {
-        this.wishlistProducts.set(this.wishlistProducts().filter(p => p.id !== product.id));
+        this.wishlistProducts.set(this.wishlistProducts().filter(p => p._id !== product._id));
     }
 
     addToCart(product: Product): void {

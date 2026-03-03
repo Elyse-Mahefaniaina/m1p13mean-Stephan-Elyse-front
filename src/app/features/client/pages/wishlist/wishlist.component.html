@@ -33,7 +33,7 @@
         } @else {
         @if (wishlistProducts().length > 0) {
         <div class="row g-4 animate-slide-up">
-            @for (product of wishlistProducts(); track product.id) {
+            @for (product of wishlistProducts(); track product._id) {
             <div class="col-sm-6 col-lg-4 col-xl-3">
                 <app-product-card [product]="product" (toggleWishlist)="onToggleWishlist($event)"
                     (addToCart)="addToCart($event)">

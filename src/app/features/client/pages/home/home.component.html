@@ -120,7 +120,7 @@
             </a>
         </div>
         <div class="row g-4">
-            @for (product of popularProducts(); track product.id) {
+            @for (product of popularProducts(); track product._id) {
             <div class="col-md-6 col-lg-3">
                 <app-product-card [product]="product" (toggleWishlist)="toggleWishlist($event)"
                     (addToCart)="addToCart($event)">

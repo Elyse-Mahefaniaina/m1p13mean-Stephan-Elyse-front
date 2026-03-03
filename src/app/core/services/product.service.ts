@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, throwError, map, forkJoin, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface Category {
     name: string;
@@ -16,7 +17,7 @@ export interface Review {
 }
 
 export interface Product {
-    id: number;
+    _id: number;
     name: string;
     shop: string;
     category: string;
@@ -44,21 +45,45 @@ export interface Product {
     providedIn: 'root'
 })
 export class ProductService {
-    // Using leading slash to ensure paths are always relative to root
-    private readonly productsUrl = '/assets/data/products.json';
     private readonly categoriesUrl = '/assets/data/categories.json';
     private readonly productDetailsUrl = '/assets/data/product-details.json';
+    private _baseUrl = environment.apiBaseUrl + "/products";
 
     constructor(private http: HttpClient) { }
 
     getProducts(): Observable<Product[]> {
-        console.log('Fetching products from:', this.productsUrl);
-        return this.http.get<Product[]>(this.productsUrl).pipe(
-            tap(products => console.log('Products loaded:', products.length)),
-            catchError(error => {
-                console.error('Error loading products:', error);
-                return throwError(() => error);
+      return this.http
+        .get<{ count: number; data: any[] }>(this._baseUrl + '?$expand=details')
+        .pipe(
+          map(res =>
+            res.data.map((p: any) => {
+              const detail = p.details && p.details.length > 0 ? p.details[0] : null;
+
+              return {
+                _id: p._id,
+                name: p.name,
+                shop: p.shop || '',
+                category: p.category,
+                price: p.price,
+                originalPrice: p.originalPrice,
+                image: p.image,
+                images: detail?.images || [],
+                rating: p.rating,
+                reviews: p.reviews,
+                isWishlisted: false,
+                stock: detail?.stock || 0,
+                description: detail?.description || '',
+                variants: detail?.variants || [],
+                specifications: detail?.specifications || [],
+                detailedReviews: detail?.detailedReviews || []
+              } as Product;
             })
+          ),
+          tap(products => console.log('Products loaded:', products.length)),
+          catchError(error => {
+            console.error('Error loading products:', error);
+            return throwError(() => error);
+          })
         );
     }
 
@@ -66,11 +91,11 @@ export class ProductService {
         return forkJoin({
             products: this.getProducts(),
             details: this.http.get<any[]>(this.productDetailsUrl).pipe(
-                catchError(() => of([])) // In case the file doesn't exist or is empty
+                catchError(() => of([]))
             )
         }).pipe(
             map(({ products, details }) => {
-                const product = products.find(p => p.id === id);
+                const product = products.find(p => p._id === id);
                 if (!product) return undefined;
 
                 const detail = details.find(d => d.id === id);

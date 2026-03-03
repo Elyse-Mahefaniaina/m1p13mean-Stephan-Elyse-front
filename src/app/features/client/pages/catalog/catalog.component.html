@@ -158,7 +158,7 @@
                 <!-- Product Grid -->
                 @if (paginatedProducts().length > 0) {
                 <div class="row g-4">
-                    @for (product of paginatedProducts(); track product.id) {
+                    @for (product of paginatedProducts(); track product._id) {
                     <div class="col-sm-6 col-lg-4">
                         <app-product-card [product]="product" (toggleWishlist)="toggleWishlist($event)"
                             (addToCart)="addToCart($event)">

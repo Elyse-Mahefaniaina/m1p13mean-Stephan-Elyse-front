@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
 
     toggleWishlist(product: Product): void {
         this.popularProducts.update(products =>
-            products.map(p => p.id === product.id ? { ...p, isWishlisted: !p.isWishlisted } : p)
+            products.map(p => p._id === product._id ? { ...p, isWishlisted: !p.isWishlisted } : p)
         );
     }
 
