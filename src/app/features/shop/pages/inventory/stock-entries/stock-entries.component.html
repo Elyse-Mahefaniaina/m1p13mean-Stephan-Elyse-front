@@ -11,7 +11,8 @@
                 </p>
             </div>
             <div>
-                <button class="btn btn-premium d-flex align-items-center gap-2 rounded-3 px-4 py-2">
+                <button class="btn btn-premium d-flex align-items-center gap-2 rounded-3 px-4 py-2"
+                    (click)="openCreateModal()">
                     <i class="bi bi-plus-circle-fill"></i>
                     <span>Nouvelle Entrée</span>
                 </button>
@@ -215,13 +216,16 @@
                         </td>
                         <td class="px-4" data-label="Actions">
                             <div class="d-flex gap-2 justify-content-end mobile-justify-start">
-                                <button class="btn-action btn-action-view" title="Détails">
+                                <button class="btn-action btn-action-view" title="Détails"
+                                    (click)="openDetailModal(entry)">
                                     <i class="bi bi-eye-fill"></i>
                                 </button>
-                                <button class="btn-action btn-action-edit" title="Modifier">
+                                <button class="btn-action btn-action-edit" title="Modifier"
+                                    (click)="openEditModal(entry)">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
-                                <button class="btn-action btn-action-delete" title="Supprimer">
+                                <button class="btn-action btn-action-delete" title="Supprimer"
+                                    (click)="openDeleteModal(entry)">
                                     <i class="bi bi-trash-fill"></i>
                                 </button>
                             </div>
@@ -268,3 +272,11 @@
         }
     </div>
 </div>
+
+<!-- Modals -->
+<app-stock-entry-form-modal (saved)="onEntrySaved($event)"></app-stock-entry-form-modal>
+<app-stock-entry-detail-modal></app-stock-entry-detail-modal>
+<app-confirm-dialog title="Supprimer l'entrée"
+    [message]="'Êtes-vous sûr de vouloir supprimer cette entrée de stock ? Cette action est irréversible.'"
+    confirmText="Supprimer" cancelText="Annuler" (confirmed)="onDeleteConfirmed()">
+</app-confirm-dialog>

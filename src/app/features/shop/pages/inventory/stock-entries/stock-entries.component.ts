@@ -1,29 +1,30 @@
-import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { Component, signal, computed, inject, OnInit, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-
-interface StockEntry {
-    id: string;
-    date: string | Date;
-    productName: string;
-    sku: string;
-    quantity: number;
-    supplier: string;
-    receivedBy: string;
-    status: 'completed' | 'pending' | 'cancelled';
-    notes?: string;
-}
+import { StockService, StockEntry } from '../../../../../core/services/stock.service';
+import { StockEntryFormModalComponent } from '../../../components/stock-entry-form-modal/stock-entry-form-modal.component';
+import { StockEntryDetailModalComponent } from '../../../components/stock-entry-detail-modal/stock-entry-detail-modal.component';
+import { ConfirmDialogComponent } from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'app-stock-entries',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [
+        CommonModule,
+        FormsModule,
+        StockEntryFormModalComponent,
+        StockEntryDetailModalComponent,
+        ConfirmDialogComponent
+    ],
     templateUrl: './stock-entries.component.html',
     styleUrl: './stock-entries.component.css'
 })
 export class StockEntriesComponent implements OnInit {
-    private http = inject(HttpClient);
+    @ViewChild(StockEntryFormModalComponent) entryFormModal!: StockEntryFormModalComponent;
+    @ViewChild(StockEntryDetailModalComponent) entryDetailModal!: StockEntryDetailModalComponent;
+    @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
+
+    private stockService = inject(StockService);
     Math = Math;
 
     // Signals for state management
@@ -32,7 +33,17 @@ export class StockEntriesComponent implements OnInit {
     statusFilter = signal<string>('all');
     currentPage = signal(1);
     pageSize = signal(10);
-    entries = signal<StockEntry[]>([]);
+    allEntries = signal<StockEntry[]>([]);
+    entryToDelete = signal<StockEntry | null>(null);
+
+    constructor() {
+        // Reset to first page when search or filters change
+        effect(() => {
+            this.searchTerm();
+            this.statusFilter();
+            this.currentPage.set(1);
+        }, { allowSignalWrites: true });
+    }
 
     ngOnInit() {
         this.loadEntries();
@@ -40,26 +51,21 @@ export class StockEntriesComponent implements OnInit {
 
     loadEntries() {
         this.loading.set(true);
-        // Simulate API delay
-        setTimeout(() => {
-            this.http.get<StockEntry[]>('assets/data/stock-entries.json').subscribe({
-                next: (data) => {
-                    // Convert date strings to Date objects if needed, 
-                    // though Angular's date pipe handles strings too
-                    this.entries.set(data);
-                    this.loading.set(false);
-                },
-                error: (err) => {
-                    console.error('Error loading stock entries', err);
-                    this.loading.set(false);
-                }
-            });
-        }, 800);
+        this.stockService.getStockEntries().subscribe({
+            next: (data: StockEntry[]) => {
+                this.allEntries.set(data);
+                this.loading.set(false);
+            },
+            error: (err: any) => {
+                console.error('Error loading stock entries', err);
+                this.loading.set(false);
+            }
+        });
     }
 
     // Computed signals for filtering and pagination
     filteredEntries = computed(() => {
-        let result = this.entries();
+        let result = this.allEntries();
         const search = this.searchTerm().toLowerCase();
         const status = this.statusFilter();
 
@@ -94,7 +100,7 @@ export class StockEntriesComponent implements OnInit {
 
     // Stats computed signals
     stats = computed(() => {
-        const all = this.entries();
+        const all = this.allEntries();
         return {
             total: all.length,
             completed: all.filter(e => e.status === 'completed').length,
@@ -102,6 +108,53 @@ export class StockEntriesComponent implements OnInit {
             cancelled: all.filter(e => e.status === 'cancelled').length
         };
     });
+
+    // CRUD Handlers
+    openCreateModal(): void {
+        this.entryFormModal.open();
+    }
+
+    openDetailModal(entry: StockEntry): void {
+        this.entryDetailModal.open(entry);
+    }
+
+    openEditModal(entry: StockEntry): void {
+        this.entryFormModal.openForEdit(entry);
+    }
+
+    openDeleteModal(entry: StockEntry): void {
+        this.entryToDelete.set(entry);
+        this.confirmDialog.open();
+    }
+
+    onDeleteConfirmed(): void {
+        const entry = this.entryToDelete();
+        if (entry) {
+            // Business logic for deletion
+            console.log('Suppression de l\'entrée:', entry.id);
+            this.allEntries.update(entries => entries.filter(e => e.id !== entry.id));
+        }
+        this.entryToDelete.set(null);
+    }
+
+    onEntrySaved(event: { isEdit: boolean, data: Partial<StockEntry>, id?: string }): void {
+        if (event.isEdit && event.id) {
+            // Update logic
+            this.allEntries.update(entries => entries.map(e =>
+                e.id === event.id ? { ...e, ...event.data } as StockEntry : e
+            ));
+        } else {
+            // Create logic
+            const newEntry: StockEntry = {
+                ...(event.data as StockEntry),
+                id: Math.random().toString(36).substr(2, 6).toUpperCase(),
+                date: new Date().toISOString(),
+                receivedBy: 'Admin (Moi)', // Default for demo
+                status: (event.data.status as any) || 'pending'
+            };
+            this.allEntries.update(entries => [newEntry, ...entries]);
+        }
+    }
 
     // Helper methods
     getStatusClass(status: string): string {
