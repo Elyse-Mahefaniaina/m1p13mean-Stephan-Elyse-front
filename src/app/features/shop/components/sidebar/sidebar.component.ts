@@ -46,22 +46,6 @@ export class SidebarComponent implements OnInit {
             ]
         },
         {
-            title: 'Inventaire',
-            items: [
-                {
-                    label: 'Gestion de Stock',
-                    icon: 'bi-box-seam-fill',
-                    route: '/shop/inventory',
-                    children: [
-                        { label: 'Entrées de Stock', icon: 'bi-plus-square-fill', route: '/shop/inventory/stock-entries' },
-                        { label: 'Sorties de Stock', icon: 'bi-dash-square-fill', route: '/shop/inventory/stock-out' },
-                        { label: 'Mouvements de stock', icon: 'bi-arrow-left-right', route: '/shop/inventory/stock-movements' }
-                    ],
-                    isOpen: true
-                }
-            ]
-        },
-        {
             title: 'Ventes',
             items: [
                 {
