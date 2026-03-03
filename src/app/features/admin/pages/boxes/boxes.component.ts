@@ -165,7 +165,7 @@ export class BoxesComponent implements OnInit {
         const box = this.boxToDelete();
         if (box) {
             // Business logic will be added later
-            console.log('Delete confirmed for box:', box.id, box.number);
+            console.log('Delete confirmed for box:', box._id, box.number);
         }
         this.boxToDelete.set(null);
     }

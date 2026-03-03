@@ -145,7 +145,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (box of paginatedBoxes(); track box.id) {
+                    @for (box of paginatedBoxes(); track box._id) {
                     <tr>
                         <td class="px-4" data-label="N° Box">
                             <span class="box-number fw-bold">{{ box.number }}</span>

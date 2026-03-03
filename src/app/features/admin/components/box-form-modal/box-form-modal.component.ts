@@ -107,7 +107,7 @@ export class BoxFormModalComponent implements AfterViewInit, OnDestroy {
         // Business logic will be added later
         console.log(this.isEditMode ? 'Edit values:' : 'Create values:', this.boxForm.value);
         if (this.isEditMode) {
-            console.log('Editing box ID:', this.editingBox?.id);
+            console.log('Editing box ID:', this.editingBox?._id);
         }
         this.close();
     }

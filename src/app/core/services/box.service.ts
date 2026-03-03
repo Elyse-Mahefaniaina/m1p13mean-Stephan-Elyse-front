@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, throwError } from 'rxjs';
 
 export interface Box {
-    id: string;
+    _id: string;
     number: string;
     zone: string;
     dimensions: string;
