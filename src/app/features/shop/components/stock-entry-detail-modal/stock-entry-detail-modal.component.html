@@ -1,0 +1,140 @@
+<div class="modal fade" #detailModal tabindex="-1" aria-labelledby="entryDetailLabel" aria-hidden="false"
+    id="stockEntryDetailModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+
+            @if (entry) {
+
+            <!-- Header -->
+            <div class="detail-header" [ngClass]="'header-' + getStatusClass(entry.status)">
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3"
+                    (click)="close()" aria-label="Fermer"></button>
+
+                <div class="d-flex flex-column align-items-center pt-5 pb-4">
+                    <div class="detail-icon-wrapper d-flex align-items-center justify-content-center mb-3">
+                        <i class="bi bi-box-seam fs-2 text-white"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-1">Entrée #{{ entry.id }}</h5>
+                    <span class="text-white-50 small">Rapport d'arrivage en stock</span>
+
+                    <div class="mt-3">
+                        <span class="detail-badge-status" [ngClass]="'status-' + getStatusClass(entry.status)">
+                            <i class="bi {{ getStatusIcon(entry.status) }} me-1"></i>
+                            {{ getStatusLabel(entry.status) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body px-4 py-4">
+
+                <!-- Info Grid -->
+                <div class="info-grid">
+
+                    <!-- Product -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-tag-fill"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Produit</div>
+                            <div class="info-value fw-bold text-dark">{{ entry.productName }}</div>
+                        </div>
+                    </div>
+
+                    <!-- SKU -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-hash"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Code SKU / Réf</div>
+                            <div class="info-value">{{ entry.sku }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-plus-slash-minus"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Quantité reçue</div>
+                            <div class="info-value">
+                                <span
+                                    class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1">
+                                    + {{ entry.quantity }} unités
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Supplier -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-truck"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Fournisseur</div>
+                            <div class="info-value">{{ entry.supplier }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Received By -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-person-check-fill"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Réceptionnaire</div>
+                            <div class="info-value d-flex align-items-center gap-2">
+                                <div class="avatar-sm">{{ entry.receivedBy.charAt(0) }}</div>
+                                {{ entry.receivedBy }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Date & Heure</div>
+                            <div class="info-value">{{ entry.date | date:'dd MMMM yyyy, HH:mm' }}</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Notes Section -->
+                @if (entry.notes) {
+                <div class="notes-section mt-4 pt-3 border-top">
+                    <div class="d-flex align-items-center gap-2 mb-2 text-muted small fw-bold text-uppercase">
+                        <i class="bi bi-sticky"></i>
+                        <span>Notes / Commentaires</span>
+                    </div>
+                    <div class="notes-content p-3 rounded-3 bg-light font-italic small text-muted">
+                        "{{ entry.notes }}"
+                    </div>
+                </div>
+                }
+
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                <button type="button"
+                    class="btn btn-detail-close w-100 rounded-3 py-2 fw-medium d-flex align-items-center justify-content-center gap-2"
+                    (click)="close()">
+                    <i class="bi bi-x-lg"></i>
+                    <span>Fermer le rapport</span>
+                </button>
+            </div>
+
+            }
+
+        </div>
+    </div>
+</div>

@@ -38,7 +38,8 @@ export class SidebarComponent {
     navSections = signal<NavSection[]>([
         {
             items: [
-                { label: 'Tableau de bord', icon: 'bi-grid-1x2-fill', route: '/shop/dashboard' }
+                { label: 'Tableau de bord', icon: 'bi-grid-1x2-fill', route: '/shop/dashboard' },
+                { label: 'Création de Produit', icon: 'bi-plus-circle-fill', route: '/shop/product-creation' }
             ]
         },
         {
@@ -49,7 +50,6 @@ export class SidebarComponent {
                     icon: 'bi-box-seam-fill',
                     route: '/shop/inventory',
                     children: [
-                        { label: 'Niveau de Stock', icon: 'bi-bar-chart-fill', route: '/shop/inventory/stock-level' },
                         { label: 'Entrées de Stock', icon: 'bi-plus-square-fill', route: '/shop/inventory/stock-entries' },
                         { label: 'Sorties de Stock', icon: 'bi-dash-square-fill', route: '/shop/inventory/stock-out' },
                         { label: 'Mouvements de stock', icon: 'bi-arrow-left-right', route: '/shop/inventory/stock-movements' }
