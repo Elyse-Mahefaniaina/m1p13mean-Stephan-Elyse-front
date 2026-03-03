@@ -16,11 +16,6 @@
                     <i class="bi bi-download"></i>
                     <span>Exporter</span>
                 </button>
-                <button class="btn btn-premium d-flex align-items-center gap-2 rounded-3 px-4 py-2"
-                    (click)="openCreateModal()">
-                    <i class="bi bi-plus-circle-fill"></i>
-                    <span>Nouvelle Commande</span>
-                </button>
             </div>
         </div>
     </div>
@@ -111,11 +106,11 @@
                         <span class="text-muted small fw-bold text-uppercase me-2"
                             style="letter-spacing: 0.05em;">Filtrer par statut :</span>
                         <div class="filter-pills-group">
-                            @for (st of ['all', 'pending', 'processing', 'shipped', 'delivered', 'completed',
-                            'cancelled'];
-                            track st) {
-                            <div class="filter-pill" [class.active]="statusFilter() === st" [attr.data-status]="st"
-                                (click)="statusFilter.set(st)">
+                        @for (st of ['all', 'en_attente', 'en_preparation', 'expediee', 'livree', 'terminee',
+                        'annulee'];
+                        track st) {
+                        <div class="filter-pill" [class.active]="statusFilter() === st" [attr.data-status]="st"
+                            (click)="statusFilter.set(st)">
                                 <span class="pill-dot"></span>
                                 <span>{{ st === 'all' ? 'Tout voir' : getStatusLabel(st) }}</span>
                             </div>
@@ -163,7 +158,7 @@
             <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
-                        <th class="px-4">ID Commande</th>
+                        <th class="px-4">Réf. Commande</th>
                         <th>Client</th>
                         <th>Date</th>
                         <th class="text-center">Articles</th>
@@ -176,7 +171,7 @@
                 <tbody>
                     @for (order of paginatedOrders(); track order.id) {
                     <tr>
-                        <td class="px-4" data-label="ID Commande">
+                        <td class="px-4" data-label="Réf. Commande">
                             <span class="fw-bold text-primary">#{{ order.id }}</span>
                         </td>
                         <td data-label="Client">
@@ -207,19 +202,28 @@
                             </span>
                         </td>
                         <td class="px-4" data-label="Actions">
-                            <div class="d-flex gap-2 justify-content-end mobile-justify-start">
+                            <div class="actions-wrap d-flex gap-2 justify-content-end mobile-justify-start">
                                 <button class="btn-action btn-action-view" title="Détails"
                                     (click)="openDetailModal(order)">
                                     <i class="bi bi-eye-fill"></i>
                                 </button>
-                                <button class="btn-action btn-action-edit" title="Modifier"
-                                    (click)="openEditModal(order)">
-                                    <i class="bi bi-pencil-square"></i>
+                                <button class="btn-action btn-action-status" title="Changer le statut"
+                                    [disabled]="isStatusLocked(order)" (click)="toggleStatusMenu(order.id)">
+                                    <i class="bi bi-arrow-repeat"></i>
                                 </button>
-                                <button class="btn-action btn-action-delete" title="Supprimer"
-                                    (click)="openDeleteModal(order)">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
+                                @if (statusMenuFor() === order.id) {
+                                <div class="status-menu" role="menu">
+                                    <div class="status-menu-title">Changer le statut</div>
+                                    @for (st of statusOptions; track st) {
+                                    <button type="button" class="status-menu-item"
+                                        [class.active]="order.status === st"
+                                        (click)="onStatusChange(order, st)">
+                                        <span class="status-dot" [ngClass]="getStatusClass(st)"></span>
+                                        <span>{{ getStatusLabel(st) }}</span>
+                                    </button>
+                                    }
+                                </div>
+                                }
                             </div>
                         </td>
                     </tr>
@@ -266,16 +270,4 @@
 
     <!-- Order Detail Modal -->
     <app-order-detail-modal></app-order-detail-modal>
-
-    <!-- Order Form Modal (Create / Edit) -->
-    <app-order-form-modal (saved)="loadOrders()"></app-order-form-modal>
-
-    <!-- Delete Confirm Dialog -->
-    <app-confirm-dialog title="Supprimer la commande"
-        message="Êtes-vous sûr de vouloir supprimer cette commande ? Cette action est irréversible."
-        detail="Toutes les informations relatives à cette commande seront définitivement effacées."
-        icon="bi-trash3-fill" theme="danger" confirmText="Supprimer" cancelText="Annuler"
-        [itemName]="orderToDelete() ? '#' + orderToDelete()!.id : ''"
-        [itemSubtitle]="orderToDelete()?.customerName ?? ''" (confirmed)="onDeleteConfirmed()">
-    </app-confirm-dialog>
 </div>

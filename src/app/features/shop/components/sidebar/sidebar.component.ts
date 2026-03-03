@@ -1,8 +1,9 @@
 import { AuthService } from './../../../../core/services/auth.service';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastService } from '../../../../core/services/toast.service';
+import { OrderService } from '../../../../core/services/order.service';
 
 interface NavItem {
     label: string;
@@ -25,12 +26,14 @@ interface NavSection {
     templateUrl: './sidebar.component.html',
     styleUrl: './sidebar.component.css'
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
     private router = inject(Router);
     private toastService = inject(ToastService);
+    private orderService = inject(OrderService);
 
     isMobileMenuOpen = signal(false);
     isProfileDropdownOpen = signal(false);
+    orderCount = signal(0);
 
     constructor(private authService: AuthService) {}
 
@@ -43,22 +46,6 @@ export class SidebarComponent {
             ]
         },
         {
-            title: 'Inventaire',
-            items: [
-                {
-                    label: 'Gestion de Stock',
-                    icon: 'bi-box-seam-fill',
-                    route: '/shop/inventory',
-                    children: [
-                        { label: 'Entrées de Stock', icon: 'bi-plus-square-fill', route: '/shop/inventory/stock-entries' },
-                        { label: 'Sorties de Stock', icon: 'bi-dash-square-fill', route: '/shop/inventory/stock-out' },
-                        { label: 'Mouvements de stock', icon: 'bi-arrow-left-right', route: '/shop/inventory/stock-movements' }
-                    ],
-                    isOpen: true
-                }
-            ]
-        },
-        {
             title: 'Ventes',
             items: [
                 {
@@ -66,11 +53,6 @@ export class SidebarComponent {
                     icon: 'bi-cart-check-fill',
                     route: '/shop/orders',
                     badge: 2
-                },
-                {
-                    label: 'Promotions',
-                    icon: 'bi-megaphone-fill',
-                    route: '/shop/promotions'
                 }
             ]
         },
@@ -85,6 +67,10 @@ export class SidebarComponent {
             ]
         }
     ]);
+
+    ngOnInit(): void {
+        this.loadOrderCount();
+    }
 
 
     toggleSubmenu(item: NavItem) {
@@ -119,5 +105,34 @@ export class SidebarComponent {
             this.router.navigate(['/shop/login']);
           }
         });
+    }
+
+    getItemBadge(item: NavItem): number {
+        if (item.route === '/shop/orders') {
+            return this.orderCount();
+        }
+        return item.badge || 0;
+    }
+
+    private loadOrderCount(): void {
+        const shopId = this.getShopId();
+        if (!shopId) return;
+        this.orderService.getShopOrders(shopId).subscribe({
+            next: (orders) => this.orderCount.set(orders.length),
+            error: () => this.orderCount.set(0)
+        });
+    }
+
+    private getShopId(): string | null {
+        const rawData = localStorage.getItem('currentUser');
+        if (!rawData) return null;
+        let user: any = null;
+        try {
+            user = JSON.parse(rawData);
+        } catch {
+            user = rawData;
+        }
+        const shop = (user && typeof user === 'object') ? user.shop : null;
+        return shop?._id || shop || null;
     }
 }

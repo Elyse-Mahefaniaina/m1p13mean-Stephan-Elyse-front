@@ -1,7 +1,9 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { OrderService } from '../../../../core/services/order.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 interface CartItem {
     id: string;
@@ -15,19 +17,23 @@ interface CartItem {
 @Component({
     selector: 'app-cart',
     standalone: true,
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, FormsModule],
     templateUrl: './cart.component.html',
     styleUrl: './cart.component.css'
 })
 export class CartComponent implements OnInit {
+    private orderService = inject(OrderService);
+    private toastService = inject(ToastService);
 
     cartItems = signal<CartItem[]>([]);
+    email = signal('');
 
     shipping = 0;
     taxRate = 0.2;
 
     ngOnInit(): void {
         this.loadCartData();
+        this.loadUserEmail();
     }
 
     private loadCartData(): void {
@@ -43,6 +49,25 @@ export class CartComponent implements OnInit {
         category: p.category
       }));
       this.cartItems.set(cartItems);
+    }
+
+    private loadUserEmail(): void {
+        const raw = localStorage.getItem('currentUser');
+        if (!raw) return;
+
+        let user: any = null;
+        try {
+            user = JSON.parse(raw);
+        } catch {
+            user = raw;
+        }
+
+        const email =
+            (user && typeof user === 'object' ? user.email : null) ||
+            (typeof user === 'string' && user.includes('@') ? user : null);
+        if (email) {
+            this.email.set(email);
+        }
     }
 
     get subtotal() {
@@ -76,6 +101,37 @@ export class CartComponent implements OnInit {
       const cart = storedCart ? JSON.parse(storedCart) : [];
       const newCart = cart.filter((p: any) => p._id !== item.id);
       localStorage.setItem('cart', JSON.stringify(newCart));
+    }
+
+    placeOrder(): void {
+        const email = this.email().trim();
+        if (!email) {
+            this.toastService.show('Veuillez saisir votre email.', 'warning');
+            return;
+        }
+        if (this.cartItems().length === 0) {
+            this.toastService.show('Votre panier est vide.', 'warning');
+            return;
+        }
+
+        const payload = {
+            email,
+            items: this.cartItems().map(item => ({
+                product: item.id,
+                quantity: item.quantity
+            }))
+        };
+
+        this.orderService.createOrder(payload).subscribe({
+            next: (res) => {
+                this.toastService.show(`Commande créée (#${res.uuid})`, 'success');
+                this.cartItems.set([]);
+                localStorage.setItem('cart', JSON.stringify([]));
+            },
+            error: () => {
+                this.toastService.show('Erreur lors de la création de la commande.', 'danger');
+            }
+        });
     }
 
     formatPrice(price: number): string {

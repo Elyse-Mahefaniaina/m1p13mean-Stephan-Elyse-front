@@ -40,24 +40,24 @@ export class OrderDetailModalComponent implements AfterViewInit, OnDestroy {
 
     getStatusLabel(status: string): string {
         switch (status) {
-            case 'pending': return 'En attente';
-            case 'processing': return 'En préparation';
-            case 'shipped': return 'Expédiée';
-            case 'delivered': return 'Livrée';
-            case 'completed': return 'Terminée';
-            case 'cancelled': return 'Annulée';
+            case 'en_attente': return 'En attente';
+            case 'en_preparation': return 'En préparation';
+            case 'expediee': return 'Expédiée';
+            case 'livree': return 'Livrée';
+            case 'terminee': return 'Terminée';
+            case 'annulee': return 'Annulée';
             default: return status;
         }
     }
 
     getStatusColor(status: string): string {
         switch (status) {
-            case 'pending': return 'warning';
-            case 'processing': return 'primary';
-            case 'shipped': return 'info';
-            case 'delivered': return 'success';
-            case 'completed': return 'success';
-            case 'cancelled': return 'danger';
+            case 'en_attente': return 'warning';
+            case 'en_preparation': return 'primary';
+            case 'expediee': return 'info';
+            case 'livree': return 'success';
+            case 'terminee': return 'success';
+            case 'annulee': return 'danger';
             default: return 'secondary';
         }
     }
