@@ -49,7 +49,7 @@ export class LoginComponent {
             this.isLoading.set(false);
             const user = res.user;
             this.toastService.show('Connexion réussie !', 'success');
-            localStorage.setItem("currentUser", user);
+            localStorage.setItem("currentUser", JSON.stringify(user));
             this.router.navigate(['/client/dashboard']);
           },
           error: (err) => {

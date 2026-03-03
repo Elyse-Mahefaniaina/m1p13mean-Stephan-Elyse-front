@@ -1,10 +1,12 @@
 import { Component, OnInit, signal, computed, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { OrderService, Order } from '../../../../core/services/order.service';
-import { OrderFormModalComponent } from '../../components/order-form-modal/order-form-modal.component';
+import { OrderService, Order, OrderStatus } from '../../../../core/services/order.service';
 import { OrderDetailModalComponent } from '../../components/order-detail-modal/order-detail-modal.component';
-import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Router } from '@angular/router';
+import { ToastService } from '../../../../core/services/toast.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-orders',
@@ -12,19 +14,18 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
     imports: [
         CommonModule,
         FormsModule,
-        OrderFormModalComponent,
-        OrderDetailModalComponent,
-        ConfirmDialogComponent
+        OrderDetailModalComponent
     ],
     templateUrl: './orders.component.html',
     styleUrl: './orders.component.css'
 })
 export class OrdersComponent implements OnInit {
-    @ViewChild(OrderFormModalComponent) orderFormModal!: OrderFormModalComponent;
     @ViewChild(OrderDetailModalComponent) orderDetailModal!: OrderDetailModalComponent;
-    @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
 
     private orderService = inject(OrderService);
+    private authService = inject(AuthService);
+    private router = inject(Router);
+    private toastService = inject(ToastService);
     protected Math = Math;
 
     allOrders = signal<Order[]>([]);
@@ -33,7 +34,15 @@ export class OrdersComponent implements OnInit {
     statusFilter = signal<string>('all');
     currentPage = signal(1);
     pageSize = signal(10);
-    orderToDelete = signal<Order | null>(null);
+    statusMenuFor = signal<string | null>(null);
+    readonly statusOptions: OrderStatus[] = [
+        'en_attente',
+        'en_preparation',
+        'expediee',
+        'livree',
+        'terminee',
+        'annulee'
+    ];
 
     ngOnInit() {
         this.loadOrders();
@@ -41,7 +50,12 @@ export class OrdersComponent implements OnInit {
 
     loadOrders() {
         this.loading.set(true);
-        this.orderService.getOrders().subscribe({
+        const shopId = this.getShopId();
+        if (!shopId) {
+            this.loading.set(false);
+            return;
+        }
+        this.orderService.getShopOrders(shopId).subscribe({
             next: (data) => {
                 this.allOrders.set(data);
                 this.loading.set(false);
@@ -88,9 +102,9 @@ export class OrdersComponent implements OnInit {
         const all = this.allOrders();
         return {
             total: all.length,
-            pending: all.filter(o => o.status === 'pending').length,
-            completed: all.filter(o => o.status === 'completed' || o.status === 'delivered').length,
-            revenue: all.filter(o => o.status !== 'cancelled').reduce((acc, o) => acc + o.total, 0)
+            pending: all.filter(o => o.status === 'en_attente').length,
+            completed: all.filter(o => o.status === 'livree' || o.status === 'terminee').length,
+            revenue: all.filter(o => o.status !== 'annulee').reduce((acc, o) => acc + o.total, 0)
         };
     });
 
@@ -102,24 +116,24 @@ export class OrdersComponent implements OnInit {
 
     getStatusClass(status: string): string {
         switch (status) {
-            case 'pending': return 'status-pending';
-            case 'processing': return 'status-processing';
-            case 'shipped': return 'status-shipped';
-            case 'delivered': return 'status-delivered';
-            case 'completed': return 'status-completed';
-            case 'cancelled': return 'status-cancelled';
+            case 'en_attente': return 'status-pending';
+            case 'en_preparation': return 'status-processing';
+            case 'expediee': return 'status-shipped';
+            case 'livree': return 'status-delivered';
+            case 'terminee': return 'status-completed';
+            case 'annulee': return 'status-cancelled';
             default: return '';
         }
     }
 
     getStatusLabel(status: string): string {
         switch (status) {
-            case 'pending': return 'En attente';
-            case 'processing': return 'En préparation';
-            case 'shipped': return 'Expédiée';
-            case 'delivered': return 'Livrée';
-            case 'completed': return 'Terminée';
-            case 'cancelled': return 'Annulée';
+            case 'en_attente': return 'En attente';
+            case 'en_preparation': return 'En préparation';
+            case 'expediee': return 'Expédiée';
+            case 'livree': return 'Livrée';
+            case 'terminee': return 'Terminée';
+            case 'annulee': return 'Annulée';
             default: return status;
         }
     }
@@ -133,35 +147,71 @@ export class OrdersComponent implements OnInit {
         }
     }
 
-    openCreateModal(): void {
-        this.orderFormModal.open();
-    }
-
     openDetailModal(order: Order): void {
         this.orderDetailModal.open(order);
-    }
-
-    openEditModal(order: Order): void {
-        this.orderFormModal.openForEdit(order);
-    }
-
-    openDeleteModal(order: Order): void {
-        this.orderToDelete.set(order);
-        this.confirmDialog.open();
-    }
-
-    onDeleteConfirmed(): void {
-        const order = this.orderToDelete();
-        if (order) {
-            this.orderService.deleteOrder(order.id).subscribe(() => {
-                this.loadOrders();
-            });
-        }
-        this.orderToDelete.set(null);
     }
 
     exportOrders(): void {
         this.orderService.exportOrders(this.filteredOrders());
     }
-}
 
+    toggleStatusMenu(orderId: string): void {
+        this.statusMenuFor.update(current => (current === orderId ? null : orderId));
+    }
+
+    onStatusChange(order: Order, status: OrderStatus): void {
+        const items = order.commandeItems || [];
+        const ids = items.map(i => i._id).filter((id): id is string => !!id);
+        if (ids.length === 0) {
+            this.toastService.show('Impossible de changer le statut (ID manquant).', 'warning');
+            this.statusMenuFor.set(null);
+            return;
+        }
+
+        forkJoin(ids.map(id => this.orderService.updateCommandeShopStatus(id, status))).subscribe({
+            next: () => {
+                const paymentStatus = status === 'terminee' ? 'paid' : 'pending';
+                this.allOrders.update(list =>
+                    list.map(o => o.id === order.id ? { ...o, status, paymentStatus } : o)
+                );
+                this.toastService.show('Statut mis à jour.', 'success');
+                this.statusMenuFor.set(null);
+            },
+            error: () => {
+                this.toastService.show('Erreur lors de la mise à jour du statut.', 'danger');
+                this.statusMenuFor.set(null);
+            }
+        });
+    }
+
+    isStatusLocked(order: Order): boolean {
+        return order.status === 'annulee' || order.status === 'terminee';
+    }
+
+    private getShopId(): string | null {
+        const rawData = localStorage.getItem('currentUser');
+        if (!rawData) {
+            this.authService.logout().subscribe({
+                next: () => this.router.navigate(['/shop/login'])
+            });
+            return null;
+        }
+
+        let user: any = null;
+        try {
+            user = JSON.parse(rawData);
+        } catch {
+            user = rawData;
+        }
+
+        const shop = (user && typeof user === 'object') ? user.shop : null;
+        const shopId = shop?._id || shop;
+        if (!shopId) {
+            this.authService.logout().subscribe({
+                next: () => this.router.navigate(['/shop/login'])
+            });
+            return null;
+        }
+        return shopId;
+    }
+}

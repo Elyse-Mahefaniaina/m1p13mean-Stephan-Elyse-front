@@ -214,14 +214,9 @@ h1,
     border-color: var(--info);
 }
 
-.btn-action-edit:hover {
-    color: var(--warning);
-    border-color: var(--warning);
-}
-
-.btn-action-delete:hover {
-    color: var(--danger);
-    border-color: var(--danger);
+.btn-action-status:hover {
+    color: var(--primary);
+    border-color: var(--primary);
 }
 
 /* Search & Filters */
@@ -300,48 +295,133 @@ h1,
     background-color: white;
 }
 
-.filter-pill[data-status="pending"].active {
+.filter-pill[data-status="en_attente"].active {
     background-color: #FFFBEB;
     color: #92400E;
     border-color: #FEF3C7;
 }
 
-.filter-pill[data-status="pending"] .pill-dot {
+.filter-pill[data-status="en_attente"] .pill-dot {
     background-color: #F59E0B;
 }
 
-.filter-pill[data-status="processing"].active,
-.filter-pill[data-status="shipped"].active {
+.filter-pill[data-status="en_preparation"].active,
+.filter-pill[data-status="expediee"].active {
     background-color: #EFF6FF;
     color: #1E40AF;
     border-color: #DBEAFE;
 }
 
-.filter-pill[data-status="processing"] .pill-dot,
-.filter-pill[data-status="shipped"] .pill-dot {
+.filter-pill[data-status="en_preparation"] .pill-dot,
+.filter-pill[data-status="expediee"] .pill-dot {
     background-color: #3B82F6;
 }
 
-.filter-pill[data-status="delivered"].active,
-.filter-pill[data-status="completed"].active {
+.filter-pill[data-status="livree"].active,
+.filter-pill[data-status="terminee"].active {
     background-color: #ECFDF5;
     color: #065F46;
     border-color: #D1FAE5;
 }
 
-.filter-pill[data-status="delivered"] .pill-dot,
-.filter-pill[data-status="completed"] .pill-dot {
+.filter-pill[data-status="livree"] .pill-dot,
+.filter-pill[data-status="terminee"] .pill-dot {
     background-color: #10B981;
 }
 
-.filter-pill[data-status="cancelled"].active {
+.filter-pill[data-status="annulee"].active {
     background-color: #FEF2F2;
     color: #991B1B;
     border-color: #FEE2E2;
 }
 
-.filter-pill[data-status="cancelled"] .pill-dot {
+.filter-pill[data-status="annulee"] .pill-dot {
     background-color: #EF4444;
+}
+
+/* Status Menu */
+.actions-wrap {
+    position: relative;
+}
+
+.status-menu {
+    position: absolute;
+    right: 0;
+    top: 44px;
+    min-width: 200px;
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+    padding: 8px;
+    z-index: 10;
+}
+
+.status-menu-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94A3B8;
+    padding: 6px 8px 4px;
+}
+
+.status-menu-item {
+    width: 100%;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #475569;
+    transition: background 0.2s ease;
+}
+
+.status-menu-item:hover {
+    background: #F8FAFC;
+}
+
+.status-menu-item.active {
+    background: rgba(79, 70, 229, 0.08);
+    color: var(--primary);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    display: inline-block;
+}
+
+.status-dot.status-pending::before,
+.status-dot.status-processing::before,
+.status-dot.status-shipped::before,
+.status-dot.status-delivered::before,
+.status-dot.status-completed::before,
+.status-dot.status-cancelled::before {
+    display: none;
+}
+
+.status-dot.status-pending {
+    background: #F59E0B;
+}
+
+.status-dot.status-processing,
+.status-dot.status-shipped {
+    background: #3B82F6;
+}
+
+.status-dot.status-delivered,
+.status-dot.status-completed {
+    background: #10B981;
+}
+
+.status-dot.status-cancelled {
+    background: #EF4444;
 }
 
 /* Pagination Premium */

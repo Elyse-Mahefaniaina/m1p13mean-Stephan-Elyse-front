@@ -1,41 +1,96 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError, throwError, map } from 'rxjs';
+import { Observable, tap, catchError, throwError, map, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface OrderItem {
-    id: number;
+    id: string;
     name: string;
     price: number;
     quantity: number;
     image?: string;
 }
 
+export type OrderStatus =
+    | 'en_attente'
+    | 'en_preparation'
+    | 'expediee'
+    | 'livree'
+    | 'terminee'
+    | 'annulee';
+
 export interface Order {
     id: string;
     date: string;
-    customerName?: string; // Added to match component usage
-    status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'completed' | 'cancelled';
-    paymentStatus?: 'paid' | 'pending' | 'refunded'; // Added to match component usage
+    customerName?: string;
+    status: OrderStatus;
+    paymentStatus?: 'paid' | 'pending' | 'refunded';
     total: number;
     itemsCount: number;
     items: OrderItem[];
+    commandeItems?: CommandeShopItem[];
+}
+
+export interface CreateCommandeItem {
+    product: string;
+    quantity: number;
+}
+
+export interface CreateCommandePayload {
+    email: string;
+    items: CreateCommandeItem[];
+}
+
+export interface CommandeShopItem {
+    _id?: string;
+    commandeUuid: string;
+    product: any;
+    shop: any;
+    quantity: number;
+    status?: OrderStatus;
+    commandeEmail?: string;
+    createdAt?: string;
+    modifiedAt?: string;
+}
+
+export interface CreateCommandeResponse {
+    uuid: string;
+    email: string;
+    items: CommandeShopItem[];
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class OrderService {
-    private readonly ordersUrl = 'assets/data/orders.json';
+    private readonly commandesUrl = environment.apiBaseUrl + '/commandes';
+    private readonly commandeShopsUrl = environment.apiBaseUrl + '/commande-shops';
 
     constructor(private http: HttpClient) { }
 
-    getOrders(): Observable<Order[]> {
-        return this.http.get<Order[]>(this.ordersUrl).pipe(
-            map(orders => orders.map(order => ({
-                ...order,
-                customerName: order.customerName || 'Client anonyme',
-                paymentStatus: order.paymentStatus || 'paid'
-            }))),
+    createOrder(payload: CreateCommandePayload): Observable<CreateCommandeResponse>;
+    createOrder(payload: Partial<Order>): Observable<void>;
+    createOrder(payload: any): Observable<any> {
+        const isCommandePayload =
+            payload && typeof payload === 'object' && 'email' in payload && 'items' in payload;
+        if (!isCommandePayload) {
+            console.warn('createOrder called with non-commande payload; ignoring.');
+            return of(undefined);
+        }
+
+        return this.http.post<CreateCommandeResponse>(this.commandesUrl, payload).pipe(
+            catchError(error => {
+                console.error('Error creating order:', error);
+                return throwError(() => error);
+            })
+        );
+    }
+
+    getShopOrders(shopId: string): Observable<Order[]> {
+        const url = `${this.commandeShopsUrl}/shop/${shopId}?$expand=product,shop`;
+        return this.http.get<any>(url).pipe(
+            map(res => this.normalizeList<CommandeShopItem>(res)),
+            map(items => this.groupByCommande(items)),
             tap(orders => console.log('Orders loaded:', orders.length)),
             catchError(error => {
                 console.error('Error loading orders:', error);
@@ -44,41 +99,34 @@ export class OrderService {
         );
     }
 
-    getOrderById(id: string): Observable<Order | undefined> {
-        return this.getOrders().pipe(
-            map(orders => orders.find(o => o.id === id))
+    getCommandeItemsByUuid(uuid: string): Observable<CommandeShopItem[]> {
+        const url = `${this.commandeShopsUrl}/commande/${uuid}`;
+        return this.http.get<any>(url).pipe(
+            map(res => this.normalizeList<CommandeShopItem>(res)),
+            catchError(error => {
+                console.error('Error loading commande items:', error);
+                return throwError(() => error);
+            })
         );
     }
 
-    // Mock methods for CRUD
-    createOrder(order: Partial<Order>): Observable<void> {
-        console.log('Creating order:', order);
-        return new Observable(subscriber => {
-            setTimeout(() => {
-                subscriber.next();
-                subscriber.complete();
-            }, 500);
-        });
+    updateCommandeShopStatus(id: string, status: OrderStatus): Observable<CommandeShopItem> {
+        return this.http.put<CommandeShopItem>(`${this.commandeShopsUrl}/${id}`, { status }).pipe(
+            catchError(error => {
+                console.error('Error updating commande shop status:', error);
+                return throwError(() => error);
+            })
+        );
     }
 
     updateOrder(id: string, order: Partial<Order>): Observable<void> {
-        console.log('Updating order:', id, order);
-        return new Observable(subscriber => {
-            setTimeout(() => {
-                subscriber.next();
-                subscriber.complete();
-            }, 500);
-        });
+        console.warn('updateOrder is not implemented for commandes.');
+        return of(undefined);
     }
 
     deleteOrder(id: string): Observable<void> {
-        console.log('Deleting order:', id);
-        return new Observable(subscriber => {
-            setTimeout(() => {
-                subscriber.next();
-                subscriber.complete();
-            }, 500);
-        });
+        console.warn('deleteOrder is not implemented for commandes.');
+        return of(undefined);
     }
 
     exportOrders(orders: Order[]): void {
@@ -103,5 +151,56 @@ export class OrderService {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    }
+
+    private normalizeList<T>(res: any): T[] {
+        if (Array.isArray(res)) return res as T[];
+        if (res && Array.isArray(res.data)) return res.data as T[];
+        return [];
+    }
+
+    private groupByCommande(items: CommandeShopItem[]): Order[] {
+        const map = new Map<string, CommandeShopItem[]>();
+        for (const item of items) {
+            const key = item.commandeUuid || item._id || '';
+            if (!key) continue;
+            if (!map.has(key)) map.set(key, []);
+            map.get(key)!.push(item);
+        }
+
+        return Array.from(map.entries()).map(([uuid, group]) => {
+            const orderItems: OrderItem[] = group.map((g) => {
+                const product = g.product || {};
+                return {
+                    id: String(g._id ?? product._id ?? ''),
+                    name: product.name ?? 'Produit',
+                    price: Number(product.price ?? 0),
+                    quantity: Number(g.quantity ?? 0),
+                    image: product.image
+                };
+            });
+
+            const total = orderItems.reduce((acc, i) => acc + i.price * i.quantity, 0);
+            const date = group[0]?.createdAt || group[0]?.modifiedAt || new Date().toISOString();
+            const email = group[0]?.commandeEmail;
+            const statuses = new Set(group.map(g => g.status).filter(Boolean) as OrderStatus[]);
+            const status =
+                statuses.size === 1
+                    ? (Array.from(statuses)[0] as OrderStatus)
+                    : 'en_preparation';
+            const paymentStatus = status === 'terminee' ? 'paid' : 'pending';
+
+            return {
+                id: uuid,
+                date,
+                customerName: email || 'Client',
+                status: status || 'en_attente',
+                paymentStatus,
+                total,
+                itemsCount: orderItems.length,
+                items: orderItems,
+                commandeItems: group
+            } as Order;
+        });
     }
 }
