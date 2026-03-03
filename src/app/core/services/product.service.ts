@@ -87,23 +87,38 @@ export class ProductService {
         );
     }
 
-    getProductById(id: number): Observable<Product | undefined> {
-        return forkJoin({
-            products: this.getProducts(),
-            details: this.http.get<any[]>(this.productDetailsUrl).pipe(
-                catchError(() => of([]))
-            )
-        }).pipe(
-            map(({ products, details }) => {
-                const product = products.find(p => p._id === id);
-                if (!product) return undefined;
+    getProductById(id: string): Observable<Product | undefined> {
+      return this.http
+        .get<any>(`${this._baseUrl}/${id}?$expand=details`)
+        .pipe(
+          map(p => {
+            if (!p) return undefined;
 
-                const detail = details.find(d => d.id === id);
-                if (detail) {
-                    return { ...product, ...detail };
-                }
-                return product;
-            })
+            const detail = p.details && p.details.length > 0 ? p.details[0] : null;
+
+            return {
+              _id: p._id,
+              name: p.name,
+              shop: p.shop || '',
+              category: p.category,
+              price: p.price,
+              originalPrice: p.originalPrice,
+              image: p.image,
+              images: detail?.images || [],
+              rating: p.rating,
+              reviews: p.reviews,
+              isWishlisted: false,
+              stock: detail?.stock || 0,
+              description: detail?.description || '',
+              variants: detail?.variants || [],
+              specifications: detail?.specifications || [],
+              detailedReviews: detail?.detailedReviews || []
+            } as Product;
+          }),
+          catchError(error => {
+            console.error('Error loading product by id:', error);
+            return of(undefined);
+          })
         );
     }
 

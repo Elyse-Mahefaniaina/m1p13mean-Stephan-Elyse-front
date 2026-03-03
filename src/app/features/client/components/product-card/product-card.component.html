@@ -1,6 +1,6 @@
 <div class="product-card card h-100 border-0 overflow-hidden">
     <!-- Image -->
-    <div class="product-img-container position-relative" [routerLink]="['/client/product', product.id]"
+    <div class="product-img-container position-relative" [routerLink]="['/client/product', product._id]"
         style="cursor: pointer;">
         <img [src]="product.image" [alt]="product.name" class="product-img">
         @if (getDiscount(product) > 0) {
@@ -13,7 +13,7 @@
     <!-- Info -->
     <div class="card-body p-4 d-flex flex-column">
         <h3 class="h6 fw-bold mb-2 product-name">
-            <a [routerLink]="['/client/product', product.id]">{{ product.name }}</a>
+            <a [routerLink]="['/client/product', product._id]">{{ product.name }}</a>
         </h3>
         <div class="d-flex align-items-center gap-2 mb-3">
             <div class="d-flex gap-0">
