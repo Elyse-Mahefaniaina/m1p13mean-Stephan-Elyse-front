@@ -4,7 +4,7 @@
         <!-- Brand -->
         <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/client">
             <i class="bi bi-bag-fill fs-3 text-primary"></i>
-            <span class="fs-4 fw-bold brand-text">MEAN</span>
+            <span class="fs-6 fw-bold brand-text">m1p13mean-Stéphan-Elysé</span>
         </a>
 
         <!-- Mobile Toggle -->
@@ -17,18 +17,18 @@
         <div class="navbar-collapse" [class.collapse]="!isMobileMenuOpen()" [class.show]="isMobileMenuOpen()">
 
             <!-- Main Nav -->
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-2">
                 <li class="nav-item">
-                    <a class="nav-link fw-semibold px-3" routerLink="/client" routerLinkActive="active"
+                    <a class="nav-link fw-semibold px-2" routerLink="/client" routerLinkActive="active"
                         [routerLinkActiveOptions]="{exact: true}">Accueil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link fw-semibold px-3" routerLink="/client/catalog"
+                    <a class="nav-link fw-semibold px-2" routerLink="/client/catalog"
                         routerLinkActive="active">Catalogue</a>
                 </li>
             </ul>
             <!-- Search Bar -->
-            <div class="mx-auto my-3 my-lg-0 w-100 px-lg-4 search-wrapper">
+            <div class="mx-auto my-3 my-lg-0 w-100 px-lg-2 search-wrapper">
                 <div class="position-relative">
                     <input type="text" class="form-control search-input rounded-pill border-0 px-4 py-2"
                         id="clientSearchInput" placeholder="Que recherchez-vous aujourd'hui ?" #searchInput
