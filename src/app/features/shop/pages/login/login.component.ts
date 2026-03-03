@@ -5,8 +5,8 @@ import { Router, RouterLink } from '@angular/router';
 import { ToastService } from '../../../../core/services/toast.service';
 
 // Get credentials from environment variables
-const SHOP_EMAIL = import.meta.env['NG_APP_SHOP_EMAIL'] || '';
-const SHOP_PASSWORD = import.meta.env['NG_APP_SHOP_PASSWORD'] || '';
+const SHOP_EMAIL = 'mora.entana@me.com';
+const SHOP_PASSWORD = 'azerty';
 
 @Component({
     selector: 'app-login',
