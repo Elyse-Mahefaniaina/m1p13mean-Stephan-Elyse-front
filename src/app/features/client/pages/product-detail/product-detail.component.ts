@@ -114,9 +114,23 @@ export class ProductDetailComponent implements OnInit {
     }
 
     protected toggleWishlist(): void {
-        const p = this.product();
-        if (p) {
-            p.isWishlisted = !p.isWishlisted;
+      const p = this.product();
+      if (!p) return;
+
+      p.isWishlisted = !p.isWishlisted;
+
+      const wishRawData = localStorage.getItem("wishlist");
+      let wishData: Product[] = wishRawData ? JSON.parse(wishRawData) : [];
+
+      if (p.isWishlisted) {
+        const exists = wishData.some(w => w._id === p._id);
+        if (!exists) {
+          wishData.push(p);
         }
+      } else {
+        wishData = wishData.filter(w => w._id !== p._id);
+      }
+
+      localStorage.setItem("wishlist", JSON.stringify(wishData));
     }
 }
