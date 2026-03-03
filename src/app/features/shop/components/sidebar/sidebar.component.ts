@@ -55,16 +55,6 @@ export class SidebarComponent implements OnInit {
                     badge: 2
                 }
             ]
-        },
-        {
-            title: 'Paramètres',
-            items: [
-                {
-                    label: 'Profil & Boutique',
-                    icon: 'bi-person-gear',
-                    route: '/shop/profile'
-                }
-            ]
         }
     ]);
 
