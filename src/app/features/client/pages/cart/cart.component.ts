@@ -20,27 +20,29 @@ interface CartItem {
     styleUrl: './cart.component.css'
 })
 export class CartComponent implements OnInit {
-    private http = inject(HttpClient);
 
-    // Initial state empty, will be loaded from JSON
     cartItems = signal<CartItem[]>([]);
 
     shipping = 0;
-    taxRate = 0.2; // 20%
+    taxRate = 0.2;
 
     ngOnInit(): void {
         this.loadCartData();
     }
 
     private loadCartData(): void {
-        this.http.get<CartItem[]>('/assets/data/cart-items.json').subscribe({
-            next: (data) => {
-                this.cartItems.set(data);
-            },
-            error: (err) => {
-                console.error('Failed to load cart data', err);
-            }
-        });
+      const data = localStorage.getItem('cart');
+      let cart = data ? JSON.parse(data) : [];
+
+      const cartItems: CartItem[] = cart.map((p: any) => ({
+        id: p._id,
+        name: p.name,
+        price: p.price,
+        image: p.image,
+        quantity: p.quantity || 1,
+        category: p.category
+      }));
+      this.cartItems.set(cartItems);
     }
 
     get subtotal() {
@@ -67,7 +69,13 @@ export class CartComponent implements OnInit {
     }
 
     removeItem(item: CartItem) {
-        this.cartItems.set(this.cartItems().filter((i: CartItem) => i.id !== item.id));
+      const updatedItems = this.cartItems().filter(i => i.id !== item.id);
+      this.cartItems.set(updatedItems);
+
+      const storedCart = localStorage.getItem('cart');
+      const cart = storedCart ? JSON.parse(storedCart) : [];
+      const newCart = cart.filter((p: any) => p._id !== item.id);
+      localStorage.setItem('cart', JSON.stringify(newCart));
     }
 
     formatPrice(price: number): string {
