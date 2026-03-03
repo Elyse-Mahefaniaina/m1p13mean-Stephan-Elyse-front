@@ -206,7 +206,7 @@
                             <div class="text-muted">{{ item.minStock }}</div>
                         </td>
                         <td data-label="Prix">
-                            <div class="fw-bold text-primary">{{ item.price | currency:'EUR' }}</div>
+                            <div class="fw-bold text-primary">{{ item.price | number:'1.0-0' }} Ar</div>
                         </td>
                         <td class="text-center" data-label="Statut">
                             <span class="status-badge" [ngClass]="getStatusClass(item.status)">
