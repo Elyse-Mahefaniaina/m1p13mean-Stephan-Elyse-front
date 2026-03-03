@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError, throwError, map } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface Shop {
-    id: string;
+    _id: string;
     name: string;
     ownerName: string;
     email: string;
@@ -21,23 +21,28 @@ export interface Shop {
     providedIn: 'root'
 })
 export class ShopService {
-    private readonly shopsUrl = '/assets/data/shops.json';
+  private _baseUrl = environment.apiBaseUrl + "/shops";
 
-    constructor(private http: HttpClient) { }
 
-    getShops(): Observable<Shop[]> {
-        return this.http.get<Shop[]>(this.shopsUrl).pipe(
-            tap(shops => console.log('Shops loaded:', shops.length)),
-            catchError(error => {
-                console.error('Error loading shops:', error);
-                return throwError(() => error);
-            })
-        );
-    }
+  constructor(private http: HttpClient) { }
 
-    getShopById(id: string): Observable<Shop | undefined> {
-        return this.getShops().pipe(
-            map(shops => shops.find(s => s.id === id))
-        );
-    }
+  getShops() {
+    return this.http.get(this._baseUrl);
+  }
+
+  saveOne(shop: Shop) {
+    return this.http.post(this._baseUrl, shop);
+  }
+
+  findOne(id: string) {
+    this.http.get(this._baseUrl+'/'+id);
+  }
+
+  updadteOne(shop: Shop, id: string) {
+    return this.http.put(this._baseUrl+'/'+id, shop);
+  }
+
+  deleteOne(id: string) {
+    return this.http.delete(this._baseUrl+'/'+id);
+  }
 }

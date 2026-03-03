@@ -1,6 +1,6 @@
 [
     {
-        "id": "B1",
+        "_id": "B1",
         "number": "101",
         "zone": "Zone A",
         "dimensions": "25m²",
@@ -19,7 +19,7 @@
         "paymentDay": 5
     },
     {
-        "id": "B2",
+        "_id": "B2",
         "number": "102",
         "zone": "Zone A",
         "dimensions": "15m²",
@@ -37,7 +37,7 @@
         "paymentDay": 5
     },
     {
-        "id": "B3",
+        "_id": "B3",
         "number": "103",
         "zone": "Zone A",
         "dimensions": "40m²",
@@ -56,7 +56,7 @@
         "paymentDay": 5
     },
     {
-        "id": "B4",
+        "_id": "B4",
         "number": "201",
         "zone": "Zone B",
         "dimensions": "30m²",
@@ -74,7 +74,7 @@
         "paymentDay": 10
     },
     {
-        "id": "B5",
+        "_id": "B5",
         "number": "202",
         "zone": "Zone B",
         "dimensions": "20m²",
@@ -91,7 +91,7 @@
         "paymentDay": 10
     },
     {
-        "id": "B6",
+        "_id": "B6",
         "number": "301",
         "zone": "Zone C",
         "dimensions": "50m²",
@@ -110,7 +110,7 @@
         "paymentDay": 1
     },
     {
-        "id": "B7",
+        "_id": "B7",
         "number": "104",
         "zone": "Zone A",
         "dimensions": "20m²",
@@ -128,7 +128,7 @@
         "paymentDay": 5
     },
     {
-        "id": "B8",
+        "_id": "B8",
         "number": "105",
         "zone": "Zone A",
         "dimensions": "35m²",
@@ -146,7 +146,7 @@
         "paymentDay": 5
     },
     {
-        "id": "B9",
+        "_id": "B9",
         "number": "203",
         "zone": "Zone B",
         "dimensions": "25m²",
@@ -164,7 +164,7 @@
         "paymentDay": 10
     },
     {
-        "id": "B10",
+        "_id": "B10",
         "number": "204",
         "zone": "Zone B",
         "dimensions": "15m²",
@@ -181,7 +181,7 @@
         "paymentDay": 10
     },
     {
-        "id": "B11",
+        "_id": "B11",
         "number": "302",
         "zone": "Zone C",
         "dimensions": "45m²",
@@ -200,7 +200,7 @@
         "paymentDay": 1
     },
     {
-        "id": "B12",
+        "_id": "B12",
         "number": "303",
         "zone": "Zone C",
         "dimensions": "30m²",
@@ -218,7 +218,7 @@
         "paymentDay": 1
     },
     {
-        "id": "B13",
+        "_id": "B13",
         "number": "401",
         "zone": "Zone D",
         "dimensions": "20m²",
@@ -235,7 +235,7 @@
         "paymentDay": 15
     },
     {
-        "id": "B14",
+        "_id": "B14",
         "number": "402",
         "zone": "Zone D",
         "dimensions": "25m²",
@@ -253,7 +253,7 @@
         "paymentDay": 15
     },
     {
-        "id": "B15",
+        "_id": "B15",
         "number": "403",
         "zone": "Zone D",
         "dimensions": "60m²",

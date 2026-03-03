@@ -1,3 +1,4 @@
+import { Shop } from './../../../../../core/services/shop.service';
 import { Component, OnInit, signal, computed, inject, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,6 +7,8 @@ import { ToastService } from '../../../../../core/services/toast.service';
 import { ProductFormModalComponent } from '../../../components/product-form-modal/product-form-modal.component';
 import { ProductDetailModalComponent } from '../../../components/product-detail-modal/product-detail-modal.component';
 import { ConfirmDialogComponent } from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
     selector: 'app-stock-level',
@@ -38,7 +41,10 @@ export class StockLevelComponent implements OnInit {
     pageSize = signal(10);
     productToDelete = signal<Product | null>(null);
 
-    constructor() {
+    constructor(
+      private router:Router,
+      private authService:AuthService
+    ) {
         // Reset to first page when filters change
         effect(() => {
             this.searchTerm();
@@ -51,9 +57,23 @@ export class StockLevelComponent implements OnInit {
         this.loadProducts();
     }
 
+    getShopByLogUser() {
+        const rawData = localStorage.getItem('currentUser');
+        let dataUser = rawData?JSON.parse(rawData):null;
+        if (dataUser == null) {
+          this.authService.logout().subscribe({
+            next:() => {
+              this.router.navigate(['/shop/login']);
+            }
+          })
+        }
+        return dataUser.shop
+    }
+
     loadProducts() {
         this.loading.set(true);
-        this.productService.getShopProducts().subscribe({
+
+        this.productService.getShopProducts(this.getShopByLogUser()._id).subscribe({
             next: (data: Product[]) => {
                 this.allProducts.set(data);
                 this.loading.set(false);
@@ -121,7 +141,14 @@ export class StockLevelComponent implements OnInit {
     }
 
     openDetailModal(product: Product) {
-        this.productDetailModal.open(product);
+        this.productService.getProductById(String(product._id)).subscribe({
+            next: (detail) => {
+                this.productDetailModal.open(detail ?? product);
+            },
+            error: () => {
+                this.productDetailModal.open(product);
+            }
+        });
     }
 
     openDeleteModal(product: Product) {
@@ -130,18 +157,22 @@ export class StockLevelComponent implements OnInit {
     }
 
     onProductSaved(productData: Partial<Product>) {
-        if (productData.id) {
+        if (productData._id) {
             // Update
-            this.productService.updateProduct(productData.id, productData).subscribe({
+            const shop = this.getShopByLogUser();
+            productData.shop = shop?._id;
+            this.productService.updateProduct(productData._id, productData).subscribe({
                 next: (updated) => {
                     this.allProducts.update(products =>
-                        products.map(p => p.id === updated.id ? { ...p, ...updated } : p)
+                        products.map(p => p._id === updated._id ? { ...p, ...updated } : p)
                     );
                     this.toastService.show('Produit mis à jour avec succès', 'success');
                 }
             });
         } else {
             // Create
+            const shop = this.getShopByLogUser();
+            productData.shop = shop?._id;
             this.productService.createProduct(productData).subscribe({
                 next: (created) => {
                     this.allProducts.update(products => [created, ...products]);
@@ -154,9 +185,9 @@ export class StockLevelComponent implements OnInit {
     onDeleteConfirmed() {
         const product = this.productToDelete();
         if (product) {
-            this.productService.deleteProduct(product.id).subscribe({
+            this.productService.deleteProduct(product._id).subscribe({
                 next: () => {
-                    this.allProducts.update(products => products.filter(p => p.id !== product.id));
+                    this.allProducts.update(products => products.filter(p => p._id !== product._id));
                     this.toastService.show('Produit supprimé', 'success');
                 }
             });

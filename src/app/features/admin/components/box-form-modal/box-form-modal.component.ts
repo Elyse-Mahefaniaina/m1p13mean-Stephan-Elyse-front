@@ -1,7 +1,8 @@
 import { Component, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Box } from '../../../../core/services/box.service';
+import { Box, BoxService } from '../../../../core/services/box.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 declare var bootstrap: any;
 
@@ -21,7 +22,11 @@ export class BoxFormModalComponent implements AfterViewInit, OnDestroy {
     editingBox: Box | null = null;
     private modalInstance: any;
 
-    constructor(private fb: FormBuilder) {
+    constructor(
+      private toasetService: ToastService,
+      private boxService: BoxService,
+      private fb: FormBuilder
+    ) {
         this.boxForm = this.fb.group({
             number: ['', [Validators.required]],
             zone: ['', [Validators.required]],
@@ -98,16 +103,24 @@ export class BoxFormModalComponent implements AfterViewInit, OnDestroy {
         return '';
     }
 
-    /** Placeholder submit — no business logic yet */
     onSubmit(): void {
         if (this.boxForm.invalid) {
             this.boxForm.markAllAsTouched();
             return;
         }
-        // Business logic will be added later
-        console.log(this.isEditMode ? 'Edit values:' : 'Create values:', this.boxForm.value);
-        if (this.isEditMode) {
-            console.log('Editing box ID:', this.editingBox?.id);
+
+        if (this.isEditMode && this.editingBox?._id) {
+            this.boxService.updadteOne(this.boxForm.value, this.editingBox?._id).subscribe({
+              next: (res: any) => {
+                this.toasetService.show("Modification effectué", "success");
+              }
+            })
+        }else {
+          this.boxService.saveOne(this.boxForm.value).subscribe({
+            next: (res: any) => {
+              this.toasetService.show("Enregistrement effectué", "success");
+            }
+          });
         }
         this.close();
     }

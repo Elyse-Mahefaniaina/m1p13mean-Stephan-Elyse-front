@@ -1,7 +1,7 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Component, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductService, Product } from '../../../../core/services/product.service';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-product-detail',
@@ -17,14 +17,16 @@ export class ProductDetailComponent implements OnInit {
     protected selectedVariants = signal<Record<string, string>>({});
     protected activeTab = signal<'description' | 'reviews'>('description');
     protected mainImage = signal<string | null>(null);
+    protected cartAnimation = signal(false);
 
     constructor(
         private route: ActivatedRoute,
-        private productService: ProductService
+        private productService: ProductService,
+        private router: Router
     ) { }
 
     ngOnInit(): void {
-        const id = Number(this.route.snapshot.paramMap.get('id'));
+        const id = this.route.snapshot.paramMap.get('id');
         if (id) {
             this.productService.getProductById(id).subscribe({
                 next: (product) => {
@@ -32,7 +34,6 @@ export class ProductDetailComponent implements OnInit {
                         this.product.set(product);
                         this.mainImage.set(product.image);
 
-                        // Initialize variants
                         if (product.variants) {
                             const variants: Record<string, string> = {};
                             product.variants.forEach(v => {
@@ -88,16 +89,48 @@ export class ProductDetailComponent implements OnInit {
     }
 
     protected addToCart(): void {
-        const p = this.product();
-        if (p) {
-            console.log('Added to cart:', p.name, 'Qty:', this.quantity(), 'Variants:', this.selectedVariants());
-        }
+      const product = this.product();
+
+      if(product == null) return;
+
+      const data = localStorage.getItem('cart');
+      let cart = data ? JSON.parse(data) : [];
+
+      const exists = cart.some((p: any) => p._id === product._id);
+
+      if (!exists) {
+        cart.push({ ...product, quantity: 1 });
+      } else {
+        cart = cart.map((p: any ) =>
+          p._id === product._id ? { ...p, quantity: (p.quantity || 1) + 1 } : p
+        );
+      }
+      localStorage.setItem('cart', JSON.stringify(cart));
+      this.cartAnimation.set(true);
+      setTimeout(() => {
+        this.cartAnimation.set(false),
+        this.router.navigate(['/client/cart'])
+      }, 2000);
     }
 
     protected toggleWishlist(): void {
-        const p = this.product();
-        if (p) {
-            p.isWishlisted = !p.isWishlisted;
+      const p = this.product();
+      if (!p) return;
+
+      p.isWishlisted = !p.isWishlisted;
+
+      const wishRawData = localStorage.getItem("wishlist");
+      let wishData: Product[] = wishRawData ? JSON.parse(wishRawData) : [];
+
+      if (p.isWishlisted) {
+        const exists = wishData.some(w => w._id === p._id);
+        if (!exists) {
+          wishData.push(p);
         }
+      } else {
+        wishData = wishData.filter(w => w._id !== p._id);
+      }
+
+      localStorage.setItem("wishlist", JSON.stringify(wishData));
     }
 }

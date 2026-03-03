@@ -15,7 +15,7 @@ export class NavbarComponent {
     protected readonly cartItemCount = signal(0);
 
     private authService = inject(AuthService);
-    protected readonly isLoggedIn = this.authService.isLoggedIn;
+    // protected readonly isLoggedIn = this.authService.isLoggedIn;
 
     constructor(private router: Router) { }
 
@@ -37,7 +37,11 @@ export class NavbarComponent {
     }
 
     logout(): void {
-        this.authService.logout();
+      this.authService.logout().subscribe({
+          next : () => {
+            this.router.navigate(['/client/login']);
+          }
+        });
     }
 }
 

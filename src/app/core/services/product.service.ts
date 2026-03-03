@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, throwError, map, forkJoin, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface Category {
     name: string;
@@ -16,7 +17,7 @@ export interface Review {
 }
 
 export interface Product {
-    id: number | string;
+    _id: number;
     name: string;
     shop: string;
     category: string;
@@ -49,48 +50,113 @@ export interface Product {
     providedIn: 'root'
 })
 export class ProductService {
-    // Using leading slash to ensure paths are always relative to root
-    private readonly productsUrl = '/assets/data/products.json';
     private readonly categoriesUrl = '/assets/data/categories.json';
     private readonly productDetailsUrl = '/assets/data/product-details.json';
+    private readonly productsUrl = '/assets/data/product-details.json';
+    private _baseUrl = environment.apiBaseUrl + "/products";
 
     constructor(private http: HttpClient) { }
 
+    private getStoredWishlistIds(): string[] {
+      const data = localStorage.getItem('wishlist');
+      if (!data) return [];
+
+      try {
+        const wishlist: any[] = JSON.parse(data);
+        return wishlist.map(item => item._id).filter(Boolean) as string[];
+      } catch (e) {
+        console.error('Erreur lors de la lecture de la wishlist depuis localStorage', e);
+        return [];
+      }
+    }
+
     getProducts(): Observable<Product[]> {
-        console.log('Fetching products from:', this.productsUrl);
-        return this.http.get<Product[]>(this.productsUrl).pipe(
-            tap(products => console.log('Products loaded:', products.length)),
-            catchError(error => {
-                console.error('Error loading products:', error);
-                return throwError(() => error);
+      const wishlistIds = this.getStoredWishlistIds();
+      return this.http
+        .get<{ count: number; data: any[] }>(this._baseUrl + '?$expand=details')
+        .pipe(
+          map(res =>
+            res.data.map((p: any) => {
+              const detail = p.details && p.details.length > 0 ? p.details[0] : null;
+
+              const stock = detail?.stock || 0;
+              const minStock = detail?.minStock || 0;
+              return {
+                _id: p._id,
+                name: p.name,
+                shop: p.shop || '',
+                category: p.category,
+                price: p.price,
+                originalPrice: p.originalPrice,
+                image: p.image,
+                images: detail?.images || [],
+                rating: p.rating,
+                reviews: p.reviews,
+                isWishlisted: wishlistIds.includes(p._id),
+                stock,
+                minStock,
+                sku: p.sku || String(p._id ?? ''),
+                description: detail?.description || '',
+                variants: detail?.variants || [],
+                specifications: detail?.specifications || [],
+                detailedReviews: detail?.detailedReviews || [],
+                status: this.calculateStatus(stock, minStock)
+              } as Product;
             })
+          ),
+          tap(),
+          catchError(error => {
+            console.error('Error loading products:', error);
+            return throwError(() => error);
+          })
         );
     }
 
-    getProductById(id: number | string): Observable<Product | undefined> {
-        return forkJoin({
-            products: this.getProducts(),
-            details: this.http.get<any[]>(this.productDetailsUrl).pipe(
-                catchError(() => of([])) // In case the file doesn't exist or is empty
-            )
-        }).pipe(
-            map(({ products, details }) => {
-                const product = products.find(p => p.id === id);
-                if (!product) return undefined;
 
-                const detail = details.find(d => d.id === id);
-                if (detail) {
-                    return { ...product, ...detail };
-                }
-                return product;
-            })
+    getProductById(id: string): Observable<Product | undefined> {
+      const wishlistIds = this.getStoredWishlistIds();
+      return this.http
+        .get<any>(`${this._baseUrl}/${id}?$expand=details`)
+        .pipe(
+          map(p => {
+            if (!p) return undefined;
+
+            const detail = p.details && p.details.length > 0 ? p.details[0] : null;
+
+            const stock = detail?.stock || 0;
+            const minStock = detail?.minStock || 0;
+            return {
+              _id: p._id,
+              name: p.name,
+              shop: p.shop || '',
+              category: p.category,
+              price: p.price,
+              originalPrice: p.originalPrice,
+              image: p.image,
+              images: detail?.images || [],
+              rating: p.rating,
+              reviews: p.reviews,
+              isWishlisted: wishlistIds.includes(p._id),
+              stock,
+              minStock,
+              sku: p.sku || String(p._id ?? ''),
+              description: detail?.description || '',
+              variants: detail?.variants || [],
+              specifications: detail?.specifications || [],
+              detailedReviews: detail?.detailedReviews || [],
+              status: this.calculateStatus(stock, minStock)
+            } as Product;
+          }),
+          catchError(error => {
+            console.error('Error loading product by id:', error);
+            return of(undefined);
+          })
         );
     }
 
     getCategories(): Observable<Category[]> {
-        console.log('Fetching categories from:', this.categoriesUrl);
         return this.http.get<Category[]>(this.categoriesUrl).pipe(
-            tap(categories => console.log('Categories loaded:', categories.length)),
+            tap(),
             catchError(error => {
                 console.error('Error loading categories:', error);
                 return throwError(() => error);
@@ -98,34 +164,94 @@ export class ProductService {
         );
     }
 
-    // --- CRUD Operations for Shop Management ---
+    getShopProducts(shopId: string): Observable<Product[]> {
+        const wishlistIds = this.getStoredWishlistIds();
+        const filter = encodeURIComponent(`shop eq '${shopId}'`);
+        const url = `${this._baseUrl}?$expand=details&$filter=${filter}`;
+        return this.http
+        .get<{ count: number; data: any[] }>(url)
+        .pipe(
+          map(res =>
+            res.data.map((p: any) => {
+              const detail = p.details && p.details.length > 0 ? p.details[0] : null;
 
-    getShopProducts(): Observable<Product[]> {
-        // In a real app, this would filter by the current shop's ID
-        return this.http.get<Product[]>(this.productsUrl).pipe(
-            map(products => products.map(p => ({
-                ...p,
-                sku: p.sku || `PROD-${p.id}`,
-                unit: p.unit || 'unités',
-                minStock: p.minStock || 5,
-                status: this.calculateStatus(p.stock, p.minStock || 5)
-            })))
+              const stock = detail?.stock || 0;
+              const minStock = detail?.minStock || 0;
+              return {
+                _id: p._id,
+                name: p.name,
+                shop: p.shop || '',
+                category: p.category,
+                price: p.price,
+                originalPrice: p.originalPrice,
+                image: p.image,
+                images: detail?.images || [],
+                rating: p.rating,
+                reviews: p.reviews,
+                isWishlisted: wishlistIds.includes(p._id),
+                stock,
+                minStock,
+                sku: p.sku || String(p._id ?? ''),
+                description: detail?.description || '',
+                variants: detail?.variants || [],
+                specifications: detail?.specifications || [],
+                detailedReviews: detail?.detailedReviews || [],
+                status: this.calculateStatus(stock, minStock)
+              } as Product;
+            })
+          ),
+          tap(),
+          catchError(error => {
+            console.error('Error loading products:', error);
+            return throwError(() => error);
+          })
         );
     }
 
     createProduct(product: Partial<Product>): Observable<Product> {
-        console.log('Creating product:', product);
-        return of({ ...product, id: Date.now() } as Product);
+        const payload = this.buildCreatePayload(product);
+        return this.http.post<Product>(this._baseUrl, payload).pipe(
+            catchError(error => {
+                console.error('Error creating product:', error);
+                return throwError(() => error);
+            })
+        );
     }
 
     updateProduct(id: number | string, product: Partial<Product>): Observable<Product> {
-        console.log('Updating product:', id, product);
-        return of({ ...product, id } as Product);
+        const payload = this.buildCreatePayload(product);
+        return this.http.put<Product>(`${this._baseUrl}/${id}`, payload).pipe(
+            catchError(error => {
+                console.error('Error updating product:', error);
+                return throwError(() => error);
+            })
+        );
     }
 
     deleteProduct(id: number | string): Observable<void> {
-        console.log('Deleting product:', id);
-        return of(undefined);
+        return this.http.delete<void>(`${this._baseUrl}/${id}`).pipe(
+            catchError(error => {
+                console.error('Error deleting product:', error);
+                return throwError(() => error);
+            })
+        );
+    }
+
+    private buildCreatePayload(product: Partial<Product>) {
+        const payload = {
+            name: product.name,
+            shop: product.shop,
+            category: product.category,
+            price: product.price,
+            originalPrice: product.originalPrice,
+            image: product.image,
+            rating: product.rating,
+            reviews: product.reviews
+        };
+
+        return Object.fromEntries(
+            Object.entries(payload).filter(([, value]) => value !== undefined && value !== null)
+        );
     }
 
     private calculateStatus(stock: number, minStock: number): 'In Stock' | 'Low Stock' | 'Out of Stock' {

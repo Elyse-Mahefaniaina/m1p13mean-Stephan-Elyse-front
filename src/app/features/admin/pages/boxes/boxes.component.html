@@ -145,7 +145,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (box of paginatedBoxes(); track box.id) {
+                    @for (box of paginatedBoxes(); track box._id) {
                     <tr>
                         <td class="px-4" data-label="N° Box">
                             <span class="box-number fw-bold">{{ box.number }}</span>
@@ -257,7 +257,9 @@
     <app-box-detail-modal></app-box-detail-modal>
 
     <!-- Box Form Modal (Create / Edit) -->
-    <app-box-form-modal></app-box-form-modal>
+    <app-box-form-modal
+      (closed)="loadDataAllData()"
+    ></app-box-form-modal>
 
     <!-- Delete Confirm Dialog -->
     <app-confirm-dialog title="Supprimer le Box"

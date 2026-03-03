@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService, Product, Category as BaseCategory } from '../../../../core/services/product.service';
 
@@ -10,11 +10,12 @@ interface Category extends BaseCategory {
 type SortOption = 'popular' | 'newest' | 'price-asc' | 'price-desc';
 
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-catalog',
     standalone: true,
-    imports: [FormsModule, ProductCardComponent],
+    imports: [FormsModule, ProductCardComponent, CommonModule],
     templateUrl: './catalog.component.html',
     styleUrl: './catalog.component.css'
 })
@@ -40,7 +41,8 @@ export class CatalogComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private productService: ProductService
+        private productService: ProductService,
+        private router: Router
     ) { }
 
     ngOnInit(): void {
@@ -61,8 +63,10 @@ export class CatalogComponent implements OnInit {
             });
         });
 
-        this.productService.getProducts().subscribe(products => {
-            this.allProducts.set(products);
+        this.productService.getProducts().subscribe({
+          next: ( res: any) => {
+            this.allProducts.set(res);
+          }
         });
     }
 
@@ -73,6 +77,7 @@ export class CatalogComponent implements OnInit {
         const rating = this.minRating();
         const selCats = this.selectedCategories();
         const sort = this.sortBy();
+
 
         let results = this.allProducts().filter(p => {
             if (search && !p.name.toLowerCase().includes(search) && !p.shop.toLowerCase().includes(search)) return false;
@@ -85,7 +90,7 @@ export class CatalogComponent implements OnInit {
 
         switch (sort) {
             case 'popular': results.sort((a, b) => b.reviews - a.reviews); break;
-            case 'newest': results.sort((a, b) => Number(b.id) - Number(a.id)); break;
+            case 'newest': results.sort((a, b) => b._id - a._id); break;
             case 'price-asc': results.sort((a, b) => a.price - b.price); break;
             case 'price-desc': results.sort((a, b) => b.price - a.price); break;
         }
@@ -138,10 +143,10 @@ export class CatalogComponent implements OnInit {
     }
 
     toggleCategory(index: number): void {
-        this.categories.update(cats =>
-            cats.map((c, i) => i === index ? { ...c, checked: !c.checked } : c)
-        );
-        this.currentPage.set(1);
+      this.categories.update(cats =>
+          cats.map((c, i) => i == index ? { ...c, checked: !c.checked } : c)
+      );
+      this.currentPage.set(1);
     }
 
     removeCategoryByName(name: string): void {
@@ -183,12 +188,29 @@ export class CatalogComponent implements OnInit {
 
     toggleWishlist(product: Product): void {
         this.allProducts.update(products =>
-            products.map(p => p.id === product.id ? { ...p, isWishlisted: !p.isWishlisted } : p)
+            products.map(p => p._id === product._id ? { ...p, isWishlisted: !p.isWishlisted } : p)
         );
+
+        const wishlist = this.allProducts().filter(p => p.isWishlisted);
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+
     }
 
     addToCart(product: Product): void {
-        console.log('Added to cart:', product.name);
+      const data = localStorage.getItem('cart');
+      let cart = data ? JSON.parse(data) : [];
+
+      const exists = cart.some((p: any) => p._id === product._id);
+
+      if (!exists) {
+        cart.push({ ...product, quantity: 1 });
+      } else {
+        cart = cart.map((p: any ) =>
+          p._id === product._id ? { ...p, quantity: (p.quantity || 1) + 1 } : p
+        );
+      }
+      localStorage.setItem('cart', JSON.stringify(cart));
+      this.router.navigate(['/client/cart'])
     }
 
     getDiscount(product: Product): number {

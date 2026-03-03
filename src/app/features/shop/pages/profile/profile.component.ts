@@ -1,3 +1,4 @@
+import { UserService } from './../../../../core/services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -11,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 })
 export class ProfileComponent implements OnInit {
     today: Date = new Date();
+
 
     // Mock User Data
     user = {
@@ -28,21 +30,29 @@ export class ProfileComponent implements OnInit {
     shop = {
         name: 'MA BOUTIQUE',
         category: 'Mode & Accessoires',
-        address: 'Analakely, Antananarivo',
-        city: 'Antananarivo',
-        country: 'Madagascar',
         status: 'Actif',
-        openingHours: 'Lun - Sam: 08h00 - 18h00',
         description: 'Vente de vêtements haut de gamme et accessoires de mode.',
-        logo: null,
-        cover: null
     };
 
     activeTab: string = 'personal';
 
-    constructor() { }
+    constructor(
+      private userService: UserService
+    ) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+      this.getCurrecteUserDetails();
+    }
+
+    getCurrecteUserDetails() {
+      const rawData = localStorage.getItem("currentUser");
+      let user = rawData ? JSON.parse(rawData) : null;
+
+      if(user) {
+        this.userService.getUserById(user.id).subscribe({})
+        this.shop = user.shop;
+      }
+    }
 
     setActiveTab(tab: string): void {
         this.activeTab = tab;
