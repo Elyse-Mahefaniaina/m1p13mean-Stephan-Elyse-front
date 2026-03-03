@@ -1,0 +1,71 @@
+:host {
+    --primary: #4F46E5;
+    --primary-hover: #4338CA;
+}
+
+.modal-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(79, 70, 229, 0.1);
+    color: var(--primary);
+}
+
+.modal-icon-edit {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+}
+
+.input-group-custom .input-group-text {
+    border-radius: 10px 0 0 10px;
+    padding-left: 1rem;
+    padding-right: 0.5rem;
+}
+
+.form-control,
+.form-select {
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    border: 1.5px solid #E2E8F0;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.input-group-custom .form-control {
+    border-radius: 0 10px 10px 0;
+}
+
+.invalid-feedback-custom {
+    color: #EF4444;
+    font-size: 0.72rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.btn-modal-submit {
+    background: var(--primary);
+    border: none;
+    color: white;
+    transition: all 0.2s;
+}
+
+.btn-modal-submit:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.form-section {
+    padding: 1.25rem;
+    background: #F8FAFC;
+    border-radius: 16px;
+    border: 1px solid #F1F5F9;
+}

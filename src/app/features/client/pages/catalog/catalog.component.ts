@@ -85,7 +85,7 @@ export class CatalogComponent implements OnInit {
 
         switch (sort) {
             case 'popular': results.sort((a, b) => b.reviews - a.reviews); break;
-            case 'newest': results.sort((a, b) => b.id - a.id); break;
+            case 'newest': results.sort((a, b) => Number(b.id) - Number(a.id)); break;
             case 'price-asc': results.sort((a, b) => a.price - b.price); break;
             case 'price-desc': results.sort((a, b) => b.price - a.price); break;
         }

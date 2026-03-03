@@ -25,13 +25,13 @@ export const SHOP_ROUTES: Routes = [
         component: ShopLayoutComponent,
         children: [
             { path: 'dashboard', component: DashboardComponent },
+            { path: 'product-creation', component: StockLevelComponent },
             { path: 'orders', component: OrdersComponent },
             { path: 'promotions', component: PromotionsComponent },
             { path: 'profile', component: ProfileComponent },
             {
                 path: 'inventory',
                 children: [
-                    { path: 'stock-level', component: StockLevelComponent },
                     { path: 'stock-entries', component: StockEntriesComponent },
                     { path: 'stock-out', component: StockOutComponent },
                     { path: 'stock-movements', component: StockMovementsComponent }

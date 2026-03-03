@@ -1,0 +1,119 @@
+<div class="modal fade" #detailModal tabindex="-1" aria-labelledby="movementDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+
+            @if (movement) {
+
+            <!-- Header Section -->
+            <div class="detail-header" [ngClass]="'detail-header-' + getTypeColor(movement.type)">
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3"
+                    (click)="close()" aria-label="Fermer"></button>
+
+                <div class="d-flex flex-column align-items-center pt-4 pb-4">
+                    <div class="detail-avatar d-flex align-items-center justify-content-center mb-3"
+                        [ngClass]="'avatar-' + getTypeColor(movement.type)">
+                        <i class="bi {{ getTypeIcon(movement.type) }}"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-1">{{ movement.productName }}</h5>
+                    <span class="text-white-50 small">{{ movement.sku }}</span>
+
+                    <div class="d-flex gap-2 mt-3">
+                        <span class="detail-badge-role">
+                            <i class="bi {{ getTypeIcon(movement.type) }} me-1"></i>
+                            {{ getTypeLabel(movement.type) }}
+                        </span>
+                        <span class="detail-badge-status" [ngClass]="'status-' + getStatusColor(movement.status)">
+                            <span class="status-indicator"></span>
+                            {{ getStatusLabel(movement.status) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Body Section -->
+            <div class="modal-body px-4 py-4">
+                <div class="info-grid">
+                    <!-- ID -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-hash"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Identifiant</div>
+                            <div class="info-value">#{{ movement.id }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-calendar3"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Date & Heure</div>
+                            <div class="info-value">{{ movement.date | date:'dd/MM/yyyy HH:mm' }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-box-seam"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Quantité</div>
+                            <div class="info-value"
+                                [ngClass]="{'text-success': movement.quantity > 0, 'text-danger': movement.quantity < 0}">
+                                {{ movement.quantity > 0 ? '+' : '' }}{{ movement.quantity }} unités
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Effectué par</div>
+                            <div class="info-value">{{ movement.user }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Reason -->
+                    <div class="info-item col-12 w-100 border-end-0">
+                        <div class="info-icon">
+                            <i class="bi bi-chat-right-text"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="info-label">Raison / Motif</div>
+                            <div class="info-value">{{ movement.reason }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    @if (movement.notes) {
+                    <div class="info-item col-12 w-100 border-end-0 border-bottom-0">
+                        <div class="info-icon">
+                            <i class="bi bi-info-circle"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="info-label">Notes complémentaires</div>
+                            <div class="info-value text-muted small lh-sm">{{ movement.notes }}</div>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                <button type="button" class="btn btn-detail-close w-100 rounded-3 py-2 fw-medium" (click)="close()">
+                    <i class="bi bi-x-lg me-1"></i> Fermer
+                </button>
+            </div>
+
+            }
+        </div>
+    </div>
+</div>

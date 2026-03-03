@@ -1,0 +1,232 @@
+<!-- Stock Entry Form Modal (Create / Edit) -->
+<div class="modal fade" #entryModal tabindex="-1" aria-labelledby="entryModalLabel" id="stockEntryFormModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+
+            <!-- Modal Header -->
+            <div class="modal-header border-0 px-4 pt-4 pb-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrapper d-flex align-items-center justify-content-center"
+                        [class.modal-icon-edit]="isEditMode">
+                        @if (isEditMode) {
+                        <i class="bi bi-pencil-square fs-5"></i>
+                        } @else {
+                        <i class="bi bi-journal-plus fs-5"></i>
+                        }
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="entryModalLabel">
+                            {{ isEditMode ? 'Modifier l\'Entrée' : 'Nouvelle Entrée de Stock' }}
+                        </h5>
+                        <p class="text-muted small mb-0">
+                            {{ isEditMode
+                            ? 'Modifiez les informations du rapport d\'arrivage'
+                            : 'Enregistrez un nouvel arrivage de produits en stock' }}
+                        </p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" (click)="close()" aria-label="Fermer"></button>
+            </div>
+
+            <!-- Separator -->
+            <div class="px-4 pt-3">
+                <hr class="text-muted opacity-25 my-0">
+            </div>
+
+            <!-- Edit Mode: Info Banner -->
+            @if (isEditMode && editingEntry) {
+            <div class="px-4 pt-3">
+                <div class="edit-banner d-flex align-items-center gap-3">
+                    <div class="edit-icon d-flex align-items-center justify-content-center">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark small">Entrée #{{ editingEntry.id }}</div>
+                        <div class="text-muted" style="font-size: 0.78rem;">
+                            {{ editingEntry.date | date:'dd/MM/yyyy HH:mm' }}
+                        </div>
+                    </div>
+                    <div class="ms-auto">
+                        <span class="badge rounded-pill" [class.bg-success-subtle]="editingEntry.status === 'completed'"
+                            [class.text-success]="editingEntry.status === 'completed'"
+                            [class.bg-warning-subtle]="editingEntry.status === 'pending'"
+                            [class.text-warning]="editingEntry.status === 'pending'"
+                            [class.bg-danger-subtle]="editingEntry.status === 'cancelled'"
+                            [class.text-danger]="editingEntry.status === 'cancelled'">
+                            {{ editingEntry.status === 'completed' ? 'Complété' : editingEntry.status === 'pending' ?
+                            'En attente' : 'Annulé' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Modal Body -->
+            <div class="modal-body px-4 py-4">
+                <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" id="stockEntryForm">
+
+                    <!-- Section: Informations Produit -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-box-seam text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Informations Produit
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Product Name -->
+                            <div class="col-md-8">
+                                <label for="productName" class="form-label fw-medium small">
+                                    Nom du produit <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-tag text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="productName"
+                                        formControlName="productName" placeholder="Ex: iPhone 15 Pro Max"
+                                        [class.is-invalid]="isInvalid('productName')">
+                                </div>
+                                @if (isInvalid('productName')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('productName') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Quantity -->
+                            <div class="col-md-4">
+                                <label for="quantity" class="form-label fw-medium small">
+                                    Quantité <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-plus-slash-minus text-muted"></i>
+                                    </span>
+                                    <input type="number" class="form-control border-start-0 ps-0" id="quantity"
+                                        formControlName="quantity" placeholder="0"
+                                        [class.is-invalid]="isInvalid('quantity')">
+                                </div>
+                                @if (isInvalid('quantity')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('quantity') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- SKU -->
+                            <div class="col-md-6">
+                                <label for="sku" class="form-label fw-medium small">
+                                    Code SKU / Référence <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-hash text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="sku"
+                                        formControlName="sku" placeholder="Ex: IP15PM-256-BL"
+                                        [class.is-invalid]="isInvalid('sku')">
+                                </div>
+                                @if (isInvalid('sku')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('sku') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Supplier -->
+                            <div class="col-md-6">
+                                <label for="supplier" class="form-label fw-medium small">
+                                    Fournisseur <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-truck text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="supplier"
+                                        formControlName="supplier" placeholder="Ex: Tech Distribution SARL"
+                                        [class.is-invalid]="isInvalid('supplier')">
+                                </div>
+                                @if (isInvalid('supplier')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('supplier') }}
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Statut & Notes -->
+                    <div class="form-section">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-info-circle text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Statut & Notes
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Status -->
+                            <div class="col-md-12">
+                                <label for="status" class="form-label fw-medium small">
+                                    Statut du rapport <span class="text-danger">*</span>
+                                </label>
+                                <div class="d-flex gap-3 mt-1">
+                                    <div class="status-option">
+                                        <input type="radio" class="btn-check" name="status" id="statusPending"
+                                            value="pending" formControlName="status">
+                                        <label class="btn btn-outline-warning border-dashed rounded-3 px-3 py-2 w-100"
+                                            for="statusPending">
+                                            <i class="bi bi-clock-history me-2"></i>En attente
+                                        </label>
+                                    </div>
+                                    <div class="status-option">
+                                        <input type="radio" class="btn-check" name="status" id="statusCompleted"
+                                            value="completed" formControlName="status">
+                                        <label class="btn btn-outline-success border-dashed rounded-3 px-3 py-2 w-100"
+                                            for="statusCompleted">
+                                            <i class="bi bi-check-circle me-2"></i>Complété
+                                        </label>
+                                    </div>
+                                    <div class="status-option">
+                                        <input type="radio" class="btn-check" name="status" id="statusCancelled"
+                                            value="cancelled" formControlName="status">
+                                        <label class="btn btn-outline-danger border-dashed rounded-3 px-3 py-2 w-100"
+                                            for="statusCancelled">
+                                            <i class="bi bi-x-circle me-2"></i>Annulé
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notes -->
+                            <div class="col-12 mt-4">
+                                <label for="notes" class="form-label fw-medium small">Notes additionnelles</label>
+                                <textarea class="form-control rounded-3" id="notes" formControlName="notes" rows="3"
+                                    placeholder="Précisez ici toute information utile relative à cet arrivage..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0 mt-3">
+                <button type="button"
+                    class="btn btn-light rounded-3 px-4 py-2 fw-medium d-flex align-items-center justify-content-center gap-2"
+                    (click)="close()">
+                    <i class="bi bi-x-lg"></i>
+                    <span>Annuler</span>
+                </button>
+                <button type="submit" form="stockEntryForm"
+                    class="btn btn-premium rounded-3 px-4 py-2 fw-medium d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-check-lg"></i>
+                    <span>{{ isEditMode ? 'Enregistrer les modifications' : 'Confirmer l\'entrée' }}</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

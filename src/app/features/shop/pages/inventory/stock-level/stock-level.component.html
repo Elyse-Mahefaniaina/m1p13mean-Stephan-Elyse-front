@@ -4,14 +4,15 @@
         <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 p-4">
             <div>
                 <h1 class="h3 mb-1 fw-bold text-shop header-font">
-                    Niveaux de Stock
+                    Création & Gestion de Produits
                 </h1>
                 <p class="text-muted mb-0 small fw-medium">
-                    <i class="bi bi-box-seam me-1"></i> Suivi en temps réel de votre inventaire
+                    <i class="bi bi-plus-circle-fill me-1"></i> Gérez votre catalogue et créez de nouveaux articles
                 </p>
             </div>
             <div>
-                <button class="btn btn-premium d-flex align-items-center gap-2 rounded-3 px-4 py-2">
+                <button class="btn btn-premium d-flex align-items-center gap-2 rounded-3 px-4 py-2"
+                    (click)="openCreateModal()">
                     <i class="bi bi-plus-circle-fill"></i>
                     <span>Ajouter un produit</span>
                 </button>
@@ -32,7 +33,7 @@
                         <span class="h3 fw-bold d-block mb-0" style="font-family: 'Sora', sans-serif;">
                             {{ stats().total }}
                         </span>
-                        <span class="text-muted small">Articles Totaux</span>
+                        <span class="text-muted small">Produits Référencés</span>
                     </div>
                 </div>
             </div>
@@ -90,7 +91,7 @@
         <div class="card-body p-4">
             <div class="row g-4">
                 <!-- Search Bar -->
-                <div class="col-12">
+                <div class="col-lg-6">
                     <div class="search-wrapper">
                         <i class="bi bi-search search-icon fs-5"></i>
                         <input type="text" class="form-control search-input" [ngModel]="searchTerm()"
@@ -100,27 +101,27 @@
                 </div>
 
                 <!-- Status Pills -->
-                <div class="col-12">
+                <div class="col-lg-6">
                     <div class="filter-section">
                         <span class="text-muted small fw-bold text-uppercase me-2"
                             style="letter-spacing: 0.05em;">Filtrer par :</span>
                         <div class="filter-pills-group">
-                            <div class="filter-pill" [class.active]="statusFilter() === 'all'" data-status="all"
+                            <div class="filter-pill" [class.active]="statusFilter() === 'all'"
                                 (click)="statusFilter.set('all')">
                                 <span class="pill-dot"></span>
                                 <span>Tout voir</span>
                             </div>
-                            <div class="filter-pill" [class.active]="statusFilter() === 'ok'" data-status="active"
+                            <div class="filter-pill" [class.active]="statusFilter() === 'ok'"
                                 (click)="statusFilter.set('ok')">
                                 <span class="pill-dot"></span>
                                 <span>En Stock</span>
                             </div>
-                            <div class="filter-pill" [class.active]="statusFilter() === 'low'" data-status="pending"
+                            <div class="filter-pill" [class.active]="statusFilter() === 'low'"
                                 (click)="statusFilter.set('low')">
                                 <span class="pill-dot"></span>
                                 <span>Faible</span>
                             </div>
-                            <div class="filter-pill" [class.active]="statusFilter() === 'out'" data-status="suspended"
+                            <div class="filter-pill" [class.active]="statusFilter() === 'out'"
                                 (click)="statusFilter.set('out')">
                                 <span class="pill-dot"></span>
                                 <span>Rupture</span>
@@ -140,7 +141,7 @@
                     style="width: 32px; height: 32px;">
                     <i class="bi bi-list-ul"></i>
                 </div>
-                <span class="h5 mb-0 fw-bold">Détails de l'Inventaire</span>
+                <span class="h5 mb-0 fw-bold header-font">Catalogue des Produits</span>
             </div>
             <span class="badge bg-light text-primary border px-3 py-2 rounded-pill fw-bold">
                 {{ filteredStock().length }} articles
@@ -172,8 +173,7 @@
                         <th>Catégorie</th>
                         <th>Quantité</th>
                         <th>Seuil Min.</th>
-                        <th>Unité</th>
-                        <th>Dernière Mise à Jour</th>
+                        <th>Prix</th>
                         <th class="text-center">Statut</th>
                         <th class="text-end px-4">Actions</th>
                     </tr>
@@ -185,10 +185,10 @@
                             <div class="d-flex align-items-center gap-3">
                                 <div
                                     class="product-avatar d-flex align-items-center justify-content-center bg-light text-primary fw-bold">
-                                    {{ item.productName.charAt(0) }}
+                                    {{ item.name.charAt(0) }}
                                 </div>
                                 <div>
-                                    <div class="fw-bold text-dark">{{ item.productName }}</div>
+                                    <div class="fw-bold text-dark">{{ item.name }}</div>
                                     <div class="text-muted small">{{ item.sku }}</div>
                                 </div>
                             </div>
@@ -197,20 +197,16 @@
                             <span class="badge bg-light text-dark border-0 fw-normal">{{ item.category }}</span>
                         </td>
                         <td data-label="Quantité">
-                            <div class="fw-bold" [ngClass]="{'text-danger': item.currentStock <= item.minStock}">
-                                {{ item.currentStock }}
+                            <div class="fw-bold" [ngClass]="{'text-danger': (item.stock || 0) <= (item.minStock || 0)}">
+                                {{ item.stock }} <span class="text-muted small fw-normal">{{ item.unit || 'unités'
+                                    }}</span>
                             </div>
                         </td>
                         <td data-label="Seuil Min.">
                             <div class="text-muted">{{ item.minStock }}</div>
                         </td>
-                        <td data-label="Unité">
-                            <div class="text-muted small">{{ item.unit }}</div>
-                        </td>
-                        <td data-label="Mise à Jour">
-                            <div class="text-muted small">
-                                {{ item.lastUpdated | date:'dd/MM/yyyy HH:mm' }}
-                            </div>
+                        <td data-label="Prix">
+                            <div class="fw-bold text-primary">{{ item.price | currency:'EUR' }}</div>
                         </td>
                         <td class="text-center" data-label="Statut">
                             <span class="status-badge" [ngClass]="getStatusClass(item.status)">
@@ -219,13 +215,16 @@
                         </td>
                         <td class="px-4" data-label="Actions">
                             <div class="d-flex gap-2 justify-content-end mobile-justify-start">
-                                <button class="btn-action btn-action-view" title="Détails">
+                                <button class="btn-action btn-action-view" title="Détails"
+                                    (click)="openDetailModal(item)">
                                     <i class="bi bi-eye-fill"></i>
                                 </button>
-                                <button class="btn-action btn-action-edit" title="Modifier">
+                                <button class="btn-action btn-action-edit" title="Modifier"
+                                    (click)="openEditModal(item)">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
-                                <button class="btn-action btn-action-delete" title="Supprimer">
+                                <button class="btn-action btn-action-delete" title="Supprimer"
+                                    (click)="openDeleteModal(item)">
                                     <i class="bi bi-trash-fill"></i>
                                 </button>
                             </div>
@@ -271,4 +270,14 @@
         </div>
         }
     </div>
+
+    <!-- Modals -->
+    <app-product-form-modal (saved)="onProductSaved($event)"></app-product-form-modal>
+    <app-product-detail-modal></app-product-detail-modal>
+    <app-confirm-dialog title="Supprimer le produit" message="Voulez-vous vraiment supprimer ce produit du catalogue ?"
+        detail="Cette action est irréversible et supprimera toutes les données ainsi que l'historique associé."
+        icon="bi-trash3-fill" theme="danger" confirmText="Supprimer" cancelText="Annuler"
+        [itemName]="productToDelete()?.name ?? ''" [itemSubtitle]="'SKU: ' + (productToDelete()?.sku ?? '')"
+        (confirmed)="onDeleteConfirmed()">
+    </app-confirm-dialog>
 </div>
