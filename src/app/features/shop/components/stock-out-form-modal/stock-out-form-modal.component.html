@@ -1,0 +1,196 @@
+<div class="modal fade" #entryModal tabindex="-1" aria-labelledby="stockOutModalLabel" id="stockOutFormModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+
+            <!-- Modal Header -->
+            <div class="modal-header border-0 px-4 pt-4 pb-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrapper d-flex align-items-center justify-content-center"
+                        [class.modal-icon-edit]="isEditMode">
+                        @if (isEditMode) {
+                        <i class="bi bi-pencil-square fs-5"></i>
+                        } @else {
+                        <i class="bi bi-box-arrow-right fs-5"></i>
+                        }
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="stockOutModalLabel">
+                            {{ isEditMode ? 'Modifier la sortie de stock' : 'Nouvelle sortie de stock' }}
+                        </h5>
+                        <p class="text-muted small mb-0">
+                            {{ isEditMode
+                            ? 'Modifiez les informations de ce mouvement de stock'
+                            : 'Enregistrez un nouveau retrait ou transfert de produits' }}
+                        </p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" (click)="close()" aria-label="Fermer"></button>
+            </div>
+
+            <!-- Separator -->
+            <div class="px-4 pt-3">
+                <hr class="text-muted opacity-25 my-0">
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body px-4 py-4">
+                <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" id="stockOutForm">
+
+                    <!-- Section: Produit & Quantité -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-box-seam text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Détails du Produit
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Product Name -->
+                            <div class="col-md-12">
+                                <label class="form-label fw-medium small">Nom du Produit <span
+                                        class="text-danger">*</span></label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-tag text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0"
+                                        formControlName="productName" placeholder="Rechercher ou saisir un produit..."
+                                        [class.is-invalid]="isInvalid('productName')">
+                                </div>
+                                @if (isInvalid('productName')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('productName') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- SKU -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium small">Référence (SKU) <span
+                                        class="text-danger">*</span></label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-hash text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" formControlName="sku"
+                                        placeholder="Ex: PRD-001" [class.is-invalid]="isInvalid('sku')">
+                                </div>
+                                @if (isInvalid('sku')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('sku') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Quantity -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium small">Quantité <span
+                                        class="text-danger">*</span></label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-stack text-muted"></i>
+                                    </span>
+                                    <input type="number" class="form-control border-start-0 ps-0"
+                                        formControlName="quantity" [class.is-invalid]="isInvalid('quantity')">
+                                </div>
+                                @if (isInvalid('quantity')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('quantity') }}
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Destination & Responsable -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-truck text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Expédition & Responsabilité
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Destination -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium small">Destination / Motif <span
+                                        class="text-danger">*</span></label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-geo-alt text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0"
+                                        formControlName="destination" placeholder="Ex: Boutique Centre-ville"
+                                        [class.is-invalid]="isInvalid('destination')">
+                                </div>
+                                @if (isInvalid('destination')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('destination') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Prepared By -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium small">Responsable <span
+                                        class="text-danger">*</span></label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-person-check text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0"
+                                        formControlName="preparedBy" placeholder="Nom de l'opérateur"
+                                        [class.is-invalid]="isInvalid('preparedBy')">
+                                </div>
+                                @if (isInvalid('preparedBy')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('preparedBy') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium small">Statut <span
+                                        class="text-danger">*</span></label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-flag text-muted"></i>
+                                    </span>
+                                    <select class="form-select border-start-0 ps-0" formControlName="status"
+                                        [class.is-invalid]="isInvalid('status')">
+                                        <option value="pending">En attente</option>
+                                        <option value="completed">Terminé / Livré</option>
+                                        <option value="cancelled">Annulé</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="form-section">
+                        <label class="form-label fw-medium small">Notes Additionnelles</label>
+                        <textarea class="form-control border-0 bg-white rounded-3 p-3" formControlName="notes" rows="3"
+                            placeholder="Informations complémentaires..."></textarea>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                <button type="button" class="btn btn-light rounded-3 px-4 py-2 fw-medium" (click)="close()">
+                    <i class="bi bi-x-lg me-1"></i> Annuler
+                </button>
+                <button type="submit" form="stockOutForm" class="btn btn-modal-submit rounded-3 px-4 py-2 fw-medium">
+                    <i class="bi bi-check-lg me-1"></i>
+                    {{ isEditMode ? 'Enregistrer les modifications' : 'Confirmer la sortie' }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
