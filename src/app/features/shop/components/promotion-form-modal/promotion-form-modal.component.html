@@ -1,0 +1,261 @@
+<!-- Promotion Form Modal (Create / Edit) -->
+<div class="modal fade" #promotionModal tabindex="-1" aria-labelledby="promotionModalLabel" id="promotionFormModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+
+            <!-- Modal Header -->
+            <div class="modal-header border-0 px-4 pt-4 pb-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrapper d-flex align-items-center justify-content-center"
+                        [class.modal-icon-edit]="isEditMode">
+                        @if (isEditMode) {
+                        <i class="bi bi-pencil-square fs-5"></i>
+                        } @else {
+                        <i class="bi bi-megaphone-fill fs-5"></i>
+                        }
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="promotionModalLabel">
+                            {{ isEditMode ? 'Modifier la promotion' : 'Nouvelle Promotion' }}
+                        </h5>
+                        <p class="text-muted small mb-0">
+                            {{ isEditMode
+                            ? 'Modifiez les détails de votre offre spéciale'
+                            : 'Configurez une nouvelle promotion pour votre boutique' }}
+                        </p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" (click)="close()" aria-label="Fermer"></button>
+            </div>
+
+            <!-- Separator -->
+            <div class="px-4 pt-3">
+                <hr class="text-muted opacity-25 my-0">
+            </div>
+
+            <!-- Edit Mode: Promotion Info Banner -->
+            @if (isEditMode && editingPromotion) {
+            <div class="px-4 pt-3">
+                <div class="edit-promo-banner d-flex align-items-center gap-3">
+                    <div class="edit-promo-icon d-flex align-items-center justify-content-center">
+                        <i class="bi bi-tag-fill"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark small">{{ editingPromotion.name }}</div>
+                        <div class="text-muted" style="font-size: 0.78rem;">
+                            {{ editingPromotion.discountType === 'percentage' ? '-' + editingPromotion.discountValue +
+                            '%' : '-' + editingPromotion.discountValue + ' Ar' }}
+                        </div>
+                    </div>
+                    <div class="ms-auto">
+                        <span class="badge rounded-pill edit-badge-status">
+                            {{ getStatusLabel(editingPromotion.status) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Modal Body -->
+            <div class="modal-body px-4 py-4">
+                <form [formGroup]="promotionForm" (ngSubmit)="onSubmit()" id="promotionFormAction">
+
+                    <!-- Section: Détails de la promotion -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-info-circle text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Informations de base
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Name -->
+                            <div class="col-md-12">
+                                <label for="promoName" class="form-label fw-medium small">
+                                    Nom de la promotion <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-tag text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="promoName"
+                                        formControlName="name" placeholder="Ex: Soldes d'Été 2024"
+                                        [class.is-invalid]="isInvalid('name')">
+                                </div>
+                                @if (isInvalid('name')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('name') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Description -->
+                            <div class="col-md-12">
+                                <label for="promoDescription" class="form-label fw-medium small">
+                                    Description <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white align-items-start pt-2">
+                                        <i class="bi bi-text-paragraph text-muted"></i>
+                                    </span>
+                                    <textarea class="form-control border-start-0 ps-0" id="promoDescription"
+                                        formControlName="description" placeholder="Détails de l'offre..." rows="2"
+                                        [class.is-invalid]="isInvalid('description')"></textarea>
+                                </div>
+                                @if (isInvalid('description')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('description') }}
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Configuration de l'offre -->
+                    <div class="form-section mb-4">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-gear text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Configuration de l'offre
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Discount Type -->
+                            <div class="col-md-6">
+                                <label for="discountType" class="form-label fw-medium small">
+                                    Type de remise <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-percent text-muted"></i>
+                                    </span>
+                                    <select class="form-select border-start-0 ps-0" id="discountType"
+                                        formControlName="discountType" [class.is-invalid]="isInvalid('discountType')">
+                                        <option value="percentage">Pourcentage (%)</option>
+                                        <option value="fixed">Montant Fixe (Ar)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Discount Value -->
+                            <div class="col-md-6">
+                                <label for="discountValue" class="form-label fw-medium small">
+                                    Valeur <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-cash-stack text-muted"></i>
+                                    </span>
+                                    <input type="number" class="form-control border-start-0 ps-0" id="discountValue"
+                                        formControlName="discountValue" placeholder="0"
+                                        [class.is-invalid]="isInvalid('discountValue')">
+                                </div>
+                                @if (isInvalid('discountValue')) {
+                                <div class="invalid-feedback-custom">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ getErrorMessage('discountValue') }}
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Applicable To -->
+                            <div class="col-md-6">
+                                <label for="applicableTo" class="form-label fw-medium small">
+                                    Application <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-cart-check text-muted"></i>
+                                    </span>
+                                    <select class="form-select border-start-0 ps-0" id="applicableTo"
+                                        formControlName="applicableTo" [class.is-invalid]="isInvalid('applicableTo')">
+                                        <option value="all">Toute la boutique</option>
+                                        <option value="category">Par catégorie</option>
+                                        <option value="product">Par produit</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-6">
+                                <label for="status" class="form-label fw-medium small">
+                                    Statut <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-toggle2-on text-muted"></i>
+                                    </span>
+                                    <select class="form-select border-start-0 ps-0" id="status" formControlName="status"
+                                        [class.is-invalid]="isInvalid('status')">
+                                        <option value="active">Active</option>
+                                        <option value="scheduled">Planifiée</option>
+                                        <option value="suspended">Suspendue</option>
+                                        <option value="expired">Terminée</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Période de validité -->
+                    <div class="form-section">
+                        <div class="section-label d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-calendar-range text-primary"></i>
+                            <span class="fw-bold small text-uppercase" style="letter-spacing: 0.05em;">
+                                Période de validité
+                            </span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Start Date -->
+                            <div class="col-md-6">
+                                <label for="startDate" class="form-label fw-medium small">
+                                    Date de début <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-calendar-event text-muted"></i>
+                                    </span>
+                                    <input type="date" class="form-control border-start-0 ps-0" id="startDate"
+                                        formControlName="startDate" [class.is-invalid]="isInvalid('startDate')">
+                                </div>
+                            </div>
+
+                            <!-- End Date -->
+                            <div class="col-md-6">
+                                <label for="endDate" class="form-label fw-medium small">
+                                    Date de fin <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-custom">
+                                    <span class="input-group-text border-end-0 bg-white">
+                                        <i class="bi bi-calendar-check text-muted"></i>
+                                    </span>
+                                    <input type="date" class="form-control border-start-0 ps-0" id="endDate"
+                                        formControlName="endDate" [class.is-invalid]="isInvalid('endDate')">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                <button type="button"
+                    class="btn btn-light rounded-3 px-4 py-2 fw-medium d-flex align-items-center justify-content-center gap-2"
+                    (click)="close()">
+                    <i class="bi bi-x-lg"></i>
+                    <span>Annuler</span>
+                </button>
+                <button type="submit" form="promotionFormAction"
+                    class="btn btn-modal-submit rounded-3 px-4 py-2 fw-medium d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-check-lg"></i>
+                    <span>{{ isEditMode ? 'Enregistrer les modifications' : 'Créer la promotion' }}</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
