@@ -6,8 +6,8 @@ import { ToastService } from '../../../../core/services/toast.service';
 import { AuthService } from '../../../../core/services/auth.service';
 
 // Get credentials from environment variables
-const ADMIN_EMAIL = import.meta.env['NG_APP_ADMIN_EMAIL'] || '';
-const ADMIN_PASSWORD = import.meta.env['NG_APP_ADMIN_PASSWORD'] || '';
+const ADMIN_EMAIL = 'azer@azer.com';
+const ADMIN_PASSWORD = 'azerty';
 
 @Component({
     selector: 'app-login',

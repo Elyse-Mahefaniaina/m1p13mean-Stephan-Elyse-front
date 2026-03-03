@@ -66,7 +66,7 @@ export class WishlistComponent implements OnInit {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Oui, vider',
         cancelButtonText: 'Annuler'
-      }).then((result) => {
+      }).then((result: any) => {
         if (result.isConfirmed) {
           this.wishlistProducts.set([]);
           localStorage.removeItem('wishlist');
