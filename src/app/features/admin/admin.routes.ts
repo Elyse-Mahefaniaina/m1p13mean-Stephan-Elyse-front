@@ -16,6 +16,7 @@ export const ADMIN_ROUTES: Routes = [
         path: '',
         component: AdminLayoutComponent,
         canActivate: [canActivePageGuard],
+        canActivateChild: [canActivePageGuard],
         children: [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'boxes', component: BoxesComponent },

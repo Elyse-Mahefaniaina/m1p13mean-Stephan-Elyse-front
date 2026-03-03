@@ -50,7 +50,7 @@ export class LoginComponent {
           next: (res:any) => {
             this.isLoading.set(false);
             const user = res.user;
-            localStorage.setItem("currentUser", user);
+            localStorage.setItem("currentUser", JSON.stringify(user));
             this.router.navigate(['/admin/dashboard']);
           },
           error: (err) => {

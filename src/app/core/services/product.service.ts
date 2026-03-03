@@ -153,9 +153,7 @@ export class ProductService {
         );
     }
 
-    // --- CRUD Operations for Shop Management ---
     getShopProducts(): Observable<Product[]> {
-        // In a real app, this would filter by the current shop's ID
         return this.http.get<Product[]>(this.productsUrl).pipe(
             map(products => products.map(p => ({
                 ...p,

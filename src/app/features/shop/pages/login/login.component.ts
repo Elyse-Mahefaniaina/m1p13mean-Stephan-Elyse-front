@@ -51,9 +51,8 @@ export class LoginComponent {
           next: (res:any) => {
             this.isLoading.set(false);
             const user = res.user;
-            this.toastService.show('Ravi de vous revoir !', 'success');
-            localStorage.setItem("currentUser", user);
-            this.router.navigateByUrl('/shop/dashboard');
+            localStorage.setItem("currentUser", JSON.stringify(user));
+            this.router.navigate(['/shop/dashboard']);
           },
           error: (err) => {
             this.isLoading.set(false);
