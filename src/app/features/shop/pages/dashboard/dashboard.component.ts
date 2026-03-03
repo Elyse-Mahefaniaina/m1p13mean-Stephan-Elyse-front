@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import localeFr from '@angular/common/locales/fr';
+import { OrderService, Order } from '../../../../core/services/order.service';
+import { ProductService } from '../../../../core/services/product.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 registerLocaleData(localeFr);
 
@@ -21,69 +24,172 @@ interface DashboardStat {
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  private orderService = inject(OrderService);
+  private productService = inject(ProductService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   today = new Date();
 
   stats: DashboardStat[] = [
     {
-      label: 'Revenus du mois',
-      value: '21 250 500 Ar',
-      icon: 'bi-cash-stack',
-      color: 'primary',
-      trend: '+12.5%',
-      description: 'par rapport au mois dernier'
-    },
-    {
-      label: 'Commandes totales',
-      value: '156',
+      label: 'Total Commandes',
+      value: '0',
       icon: 'bi-cart-check-fill',
-      color: 'blue',
-      trend: '+8%',
-      description: 'depuis l\'ouverture'
+      color: 'blue'
     },
     {
-      label: 'Produits actifs',
-      value: '42',
+      label: 'Produits',
+      value: '0',
       icon: 'bi-box-seam-fill',
-      color: 'green',
-      description: 'dans votre catalogue'
+      color: 'green'
     },
     {
-      label: 'Note Boutique',
-      value: '4.8/5',
-      icon: 'bi-star-fill',
-      color: 'yellow',
-      description: 'basé sur 85 avis'
+      label: 'Chiffre d\'affaires',
+      value: '0 Ar',
+      icon: 'bi-cash-stack',
+      color: 'primary'
     }
   ];
+  orders: Order[] = [];
+  productsCount = 0;
 
-  recentOrders = [
-    { id: '#ORD-7234', client: 'Jean Dupont', status: 'delivered', total: '625 000 Ar', date: 'Aujourd\'hui' },
-    { id: '#ORD-7233', client: 'Marie Martin', status: 'shipped', total: '229 500 Ar', date: 'Hier' },
-    { id: '#ORD-7232', client: 'Luc Bernard', status: 'pending', total: '1 050 000 Ar', date: 'Il y a 2 jours' }
-  ];
+  ngOnInit(): void {
+    this.loadOrders();
+    this.loadProducts();
+  }
 
-  popularProducts = [
-    { name: 'Montre Élégance Noir', sales: 45, price: '449 500 Ar', stock: 12 },
-    { name: 'Sac à main Cuir', sales: 32, price: '600 000 Ar', stock: 5 },
-    { name: 'Écharpe en Soie', sales: 28, price: '175 000 Ar', stock: 25 }
-  ];
+  private loadOrders(): void {
+    const shopId = this.getShopId();
+    if (!shopId) return;
+    this.orderService.getShopOrders(shopId).subscribe({
+      next: (orders) => {
+        this.orders = [...orders].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.buildStats();
+      },
+      error: (err) => {
+        console.error('Error loading dashboard orders:', err);
+        this.orders = [];
+        this.buildStats();
+      }
+    });
+  }
+
+  private buildStats(): void {
+    const totalOrders = this.orders.length;
+    const revenue = this.orders
+      .filter(o => o.status !== 'annulee')
+      .reduce((acc, o) => acc + (o.total || 0), 0);
+
+    this.stats = [
+      {
+        label: 'Total Commandes',
+        value: String(totalOrders),
+        icon: 'bi-cart-check-fill',
+        color: 'blue'
+      },
+      {
+        label: 'Produits',
+        value: String(this.productsCount),
+        icon: 'bi-box-seam-fill',
+        color: 'green'
+      },
+      {
+        label: 'Chiffre d\'affaires',
+        value: `${this.formatAr(revenue)} Ar`,
+        icon: 'bi-cash-stack',
+        color: 'primary'
+      }
+    ];
+  }
+
+  private formatAr(value: number): string {
+    return new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(value);
+  }
+
+  private loadProducts(): void {
+    const shopId = this.getShopId();
+    if (!shopId) return;
+    this.productService.getShopProducts(shopId).subscribe({
+      next: (products) => {
+        this.productsCount = products.length;
+        this.buildStats();
+      },
+      error: (err) => {
+        console.error('Error loading dashboard products:', err);
+        this.productsCount = 0;
+        this.buildStats();
+      }
+    });
+  }
+
+  private getShopId(): string | null {
+    const rawData = localStorage.getItem('currentUser');
+    if (!rawData) {
+      this.authService.logout().subscribe({
+        next: () => this.router.navigate(['/shop/login'])
+      });
+      return null;
+    }
+
+    let user: any = null;
+    try {
+      user = JSON.parse(rawData);
+    } catch {
+      user = rawData;
+    }
+
+    const shop = (user && typeof user === 'object') ? user.shop : null;
+    const shopId = shop?._id || shop;
+    if (!shopId) {
+      this.authService.logout().subscribe({
+        next: () => this.router.navigate(['/shop/login'])
+      });
+      return null;
+    }
+    return shopId;
+  }
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'delivered': return 'bg-success-subtle text-success';
-      case 'shipped': return 'bg-primary-subtle text-primary';
-      case 'pending': return 'bg-warning-subtle text-warning';
+      case 'livree': return 'bg-success-subtle text-success';
+      case 'terminee': return 'bg-success-subtle text-success';
+      case 'expediee': return 'bg-primary-subtle text-primary';
+      case 'en_preparation': return 'bg-primary-subtle text-primary';
+      case 'en_attente': return 'bg-warning-subtle text-warning';
+      case 'annulee': return 'bg-danger-subtle text-danger';
       default: return 'bg-secondary-subtle text-secondary';
     }
   }
 
   getStatusLabel(status: string): string {
     switch (status) {
-      case 'delivered': return 'Livré';
-      case 'shipped': return 'Expédié';
-      case 'pending': return 'En attente';
+      case 'livree': return 'Livrée';
+      case 'terminee': return 'Terminée';
+      case 'expediee': return 'Expédiée';
+      case 'en_preparation': return 'En préparation';
+      case 'en_attente': return 'En attente';
+      case 'annulee': return 'Annulée';
       default: return status;
+    }
+  }
+
+  getPaymentStatusClass(status?: string): string {
+    switch (status) {
+      case 'paid': return 'text-success bg-success-light';
+      case 'pending': return 'text-warning bg-warning-light';
+      case 'refunded': return 'text-danger bg-danger-light';
+      default: return '';
+    }
+  }
+
+  getPaymentStatusLabel(status?: string): string {
+    switch (status) {
+      case 'paid': return 'Payé';
+      case 'pending': return 'Attente';
+      case 'refunded': return 'Remboursé';
+      default: return 'N/A';
     }
   }
 }

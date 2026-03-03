@@ -4,7 +4,6 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { BoxesComponent } from './pages/boxes/boxes.component';
 import { ShopsComponent } from './pages/shops/shops.component';
-import { UsersComponent } from './pages/users/users.component';
 import { canActivePageGuard } from '../../core/guard/canActivePage/can-active-page-guard';
 
 /**
@@ -21,7 +20,6 @@ export const ADMIN_ROUTES: Routes = [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'boxes', component: BoxesComponent },
             { path: 'shops', component: ShopsComponent },
-            { path: 'users', component: UsersComponent },
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
         ]
     }
