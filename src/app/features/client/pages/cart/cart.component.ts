@@ -125,6 +125,7 @@ export class CartComponent implements OnInit {
         this.orderService.createOrder(payload).subscribe({
             next: (res) => {
                 this.toastService.show(`Commande créée (#${res.uuid})`, 'success');
+                this.downloadOrderRefPdf(res.uuid, email);
                 this.cartItems.set([]);
                 localStorage.setItem('cart', JSON.stringify([]));
             },
@@ -132,6 +133,76 @@ export class CartComponent implements OnInit {
                 this.toastService.show('Erreur lors de la création de la commande.', 'danger');
             }
         });
+    }
+
+    private downloadOrderRefPdf(orderRef: string, email: string): void {
+        const safeRef = String(orderRef || '').trim() || 'commande';
+        const dateStr = new Date().toISOString().replace('T', ' ').slice(0, 19);
+        const lines = [
+            'Commande - Reference',
+            `Reference commande: ${safeRef}`,
+            `Email client: ${email}`,
+            `Date: ${dateStr}`
+        ];
+
+        const pdf = this.buildSimplePdf(lines);
+        const blob = new Blob([pdf], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `commande_${safeRef}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    private buildSimplePdf(lines: string[]): string {
+        const escapedLines = lines.map(line =>
+            line.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)')
+        );
+
+        const contentLines = escapedLines.map((line, idx) => {
+            const y = 720 - idx * 24;
+            return `BT /F1 18 Tf 72 ${y} Td (${line}) Tj ET`;
+        });
+        const content = contentLines.join('\n');
+        const contentLength = content.length;
+
+        const objects: string[] = [];
+        objects.push('%PDF-1.4');
+        objects.push('1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj');
+        objects.push('2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj');
+        objects.push(
+            '3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] ' +
+            '/Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj'
+        );
+        objects.push('4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj');
+        objects.push(`5 0 obj << /Length ${contentLength} >> stream\n${content}\nendstream endobj`);
+
+        const xrefOffsets: number[] = [];
+        let offset = 0;
+        const parts: string[] = [];
+
+        for (const obj of objects) {
+            xrefOffsets.push(offset);
+            parts.push(obj);
+            offset += obj.length + 1;
+        }
+
+        const xrefStart = offset;
+        parts.push('xref');
+        parts.push(`0 ${objects.length + 1}`);
+        parts.push('0000000000 65535 f ');
+        for (const off of xrefOffsets) {
+            parts.push(off.toString().padStart(10, '0') + ' 00000 n ');
+        }
+        parts.push('trailer << /Size ' + (objects.length + 1) + ' /Root 1 0 R >>');
+        parts.push('startxref');
+        parts.push(String(xrefStart));
+        parts.push('%%EOF');
+
+        return parts.join('\n');
     }
 
     formatPrice(price: number): string {
